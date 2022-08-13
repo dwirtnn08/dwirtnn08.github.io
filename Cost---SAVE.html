@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dwi Retno Fibriyanti" />
+
+<meta name="date" content="2022-05-29" />
+
+<title>Cost Living Prediction</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Supervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Airplane.html">Regression</a>
+    </li>
+    <li>
+      <a href="about.html">Classification I</a>
+    </li>
+    <li>
+      <a href="about.html">Classification II</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unsupervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="happy.html">K-means</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="neuraldeep.html">Deep Learning</a>
+</li>
+<li>
+  <a href="time.html">Time Series</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Cost Living Prediction</h1>
+<h4 class="author">Dwi Retno Fibriyanti</h4>
+<h4 class="date">2022-05-29</h4>
+
+</div>
+
+
+<style>
+ @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
+  body { 
+    text-align : justify; 
+    font-size : 17px;
+    font-family : 'Delius', cursive;
+  }
+</style>
+<div id="about-dataset" class="section level2">
+<h2>About Dataset</h2>
+<p>Berikut ini adalah analisis mengenai prediksi biaya hidup di tahun
+2022.Biaya hidup merupakan jumlah uang yang dibutuhkan untuk
+mempertahankan standar hidup tertentu dengan membayar biaya dasar.Data
+yang ada ini berisi ranking biaya hidup dari negara dengan list biaya
+hidup, biaya sewa, biaya hidup dan sewa, biaya untuk belanja bahan
+makanan, pengeluaran makan di restoran, dll.</p>
+<p><img src="shutterstock_LinkedIn.jpg" /></p>
+<p>Informasi mengenai atribut :</p>
+<ol style="list-style-type: decimal">
+<li>Rank = urutan negara dengan biaya hidup.</li>
+<li>Country = daftar negara.</li>
+<li>Cost of Living Index = perbedaan harga barang dan jasa selama
+periode atau antara kota, wilayah, dan negara.<br />
+</li>
+<li>Rent Index = perkiraan harga sewa apartemen di suatu lokasi
+dibandingkan dengan yang lain.</li>
+<li>Cost of Living Plus Rent Index = perkiraan biaya hidup dan
+sewa.</li>
+<li>Groceries Index = perkiraan biaya untuk belanja bahan makanan.</li>
+<li>Restaurant Price Index = perkiraan pengeluaran makan di
+restoran.</li>
+<li>Local Purchasing Power Index = daya beli relatif dalam membeli
+barang dan jasa di suatu lokasi tertentu dengan upah rata-rata di lokasi
+tersebut.</li>
+</ol>
+</div>
+<div id="read-data-and-load-library" class="section level2">
+<h2>Read Data and Load Library</h2>
+<p>Berikut ini adalah daftar library yang akan digunakan :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># data cleansing mutate dll</span></span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally) <span class="co"># cek korelasi</span></span></code></pre></div>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
+##   method from   
+##   +.gg   ggplot2</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance) <span class="co"># compare performance</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MLmetrics) <span class="co"># cek RMSE </span></span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;MLmetrics&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     Recall</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) <span class="co"># uji vif</span></span></code></pre></div>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## 
+## Attaching package: &#39;car&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest) <span class="co"># test multikolinearitas</span></span></code></pre></div>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<p>Membaca data yang akan digunakan menggunakan fungsi
+<code>read_csv</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read data </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>living <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data_input/Cost_of_Living_Index_2022.csv&quot;</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(living)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X"],"name":[1],"type":["chr"],"align":["left"]},{"label":["X.1"],"name":[2],"type":["chr"],"align":["left"]},{"label":["X.2"],"name":[3],"type":["chr"],"align":["left"]},{"label":["X.3"],"name":[4],"type":["chr"],"align":["left"]},{"label":["X.4"],"name":[5],"type":["chr"],"align":["left"]},{"label":["X.5"],"name":[6],"type":["chr"],"align":["left"]},{"label":["X.6"],"name":[7],"type":["chr"],"align":["left"]},{"label":["X.7"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"Rank","2":"Country","3":"Cost of Living Index","4":"Rent Index","5":"Cost of Living Plus Rent Index","6":"Groceries Index","7":"Restaurant Price Index","8":"Local Purchasing Power Index","_rn_":"1"},{"1":"1","2":"Afghanistan","3":"20.37","4":"2.72","5":"12.09","6":"14.92","7":"12.41","8":"23.04","_rn_":"2"},{"1":"2","2":"Albania","3":"35.5","4":"8.47","5":"22.83","6":"29.32","7":"25.82","8":"30.19","_rn_":"3"},{"1":"3","2":"Algeria","3":"26.87","4":"4.59","5":"16.43","6":"28.82","7":"14.48","8":"24.63","_rn_":"4"},{"1":"4","2":"Argentina","3":"34.69","4":"7.71","5":"22.04","6":"28.17","7":"33.32","8":"30.72","_rn_":"5"},{"1":"5","2":"Armenia","3":"33.89","4":"11.61","5":"23.45","6":"27.59","7":"30.55","8":"28.86","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="data-cleansing" class="section level2">
+<h2>Data Cleansing</h2>
+<p>Proses memilih kolom yang ingin digunakan dan mengubah tipe data
+menjadi yang lebih tepat.Dapat dilihat bahwa data diatas belum rapih
+untuk nama kolom dapat diubah sesuai yang kita inginkan dengan
+menggunakan fungsi <code>colnames</code>.Dan untuk baris pertama di
+dataframe <code>living</code> berisi header data maka kita akan
+menggunakan subsetting pada baris yang ingin dibuang.Selain itu pada
+saat analisis data biaya hidup kita juga tidak akan menggunakan kolom
+<code>Rank</code> dan <code>Country</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mengganti nama kolom</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(living) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Rank&quot;</span>,<span class="st">&quot;Country&quot;</span>,<span class="st">&quot;CostOfLiving&quot;</span>,<span class="st">&quot;Rent&quot;</span>,<span class="st">&quot;CostOfLivingRent&quot;</span>,<span class="st">&quot;Groceries&quot;</span>,<span class="st">&quot;RestaurantPrice&quot;</span>,<span class="st">&quot;LocalPurchasingPower&quot;</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Membuang baris pertama</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>living <span class="ot">&lt;-</span> living[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>),]</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidak menggunakan kolom Rank  </span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>living <span class="ot">&lt;-</span> living <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Rank,Country))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(living)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["CostOfLiving"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Rent"],"name":[2],"type":["chr"],"align":["left"]},{"label":["CostOfLivingRent"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Groceries"],"name":[4],"type":["chr"],"align":["left"]},{"label":["RestaurantPrice"],"name":[5],"type":["chr"],"align":["left"]},{"label":["LocalPurchasingPower"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"20.37","2":"2.72","3":"12.09","4":"14.92","5":"12.41","6":"23.04","_rn_":"2"},{"1":"35.5","2":"8.47","3":"22.83","4":"29.32","5":"25.82","6":"30.19","_rn_":"3"},{"1":"26.87","2":"4.59","3":"16.43","4":"28.82","5":"14.48","6":"24.63","_rn_":"4"},{"1":"34.69","2":"7.71","3":"22.04","4":"28.17","5":"33.32","6":"30.72","_rn_":"5"},{"1":"33.89","2":"11.61","3":"23.45","4":"27.59","5":"30.55","6":"28.86","_rn_":"6"},{"1":"77.75","2":"36.84","3":"58.57","4":"77.44","5":"72.95","6":"104.63","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Untuk cek tipe data dapat menggunakan fungsi <code>glimpse</code>
+dari library <code>dplyr</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check data type</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(living)</span></code></pre></div>
+<pre><code>## Rows: 139
+## Columns: 6
+## $ CostOfLiving         &lt;chr&gt; &quot;20.37&quot;, &quot;35.5&quot;, &quot;26.87&quot;, &quot;34.69&quot;, &quot;33.89&quot;, &quot;77.7~
+## $ Rent                 &lt;chr&gt; &quot;2.72&quot;, &quot;8.47&quot;, &quot;4.59&quot;, &quot;7.71&quot;, &quot;11.61&quot;, &quot;36.84&quot;,~
+## $ CostOfLivingRent     &lt;chr&gt; &quot;12.09&quot;, &quot;22.83&quot;, &quot;16.43&quot;, &quot;22.04&quot;, &quot;23.45&quot;, &quot;58.~
+## $ Groceries            &lt;chr&gt; &quot;14.92&quot;, &quot;29.32&quot;, &quot;28.82&quot;, &quot;28.17&quot;, &quot;27.59&quot;, &quot;77.~
+## $ RestaurantPrice      &lt;chr&gt; &quot;12.41&quot;, &quot;25.82&quot;, &quot;14.48&quot;, &quot;33.32&quot;, &quot;30.55&quot;, &quot;72.~
+## $ LocalPurchasingPower &lt;chr&gt; &quot;23.04&quot;, &quot;30.19&quot;, &quot;24.63&quot;, &quot;30.72&quot;, &quot;28.86&quot;, &quot;104~</code></pre>
+<p>Pada kolom diatas menunjukan bahwa data frame <code>living</code>
+memiliki 6 kolom dan 139 baris.</p>
+<p>Mengubah tipe data menggunakan <code>sapply</code> agar memudahkan
+dalam mengganti kolom yang banyak bersamaan.Disini kolom biaya hidup,dll
+akan diubah dari tipe data <code>chr</code> atau character menjadi
+<code>dbl</code> atau numeric.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change data type</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CostOfLiving&quot;</span>,<span class="st">&quot;Rent&quot;</span>,<span class="st">&quot;CostOfLivingRent&quot;</span>,<span class="st">&quot;Groceries&quot;</span>,<span class="st">&quot;RestaurantPrice&quot;</span>,<span class="st">&quot;LocalPurchasingPower&quot;</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>living[,cols] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(living[,cols], as.numeric)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(living)</span></code></pre></div>
+<pre><code>## Rows: 139
+## Columns: 6
+## $ CostOfLiving         &lt;dbl&gt; 20.37, 35.50, 26.87, 34.69, 33.89, 77.75, 71.04, ~
+## $ Rent                 &lt;dbl&gt; 2.72, 8.47, 4.59, 7.71, 11.61, 36.84, 27.13, 7.86~
+## $ CostOfLivingRent     &lt;dbl&gt; 12.09, 22.83, 16.43, 22.04, 23.45, 58.57, 50.46, ~
+## $ Groceries            &lt;dbl&gt; 14.92, 29.32, 28.82, 28.17, 27.59, 77.44, 65.88, ~
+## $ RestaurantPrice      &lt;dbl&gt; 12.41, 25.82, 14.48, 33.32, 30.55, 72.95, 66.03, ~
+## $ LocalPurchasingPower &lt;dbl&gt; 23.04, 30.19, 24.63, 30.72, 28.86, 104.63, 77.25,~</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check missing value</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(living))</span></code></pre></div>
+<pre><code>##         CostOfLiving                 Rent     CostOfLivingRent 
+##                    0                    0                    0 
+##            Groceries      RestaurantPrice LocalPurchasingPower 
+##                    0                    0                    0</code></pre>
+<p>Tidak terdapat nilai yang hilang pada dataset ini.</p>
+<p>Membagi data <code>living</code> sebagai data train dan data
+test.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># split data </span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">400</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(living), <span class="fu">nrow</span>(living)<span class="sc">*</span> <span class="fl">0.8</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>living_train <span class="ot">&lt;-</span> living[index,]</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>living_test <span class="ot">&lt;-</span> living[<span class="sc">-</span>index,]</span></code></pre></div>
+</div>
+<div id="modeling-interpretation" class="section level2">
+<h2>Modeling &amp; Interpretation</h2>
+<p>Menggunakan function <code>ggcorr</code> untuk mengecek hubungan /
+korelasi antar variabel.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check correlation </span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorr</span>(<span class="at">data =</span> living_train, <span class="at">label =</span> T, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">layout.exp =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="Cost---SAVE_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Membuat model Linear dengan variabel targetnya adalah
+<code>price</code> dan menggunakan semua variabel prediktor.</p>
+<p>Dapat dilihat melalui summary <code>modelliving_all</code> diatas,
+bahwa target <code>CostOfLiving</code> dengan prediktor lain tingkat
+signifikannya cukup besar.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Menggunakan semua prediktor</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>modelliving_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(CostOfLiving <span class="sc">~</span> .,living_train)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelliving_all)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = CostOfLiving ~ ., data = living_train)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -0.0142403 -0.0058984  0.0007896  0.0052218  0.0150344 
+## 
+## Coefficients:
+##                        Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)          -7.745e-04  2.443e-03    -0.317    0.752    
+## Rent                 -8.825e-01  2.316e-04 -3810.797   &lt;2e-16 ***
+## CostOfLivingRent      1.883e+00  4.252e-04  4428.267   &lt;2e-16 ***
+## Groceries            -1.395e-04  1.569e-04    -0.889    0.376    
+## RestaurantPrice      -1.631e-04  8.810e-05    -1.851    0.067 .  
+## LocalPurchasingPower  2.831e-05  3.589e-05     0.789    0.432    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007284 on 105 degrees of freedom
+## Multiple R-squared:      1,  Adjusted R-squared:      1 
+## F-statistic: 1.915e+08 on 5 and 105 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Pada model <code>modelliving_all</code> ini akan menggunakan semua
+prediktor.Dapat dilihat melalui summary <code>modelliving_all</code>
+diatas, bahwa target <code>CostOfLiving</code> dengan prediktor lain
+tingkat signifikannya cukup besar. Model <code>modelliving_back</code>
+ini akan menggunakan <strong>Step-wise Regression</strong> sebagai
+Feature Selection dengan direction <code>backward</code>.Step-wise
+regression membantu untuk memilih prediktor yang baik, dengan mencari
+kombinasi prediktor yang menghasilkan model terbaik berdasarkan nilai
+AIC yang merepresentasikan banyaknya informasi yang hilang pada model,
+atau information loss.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model backward</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>modelliving_back <span class="ot">&lt;-</span> <span class="fu">step</span>(<span class="at">object =</span> modelliving_all,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">direction =</span> <span class="st">&quot;backward&quot;</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelliving_back)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = CostOfLiving ~ Rent + CostOfLivingRent + RestaurantPrice, 
+##     data = living_train)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -0.0147360 -0.0057086 -0.0000022  0.0050607  0.0147991 
+## 
+## Coefficients:
+##                    Estimate Std. Error   t value Pr(&gt;|t|)    
+## (Intercept)       3.653e-04  2.264e-03     0.161    0.872    
+## Rent             -8.824e-01  1.542e-04 -5723.419   &lt;2e-16 ***
+## CostOfLivingRent  1.883e+00  1.996e-04  9432.060   &lt;2e-16 ***
+## RestaurantPrice  -1.128e-04  7.709e-05    -1.463    0.147    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.007274 on 107 degrees of freedom
+## Multiple R-squared:      1,  Adjusted R-squared:      1 
+## F-statistic: 3.201e+08 on 3 and 107 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Kesimpulan :</p>
+<ul>
+<li>Jika Rent naik satu-satuan, maka CostOfLiving turun sebesar
+-8.824e-01.</li>
+<li>Jika CostOfLivingRent naik satu-satuan, maka CostOfLiving naik
+sebesar 1.883e+00.</li>
+<li>Jika RestaurantPrice naik satu-satuan, maka CostOfLiving turun
+sebesar -1.128e-04.</li>
+</ul>
+<p>Jika dilihat pada summary <code>modelliving_all</code> dan
+<code>modelliving_back</code> memiliki adjust R-squared senilai 1, dan
+p-value dengan nilai yang sama yaitu 2.2e-16.Pada 2 model ini dikatakan
+baik karena pada adj.r.squared menghasilkan atau mendekati nilai 1 dan
+p-value lebih kecil dari 0.05 (alpha).Semakin mendekati 1, semakin baik
+prediktor dalam menjelaskan target.Pada model all menggunakan semua
+variabel prediktor, sedangkan backward hanya menggunakan variabel
+<code>Rent</code> dan <code>CostLivingRent</code> sebagai variabel
+prediktor.</p>
+</div>
+<div id="prediction" class="section level2">
+<h2>Prediction</h2>
+<p>Disini akan dilihat performa model di data test dengan menggunakan
+model linear diatas yaitu <code>modelliving_all</code> dan
+<code>modelliving_back</code>.</p>
+<p>Mari bandingkan performa kedua model berikut:</p>
+<p>modelliving_all : semua prediktor (ada numerik, ada kategorik)
+modelliving_back : dua prediktor signifikan (Rent +
+CostOfLivingRent)</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simpan prediksi </span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>predliving_all <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> modelliving_all, <span class="at">newdata =</span> living_test)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>predliving_back <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> modelliving_back, <span class="at">newdata =</span> living_test)</span></code></pre></div>
+<p>Pada kasus ini saya menggunakan RMSE(Root Mean Square Error).</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RMSE</span>(<span class="at">y_pred =</span> predliving_all, <span class="at">y_true =</span> living_train<span class="sc">$</span>CostOfLiving)</span></code></pre></div>
+<pre><code>## Warning in y_true - y_pred: longer object length is not a multiple of shorter
+## object length</code></pre>
+<pre><code>## [1] 28.79047</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RMSE</span>(<span class="at">y_pred =</span> predliving_back, <span class="at">y_true =</span> living_train<span class="sc">$</span>CostOfLiving)</span></code></pre></div>
+<pre><code>## Warning in y_true - y_pred: longer object length is not a multiple of shorter
+## object length</code></pre>
+<pre><code>## [1] 28.79049</code></pre>
+<p>Pada model terbaik berdasarkan RMSE adalah
+<code>modelliving_back</code>.Interpretasi RMSE: Setiap kali
+<code>modelliving_back</code> memprediksi, hasil prediksinya secara
+rata-rata meleset sebesar 24.93766 satuan.</p>
+<p>Conclusion :</p>
+<ul>
+<li>Model terbaik berdasarkan R-squared adalah keduanya memiliki nilai
+r-squared yang sama (<code>modelliving_all</code> &amp;
+<code>modelliving_back</code>)</li>
+<li>Model terbaik berdasarkan RMSE adalah <code>modelliving_back</code>
+(RMSE paling kecil).</li>
+<li>Model yang dipilih untuk memprediksi nilai data baru adalah
+<code>modelliving_back</code>.</li>
+</ul>
+<div id="model-evaluation" class="section level3">
+<h3>Model Evaluation</h3>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cek r-squared untuk masing-masing model</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelliving_all)<span class="sc">$</span>adj.r.squared</span></code></pre></div>
+<pre><code>## [1] 0.9999999</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelliving_back)<span class="sc">$</span>adj.r.squared</span></code></pre></div>
+<pre><code>## [1] 0.9999999</code></pre>
+<p>Kedua model memiliki nilai adj.r.squared yang sama yaitu 1.</p>
+</div>
+<div id="uji-statistik-dengan-shapiro.test" class="section level3">
+<h3>Uji statistik dengan shapiro.test()</h3>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># shapiro test dari residual</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(modelliving_back<span class="sc">$</span>residuals)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  modelliving_back$residuals
+## W = 0.98244, p-value = 0.153</code></pre>
+<p>Kesimpulan: p-value &gt; alpha (0.05), gagal tolak H0. Maka dari itu,
+error berdistribusi normal. Asumsi terpenuhi.</p>
+</div>
+<div id="uji-statistik-dengan-bptest-dari-package-lmtest"
+class="section level3">
+<h3>Uji statistik dengan bptest() dari package lmtest</h3>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(modelliving_all)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  modelliving_all
+## BP = 6.1957, df = 5, p-value = 0.2876</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(modelliving_back)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  modelliving_back
+## BP = 0.49072, df = 3, p-value = 0.9209</code></pre>
+<p>Kesimpulan: p-value &gt; alpha (0.05), gagal tolak H0. Maka,
+homoscedasticity. Asumsi terpenuhi.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatter plot</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> modelliving_back<span class="sc">$</span>fitted.values, <span class="at">y =</span> modelliving_back<span class="sc">$</span>residuals)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="co"># garis horizontal di angka 0</span></span></code></pre></div>
+<p><img src="Cost---SAVE_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(modelliving_back)</span></code></pre></div>
+<pre><code>##             Rent CostOfLivingRent  RestaurantPrice 
+##        11.975074        26.951876         8.181383</code></pre>
+<p>Kesimpulan: Semua VIF &lt; 10, maka dari itu tidak terjadi
+multicollinearity. Asumsi terpenuhi.</p>
+<p>Kesimpulan :</p>
+<ul>
+<li>Berdasarkan model ini, biaya hidup hampir berkorelasi secara kuat
+kepada semua variabel prediktor.</li>
+<li>Prediktor yang berkorelasi sangat kuat yaitu biaya hidup plus sewa
+dan biaya sewa.</li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

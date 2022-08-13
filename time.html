@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dwi Retno" />
+
+<meta name="date" content="2022-07-03" />
+
+<title>Timeseries</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Supervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Cost---SAVE.html">Regression</a>
+    </li>
+    <li>
+      <a href="Airplane.html">Classification I</a>
+    </li>
+    <li>
+      <a href="about.html">Classification II</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unsupervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="happy.html">K-means</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="neuraldeep.html">Deep Learning</a>
+</li>
+<li>
+  <a href="time.html">Time Series</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Timeseries</h1>
+<h4 class="author">Dwi Retno</h4>
+<h4 class="date">2022-07-03</h4>
+
+</div>
+
+
+<ul>
+<li>Data pre-processing berupa data cleansing dan pelengkapan data</li>
+<li>Proses EDA berupa analisis trend dan seasonal menggunakan plot
+sederhana</li>
+<li>Penjelasan pemilihan model time series dan asumsinya.</li>
+<li>Evaluasi model dan pemilihan model terbaik.</li>
+</ul>
+<div id="load-library" class="section level1">
+<h1>Load Library</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.6     v purrr   0.3.4
+## v tibble  3.1.7     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x lubridate::as.difftime() masks base::as.difftime()
+## x lubridate::date()        masks base::date()
+## x dplyr::filter()          masks stats::filter()
+## x lubridate::intersect()   masks base::intersect()
+## x dplyr::lag()             masks stats::lag()
+## x lubridate::setdiff()     masks base::setdiff()
+## x lubridate::union()       masks base::union()</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TSstudio) <span class="co"># interactive plot</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MLmetrics) <span class="co"># MAPE</span></span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;MLmetrics&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     Recall</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span></code></pre></div>
+<style>
+ @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
+  body { 
+    text-align : justify; 
+    font-size : 17px;
+    font-family : 'Delius', cursive;
+  }
+</style>
+<div id="read-data" class="section level2">
+<h2>Read Data</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>microsoft <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;Microsoft_Stock.csv&quot;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(microsoft)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Date"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Open"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["High"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Low"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Close"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Volume"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"4/1/2015 16:00:00","2":"40.60","3":"40.76","4":"40.31","5":"40.72","6":"36865322","_rn_":"1"},{"1":"4/2/2015 16:00:00","2":"40.66","3":"40.74","4":"40.12","5":"40.29","6":"37487476","_rn_":"2"},{"1":"4/6/2015 16:00:00","2":"40.34","3":"41.78","4":"40.18","5":"41.55","6":"39223692","_rn_":"3"},{"1":"4/7/2015 16:00:00","2":"41.61","3":"41.91","4":"41.31","5":"41.53","6":"28809375","_rn_":"4"},{"1":"4/8/2015 16:00:00","2":"41.48","3":"41.69","4":"41.04","5":"41.42","6":"24753438","_rn_":"5"},{"1":"4/9/2015 16:00:00","2":"41.25","3":"41.62","4":"41.25","5":"41.48","6":"25723861","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="data-prepocessing" class="section level1">
+<h1>Data Prepocessing</h1>
+<p>Tipe data Date yang sebelumnya tipe datanya chr/ character diubah
+dengan menggunakan fungsi mdy_hms() dengan library lubridate.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ubah datetime </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>microsoft<span class="sc">$</span>DateC <span class="ot">&lt;-</span> <span class="fu">mdy_hms</span>(microsoft<span class="sc">$</span>Date)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>microsoft<span class="sc">$</span>DateClean <span class="ot">&lt;-</span> <span class="fu">format</span>(<span class="fu">as.Date</span>(microsoft<span class="sc">$</span>DateC), <span class="at">format =</span> <span class="st">&quot;%Y-%m-%d&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>microsoft <span class="ot">&lt;-</span> microsoft <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Date, DateC, Open, Low, Close, Volume)) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DateClean =</span> lubridate<span class="sc">::</span><span class="fu">ymd</span>(DateClean)) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(DateClean) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  padr<span class="sc">::</span><span class="fu">pad</span>()</span></code></pre></div>
+<pre><code>## pad applied on the interval: day</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>microsoft</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["High"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["DateClean"],"name":[2],"type":["date"],"align":["right"]}],"data":[{"1":"40.76","2":"2015-04-01"},{"1":"40.74","2":"2015-04-02"},{"1":"NA","2":"2015-04-03"},{"1":"NA","2":"2015-04-04"},{"1":"NA","2":"2015-04-05"},{"1":"41.78","2":"2015-04-06"},{"1":"41.91","2":"2015-04-07"},{"1":"41.69","2":"2015-04-08"},{"1":"41.62","2":"2015-04-09"},{"1":"41.95","2":"2015-04-10"},{"1":"NA","2":"2015-04-11"},{"1":"NA","2":"2015-04-12"},{"1":"42.06","2":"2015-04-13"},{"1":"42.03","2":"2015-04-14"},{"1":"42.46","2":"2015-04-15"},{"1":"42.34","2":"2015-04-16"},{"1":"41.74","2":"2015-04-17"},{"1":"NA","2":"2015-04-18"},{"1":"NA","2":"2015-04-19"},{"1":"43.17","2":"2015-04-20"},{"1":"43.15","2":"2015-04-21"},{"1":"43.13","2":"2015-04-22"},{"1":"43.61","2":"2015-04-23"},{"1":"48.14","2":"2015-04-24"},{"1":"NA","2":"2015-04-25"},{"1":"NA","2":"2015-04-26"},{"1":"48.13","2":"2015-04-27"},{"1":"49.21","2":"2015-04-28"},{"1":"49.31","2":"2015-04-29"},{"1":"49.54","2":"2015-04-30"},{"1":"48.88","2":"2015-05-01"},{"1":"NA","2":"2015-05-02"},{"1":"NA","2":"2015-05-03"},{"1":"48.87","2":"2015-05-04"},{"1":"48.16","2":"2015-05-05"},{"1":"47.77","2":"2015-05-06"},{"1":"47.09","2":"2015-05-07"},{"1":"47.98","2":"2015-05-08"},{"1":"NA","2":"2015-05-09"},{"1":"NA","2":"2015-05-10"},{"1":"47.91","2":"2015-05-11"},{"1":"47.68","2":"2015-05-12"},{"1":"48.32","2":"2015-05-13"},{"1":"48.82","2":"2015-05-14"},{"1":"48.91","2":"2015-05-15"},{"1":"NA","2":"2015-05-16"},{"1":"NA","2":"2015-05-17"},{"1":"48.22","2":"2015-05-18"},{"1":"47.81","2":"2015-05-19"},{"1":"47.93","2":"2015-05-20"},{"1":"47.60","2":"2015-05-21"},{"1":"47.35","2":"2015-05-22"},{"1":"NA","2":"2015-05-23"},{"1":"NA","2":"2015-05-24"},{"1":"NA","2":"2015-05-25"},{"1":"46.88","2":"2015-05-26"},{"1":"47.77","2":"2015-05-27"},{"1":"48.02","2":"2015-05-28"},{"1":"47.57","2":"2015-05-29"},{"1":"NA","2":"2015-05-30"},{"1":"NA","2":"2015-05-31"},{"1":"47.77","2":"2015-06-01"},{"1":"47.35","2":"2015-06-02"},{"1":"47.74","2":"2015-06-03"},{"1":"47.16","2":"2015-06-04"},{"1":"46.52","2":"2015-06-05"},{"1":"NA","2":"2015-06-06"},{"1":"NA","2":"2015-06-07"},{"1":"46.43","2":"2015-06-08"},{"1":"45.94","2":"2015-06-09"},{"1":"46.83","2":"2015-06-10"},{"1":"46.92","2":"2015-06-11"},{"1":"46.47","2":"2015-06-12"},{"1":"NA","2":"2015-06-13"},{"1":"NA","2":"2015-06-14"},{"1":"45.65","2":"2015-06-15"},{"1":"46.24","2":"2015-06-16"},{"1":"46.07","2":"2015-06-17"},{"1":"46.80","2":"2015-06-18"},{"1":"46.83","2":"2015-06-19"},{"1":"NA","2":"2015-06-20"},{"1":"NA","2":"2015-06-21"},{"1":"46.72","2":"2015-06-22"},{"1":"46.28","2":"2015-06-23"},{"1":"46.25","2":"2015-06-24"},{"1":"46.06","2":"2015-06-25"},{"1":"46.28","2":"2015-06-26"},{"1":"NA","2":"2015-06-27"},{"1":"NA","2":"2015-06-28"},{"1":"45.23","2":"2015-06-29"},{"1":"44.72","2":"2015-06-30"},{"1":"45.23","2":"2015-07-01"},{"1":"44.75","2":"2015-07-02"},{"1":"NA","2":"2015-07-03"},{"1":"NA","2":"2015-07-04"},{"1":"NA","2":"2015-07-05"},{"1":"44.48","2":"2015-07-06"},{"1":"44.49","2":"2015-07-07"},{"1":"44.90","2":"2015-07-08"},{"1":"45.22","2":"2015-07-09"},{"1":"45.14","2":"2015-07-10"},{"1":"NA","2":"2015-07-11"},{"1":"NA","2":"2015-07-12"},{"1":"45.62","2":"2015-07-13"},{"1":"45.96","2":"2015-07-14"},{"1":"45.89","2":"2015-07-15"},{"1":"46.69","2":"2015-07-16"},{"1":"46.78","2":"2015-07-17"},{"1":"NA","2":"2015-07-18"},{"1":"NA","2":"2015-07-19"},{"1":"47.13","2":"2015-07-20"},{"1":"47.33","2":"2015-07-21"},{"1":"46.93","2":"2015-07-22"},{"1":"46.23","2":"2015-07-23"},{"1":"46.32","2":"2015-07-24"},{"1":"NA","2":"2015-07-25"},{"1":"NA","2":"2015-07-26"},{"1":"46.01","2":"2015-07-27"},{"1":"45.64","2":"2015-07-28"},{"1":"46.78","2":"2015-07-29"},{"1":"47.40","2":"2015-07-30"},{"1":"47.37","2":"2015-07-31"},{"1":"NA","2":"2015-08-01"},{"1":"NA","2":"2015-08-02"},{"1":"47.00","2":"2015-08-03"},{"1":"47.71","2":"2015-08-04"},{"1":"48.41","2":"2015-08-05"},{"1":"47.77","2":"2015-08-06"},{"1":"46.78","2":"2015-08-07"},{"1":"NA","2":"2015-08-08"},{"1":"NA","2":"2015-08-09"},{"1":"47.49","2":"2015-08-10"},{"1":"46.94","2":"2015-08-11"},{"1":"46.90","2":"2015-08-12"},{"1":"47.10","2":"2015-08-13"},{"1":"47.10","2":"2015-08-14"},{"1":"NA","2":"2015-08-15"},{"1":"NA","2":"2015-08-16"},{"1":"47.45","2":"2015-08-17"},{"1":"47.43","2":"2015-08-18"},{"1":"47.08","2":"2015-08-19"},{"1":"46.47","2":"2015-08-20"},{"1":"45.48","2":"2015-08-21"},{"1":"NA","2":"2015-08-22"},{"1":"NA","2":"2015-08-23"},{"1":"43.31","2":"2015-08-24"},{"1":"43.24","2":"2015-08-25"},{"1":"42.84","2":"2015-08-26"},{"1":"43.95","2":"2015-08-27"},{"1":"44.15","2":"2015-08-28"},{"1":"NA","2":"2015-08-29"},{"1":"NA","2":"2015-08-30"},{"1":"43.93","2":"2015-08-31"},{"1":"42.59","2":"2015-09-01"},{"1":"43.38","2":"2015-09-02"},{"1":"43.98","2":"2015-09-03"},{"1":"43.04","2":"2015-09-04"},{"1":"NA","2":"2015-09-05"},{"1":"NA","2":"2015-09-06"},{"1":"NA","2":"2015-09-07"},{"1":"44.00","2":"2015-09-08"},{"1":"44.40","2":"2015-09-09"},{"1":"43.79","2":"2015-09-10"},{"1":"43.59","2":"2015-09-11"},{"1":"NA","2":"2015-09-12"},{"1":"NA","2":"2015-09-13"},{"1":"43.44","2":"2015-09-14"},{"1":"44.29","2":"2015-09-15"},{"1":"44.38","2":"2015-09-16"},{"1":"45.00","2":"2015-09-17"},{"1":"43.99","2":"2015-09-18"},{"1":"NA","2":"2015-09-19"},{"1":"NA","2":"2015-09-20"},{"1":"44.47","2":"2015-09-21"},{"1":"44.05","2":"2015-09-22"},{"1":"44.17","2":"2015-09-23"},{"1":"44.13","2":"2015-09-24"},{"1":"44.73","2":"2015-09-25"},{"1":"NA","2":"2015-09-26"},{"1":"NA","2":"2015-09-27"},{"1":"44.09","2":"2015-09-28"},{"1":"43.57","2":"2015-09-29"},{"1":"44.30","2":"2015-09-30"},{"1":"44.75","2":"2015-10-01"},{"1":"45.57","2":"2015-10-02"},{"1":"NA","2":"2015-10-03"},{"1":"NA","2":"2015-10-04"},{"1":"46.89","2":"2015-10-05"},{"1":"47.18","2":"2015-10-06"},{"1":"47.35","2":"2015-10-07"},{"1":"47.52","2":"2015-10-08"},{"1":"47.54","2":"2015-10-09"},{"1":"NA","2":"2015-10-10"},{"1":"NA","2":"2015-10-11"},{"1":"47.07","2":"2015-10-12"},{"1":"47.13","2":"2015-10-13"},{"1":"47.10","2":"2015-10-14"},{"1":"47.03","2":"2015-10-15"},{"1":"47.54","2":"2015-10-16"},{"1":"NA","2":"2015-10-17"},{"1":"NA","2":"2015-10-18"},{"1":"47.88","2":"2015-10-19"},{"1":"47.81","2":"2015-10-20"},{"1":"47.99","2":"2015-10-21"},{"1":"48.95","2":"2015-10-22"},{"1":"54.07","2":"2015-10-23"},{"1":"NA","2":"2015-10-24"},{"1":"NA","2":"2015-10-25"},{"1":"54.32","2":"2015-10-26"},{"1":"54.37","2":"2015-10-27"},{"1":"53.98","2":"2015-10-28"},{"1":"53.83","2":"2015-10-29"},{"1":"53.99","2":"2015-10-30"},{"1":"NA","2":"2015-10-31"},{"1":"NA","2":"2015-11-01"},{"1":"53.36","2":"2015-11-02"},{"1":"54.39","2":"2015-11-03"},{"1":"54.88","2":"2015-11-04"},{"1":"54.70","2":"2015-11-05"},{"1":"54.98","2":"2015-11-06"},{"1":"NA","2":"2015-11-07"},{"1":"NA","2":"2015-11-08"},{"1":"54.87","2":"2015-11-09"},{"1":"54.13","2":"2015-11-10"},{"1":"54.20","2":"2015-11-11"},{"1":"53.98","2":"2015-11-12"},{"1":"53.29","2":"2015-11-13"},{"1":"NA","2":"2015-11-14"},{"1":"NA","2":"2015-11-15"},{"1":"53.89","2":"2015-11-16"},{"1":"53.53","2":"2015-11-17"},{"1":"53.98","2":"2015-11-18"},{"1":"54.66","2":"2015-11-19"},{"1":"54.30","2":"2015-11-20"},{"1":"NA","2":"2015-11-21"},{"1":"NA","2":"2015-11-22"},{"1":"54.46","2":"2015-11-23"},{"1":"54.44","2":"2015-11-24"},{"1":"54.23","2":"2015-11-25"},{"1":"NA","2":"2015-11-26"},{"1":"54.08","2":"2015-11-27"},{"1":"NA","2":"2015-11-28"},{"1":"NA","2":"2015-11-29"},{"1":"54.96","2":"2015-11-30"},{"1":"55.23","2":"2015-12-01"},{"1":"55.96","2":"2015-12-02"},{"1":"55.77","2":"2015-12-03"},{"1":"56.23","2":"2015-12-04"},{"1":"NA","2":"2015-12-05"},{"1":"NA","2":"2015-12-06"},{"1":"55.97","2":"2015-12-07"},{"1":"56.10","2":"2015-12-08"},{"1":"55.87","2":"2015-12-09"},{"1":"55.66","2":"2015-12-10"},{"1":"55.10","2":"2015-12-11"},{"1":"NA","2":"2015-12-12"},{"1":"NA","2":"2015-12-13"},{"1":"55.21","2":"2015-12-14"},{"1":"55.90","2":"2015-12-15"},{"1":"56.25","2":"2015-12-16"},{"1":"56.79","2":"2015-12-17"},{"1":"56.00","2":"2015-12-18"},{"1":"NA","2":"2015-12-19"},{"1":"NA","2":"2015-12-20"},{"1":"55.35","2":"2015-12-21"},{"1":"55.48","2":"2015-12-22"},{"1":"55.88","2":"2015-12-23"},{"1":"55.96","2":"2015-12-24"},{"1":"NA","2":"2015-12-25"},{"1":"NA","2":"2015-12-26"},{"1":"NA","2":"2015-12-27"},{"1":"55.95","2":"2015-12-28"},{"1":"56.85","2":"2015-12-29"},{"1":"56.78","2":"2015-12-30"},{"1":"56.19","2":"2015-12-31"},{"1":"NA","2":"2016-01-01"},{"1":"NA","2":"2016-01-02"},{"1":"NA","2":"2016-01-03"},{"1":"54.80","2":"2016-01-04"},{"1":"55.39","2":"2016-01-05"},{"1":"54.40","2":"2016-01-06"},{"1":"53.49","2":"2016-01-07"},{"1":"53.28","2":"2016-01-08"},{"1":"NA","2":"2016-01-09"},{"1":"NA","2":"2016-01-10"},{"1":"52.85","2":"2016-01-11"},{"1":"53.10","2":"2016-01-12"},{"1":"54.07","2":"2016-01-13"},{"1":"53.42","2":"2016-01-14"},{"1":"51.97","2":"2016-01-15"},{"1":"NA","2":"2016-01-16"},{"1":"NA","2":"2016-01-17"},{"1":"NA","2":"2016-01-18"},{"1":"51.68","2":"2016-01-19"},{"1":"51.38","2":"2016-01-20"},{"1":"51.58","2":"2016-01-21"},{"1":"52.33","2":"2016-01-22"},{"1":"NA","2":"2016-01-23"},{"1":"NA","2":"2016-01-24"},{"1":"52.65","2":"2016-01-25"},{"1":"52.44","2":"2016-01-26"},{"1":"52.20","2":"2016-01-27"},{"1":"52.21","2":"2016-01-28"},{"1":"55.09","2":"2016-01-29"},{"1":"NA","2":"2016-01-30"},{"1":"NA","2":"2016-01-31"},{"1":"55.09","2":"2016-02-01"},{"1":"54.26","2":"2016-02-02"},{"1":"53.39","2":"2016-02-03"},{"1":"52.81","2":"2016-02-04"},{"1":"52.00","2":"2016-02-05"},{"1":"NA","2":"2016-02-06"},{"1":"NA","2":"2016-02-07"},{"1":"49.57","2":"2016-02-08"},{"1":"50.24","2":"2016-02-09"},{"1":"50.39","2":"2016-02-10"},{"1":"50.11","2":"2016-02-11"},{"1":"50.68","2":"2016-02-12"},{"1":"NA","2":"2016-02-13"},{"1":"NA","2":"2016-02-14"},{"1":"NA","2":"2016-02-15"},{"1":"51.09","2":"2016-02-16"},{"1":"52.77","2":"2016-02-17"},{"1":"52.95","2":"2016-02-18"},{"1":"52.28","2":"2016-02-19"},{"1":"NA","2":"2016-02-20"},{"1":"NA","2":"2016-02-21"},{"1":"53.00","2":"2016-02-22"},{"1":"52.37","2":"2016-02-23"},{"1":"51.50","2":"2016-02-24"},{"1":"52.10","2":"2016-02-25"},{"1":"52.68","2":"2016-02-26"},{"1":"NA","2":"2016-02-27"},{"1":"NA","2":"2016-02-28"},{"1":"51.65","2":"2016-02-29"},{"1":"52.59","2":"2016-03-01"},{"1":"52.96","2":"2016-03-02"},{"1":"52.97","2":"2016-03-03"},{"1":"52.45","2":"2016-03-04"},{"1":"NA","2":"2016-03-05"},{"1":"NA","2":"2016-03-06"},{"1":"51.80","2":"2016-03-07"},{"1":"52.13","2":"2016-03-08"},{"1":"52.85","2":"2016-03-09"},{"1":"52.94","2":"2016-03-10"},{"1":"53.07","2":"2016-03-11"},{"1":"NA","2":"2016-03-12"},{"1":"NA","2":"2016-03-13"},{"1":"53.59","2":"2016-03-14"},{"1":"53.59","2":"2016-03-15"},{"1":"54.60","2":"2016-03-16"},{"1":"55.00","2":"2016-03-17"},{"1":"54.97","2":"2016-03-18"},{"1":"NA","2":"2016-03-19"},{"1":"NA","2":"2016-03-20"},{"1":"53.93","2":"2016-03-21"},{"1":"54.25","2":"2016-03-22"},{"1":"54.24","2":"2016-03-23"},{"1":"54.33","2":"2016-03-24"},{"1":"NA","2":"2016-03-25"},{"1":"NA","2":"2016-03-26"},{"1":"NA","2":"2016-03-27"},{"1":"54.29","2":"2016-03-28"},{"1":"54.86","2":"2016-03-29"},{"1":"55.64","2":"2016-03-30"},{"1":"55.59","2":"2016-03-31"},{"1":"55.61","2":"2016-04-01"},{"1":"NA","2":"2016-04-02"},{"1":"NA","2":"2016-04-03"},{"1":"55.66","2":"2016-04-04"},{"1":"55.30","2":"2016-04-05"},{"1":"55.20","2":"2016-04-06"},{"1":"54.91","2":"2016-04-07"},{"1":"55.28","2":"2016-04-08"},{"1":"NA","2":"2016-04-09"},{"1":"NA","2":"2016-04-10"},{"1":"55.15","2":"2016-04-11"},{"1":"54.78","2":"2016-04-12"},{"1":"55.44","2":"2016-04-13"},{"1":"55.58","2":"2016-04-14"},{"1":"55.92","2":"2016-04-15"},{"1":"NA","2":"2016-04-16"},{"1":"NA","2":"2016-04-17"},{"1":"56.59","2":"2016-04-18"},{"1":"56.77","2":"2016-04-19"},{"1":"56.50","2":"2016-04-20"},{"1":"56.23","2":"2016-04-21"},{"1":"52.43","2":"2016-04-22"},{"1":"NA","2":"2016-04-23"},{"1":"NA","2":"2016-04-24"},{"1":"52.13","2":"2016-04-25"},{"1":"52.35","2":"2016-04-26"},{"1":"51.50","2":"2016-04-27"},{"1":"50.77","2":"2016-04-28"},{"1":"50.25","2":"2016-04-29"},{"1":"NA","2":"2016-04-30"},{"1":"NA","2":"2016-05-01"},{"1":"50.75","2":"2016-05-02"},{"1":"50.41","2":"2016-05-03"},{"1":"50.06","2":"2016-05-04"},{"1":"50.30","2":"2016-05-05"},{"1":"50.39","2":"2016-05-06"},{"1":"NA","2":"2016-05-07"},{"1":"NA","2":"2016-05-08"},{"1":"50.59","2":"2016-05-09"},{"1":"51.10","2":"2016-05-10"},{"1":"51.78","2":"2016-05-11"},{"1":"51.81","2":"2016-05-12"},{"1":"51.90","2":"2016-05-13"},{"1":"NA","2":"2016-05-14"},{"1":"NA","2":"2016-05-15"},{"1":"51.96","2":"2016-05-16"},{"1":"51.73","2":"2016-05-17"},{"1":"51.14","2":"2016-05-18"},{"1":"50.62","2":"2016-05-19"},{"1":"51.22","2":"2016-05-20"},{"1":"NA","2":"2016-05-21"},{"1":"NA","2":"2016-05-22"},{"1":"50.68","2":"2016-05-23"},{"1":"51.71","2":"2016-05-24"},{"1":"52.49","2":"2016-05-25"},{"1":"51.98","2":"2016-05-26"},{"1":"52.32","2":"2016-05-27"},{"1":"NA","2":"2016-05-28"},{"1":"NA","2":"2016-05-29"},{"1":"NA","2":"2016-05-30"},{"1":"53.00","2":"2016-05-31"},{"1":"52.95","2":"2016-06-01"},{"1":"52.74","2":"2016-06-02"},{"1":"52.42","2":"2016-06-03"},{"1":"NA","2":"2016-06-04"},{"1":"NA","2":"2016-06-05"},{"1":"52.35","2":"2016-06-06"},{"1":"52.73","2":"2016-06-07"},{"1":"52.44","2":"2016-06-08"},{"1":"52.00","2":"2016-06-09"},{"1":"52.05","2":"2016-06-10"},{"1":"NA","2":"2016-06-11"},{"1":"NA","2":"2016-06-12"},{"1":"50.72","2":"2016-06-13"},{"1":"50.10","2":"2016-06-14"},{"1":"50.12","2":"2016-06-15"},{"1":"50.47","2":"2016-06-16"},{"1":"50.43","2":"2016-06-17"},{"1":"NA","2":"2016-06-18"},{"1":"NA","2":"2016-06-19"},{"1":"50.83","2":"2016-06-20"},{"1":"51.43","2":"2016-06-21"},{"1":"51.46","2":"2016-06-22"},{"1":"52.06","2":"2016-06-23"},{"1":"50.94","2":"2016-06-24"},{"1":"NA","2":"2016-06-25"},{"1":"NA","2":"2016-06-26"},{"1":"49.15","2":"2016-06-27"},{"1":"49.47","2":"2016-06-28"},{"1":"50.72","2":"2016-06-29"},{"1":"51.30","2":"2016-06-30"},{"1":"51.72","2":"2016-07-01"},{"1":"NA","2":"2016-07-02"},{"1":"NA","2":"2016-07-03"},{"1":"NA","2":"2016-07-04"},{"1":"51.28","2":"2016-07-05"},{"1":"51.54","2":"2016-07-06"},{"1":"51.61","2":"2016-07-07"},{"1":"52.36","2":"2016-07-08"},{"1":"NA","2":"2016-07-09"},{"1":"NA","2":"2016-07-10"},{"1":"52.83","2":"2016-07-11"},{"1":"53.40","2":"2016-07-12"},{"1":"53.86","2":"2016-07-13"},{"1":"53.99","2":"2016-07-14"},{"1":"54.00","2":"2016-07-15"},{"1":"NA","2":"2016-07-16"},{"1":"NA","2":"2016-07-17"},{"1":"54.34","2":"2016-07-18"},{"1":"53.90","2":"2016-07-19"},{"1":"56.84","2":"2016-07-20"},{"1":"56.23","2":"2016-07-21"},{"1":"56.63","2":"2016-07-22"},{"1":"NA","2":"2016-07-23"},{"1":"NA","2":"2016-07-24"},{"1":"56.74","2":"2016-07-25"},{"1":"57.29","2":"2016-07-26"},{"1":"56.80","2":"2016-07-27"},{"1":"56.37","2":"2016-07-28"},{"1":"56.76","2":"2016-07-29"},{"1":"NA","2":"2016-07-30"},{"1":"NA","2":"2016-07-31"},{"1":"56.75","2":"2016-08-01"},{"1":"56.90","2":"2016-08-02"},{"1":"57.11","2":"2016-08-03"},{"1":"57.52","2":"2016-08-04"},{"1":"58.21","2":"2016-08-05"},{"1":"NA","2":"2016-08-06"},{"1":"NA","2":"2016-08-07"},{"1":"58.09","2":"2016-08-08"},{"1":"58.50","2":"2016-08-09"},{"1":"58.32","2":"2016-08-10"},{"1":"58.45","2":"2016-08-11"},{"1":"58.19","2":"2016-08-12"},{"1":"NA","2":"2016-08-13"},{"1":"NA","2":"2016-08-14"},{"1":"58.50","2":"2016-08-15"},{"1":"57.62","2":"2016-08-16"},{"1":"57.68","2":"2016-08-17"},{"1":"57.70","2":"2016-08-18"},{"1":"57.73","2":"2016-08-19"},{"1":"NA","2":"2016-08-20"},{"1":"NA","2":"2016-08-21"},{"1":"57.75","2":"2016-08-22"},{"1":"58.18","2":"2016-08-23"},{"1":"58.04","2":"2016-08-24"},{"1":"58.29","2":"2016-08-25"},{"1":"58.70","2":"2016-08-26"},{"1":"NA","2":"2016-08-27"},{"1":"NA","2":"2016-08-28"},{"1":"58.60","2":"2016-08-29"},{"1":"58.19","2":"2016-08-30"},{"1":"57.80","2":"2016-08-31"},{"1":"57.82","2":"2016-09-01"},{"1":"58.19","2":"2016-09-02"},{"1":"NA","2":"2016-09-03"},{"1":"NA","2":"2016-09-04"},{"1":"NA","2":"2016-09-05"},{"1":"57.80","2":"2016-09-06"},{"1":"57.84","2":"2016-09-07"},{"1":"57.79","2":"2016-09-08"},{"1":"57.52","2":"2016-09-09"},{"1":"NA","2":"2016-09-10"},{"1":"NA","2":"2016-09-11"},{"1":"57.21","2":"2016-09-12"},{"1":"56.65","2":"2016-09-13"},{"1":"56.63","2":"2016-09-14"},{"1":"57.35","2":"2016-09-15"},{"1":"57.63","2":"2016-09-16"},{"1":"NA","2":"2016-09-17"},{"1":"NA","2":"2016-09-18"},{"1":"57.75","2":"2016-09-19"},{"1":"57.35","2":"2016-09-20"},{"1":"57.85","2":"2016-09-21"},{"1":"58.00","2":"2016-09-22"},{"1":"57.91","2":"2016-09-23"},{"1":"NA","2":"2016-09-24"},{"1":"NA","2":"2016-09-25"},{"1":"57.14","2":"2016-09-26"},{"1":"58.06","2":"2016-09-27"},{"1":"58.06","2":"2016-09-28"},{"1":"58.17","2":"2016-09-29"},{"1":"57.77","2":"2016-09-30"},{"1":"NA","2":"2016-10-01"},{"1":"NA","2":"2016-10-02"},{"1":"57.55","2":"2016-10-03"},{"1":"57.60","2":"2016-10-04"},{"1":"57.96","2":"2016-10-05"},{"1":"57.86","2":"2016-10-06"},{"1":"57.98","2":"2016-10-07"},{"1":"NA","2":"2016-10-08"},{"1":"NA","2":"2016-10-09"},{"1":"58.39","2":"2016-10-10"},{"1":"58.02","2":"2016-10-11"},{"1":"57.27","2":"2016-10-12"},{"1":"57.30","2":"2016-10-13"},{"1":"57.74","2":"2016-10-14"},{"1":"NA","2":"2016-10-15"},{"1":"NA","2":"2016-10-16"},{"1":"57.46","2":"2016-10-17"},{"1":"57.95","2":"2016-10-18"},{"1":"57.84","2":"2016-10-19"},{"1":"57.52","2":"2016-10-20"},{"1":"60.45","2":"2016-10-21"},{"1":"NA","2":"2016-10-22"},{"1":"NA","2":"2016-10-23"},{"1":"61.00","2":"2016-10-24"},{"1":"61.37","2":"2016-10-25"},{"1":"61.20","2":"2016-10-26"},{"1":"60.83","2":"2016-10-27"},{"1":"60.52","2":"2016-10-28"},{"1":"NA","2":"2016-10-29"},{"1":"NA","2":"2016-10-30"},{"1":"60.42","2":"2016-10-31"},{"1":"60.02","2":"2016-11-01"},{"1":"59.93","2":"2016-11-02"},{"1":"59.64","2":"2016-11-03"},{"1":"59.28","2":"2016-11-04"},{"1":"NA","2":"2016-11-05"},{"1":"NA","2":"2016-11-06"},{"1":"60.52","2":"2016-11-07"},{"1":"60.78","2":"2016-11-08"},{"1":"60.59","2":"2016-11-09"},{"1":"60.49","2":"2016-11-10"},{"1":"59.12","2":"2016-11-11"},{"1":"NA","2":"2016-11-12"},{"1":"NA","2":"2016-11-13"},{"1":"59.08","2":"2016-11-14"},{"1":"59.49","2":"2016-11-15"},{"1":"59.66","2":"2016-11-16"},{"1":"60.95","2":"2016-11-17"},{"1":"61.14","2":"2016-11-18"},{"1":"NA","2":"2016-11-19"},{"1":"NA","2":"2016-11-20"},{"1":"60.97","2":"2016-11-21"},{"1":"61.26","2":"2016-11-22"},{"1":"61.10","2":"2016-11-23"},{"1":"NA","2":"2016-11-24"},{"1":"60.53","2":"2016-11-25"},{"1":"NA","2":"2016-11-26"},{"1":"NA","2":"2016-11-27"},{"1":"61.02","2":"2016-11-28"},{"1":"61.41","2":"2016-11-29"},{"1":"61.18","2":"2016-11-30"},{"1":"60.15","2":"2016-12-01"},{"1":"59.47","2":"2016-12-02"},{"1":"NA","2":"2016-12-03"},{"1":"NA","2":"2016-12-04"},{"1":"60.59","2":"2016-12-05"},{"1":"60.46","2":"2016-12-06"},{"1":"61.38","2":"2016-12-07"},{"1":"61.58","2":"2016-12-08"},{"1":"61.99","2":"2016-12-09"},{"1":"NA","2":"2016-12-10"},{"1":"NA","2":"2016-12-11"},{"1":"62.30","2":"2016-12-12"},{"1":"63.42","2":"2016-12-13"},{"1":"63.45","2":"2016-12-14"},{"1":"63.15","2":"2016-12-15"},{"1":"62.95","2":"2016-12-16"},{"1":"NA","2":"2016-12-17"},{"1":"NA","2":"2016-12-18"},{"1":"63.77","2":"2016-12-19"},{"1":"63.80","2":"2016-12-20"},{"1":"63.70","2":"2016-12-21"},{"1":"64.10","2":"2016-12-22"},{"1":"63.54","2":"2016-12-23"},{"1":"NA","2":"2016-12-24"},{"1":"NA","2":"2016-12-25"},{"1":"NA","2":"2016-12-26"},{"1":"64.07","2":"2016-12-27"},{"1":"63.40","2":"2016-12-28"},{"1":"63.20","2":"2016-12-29"},{"1":"62.99","2":"2016-12-30"},{"1":"NA","2":"2016-12-31"},{"1":"NA","2":"2017-01-01"},{"1":"NA","2":"2017-01-02"},{"1":"62.84","2":"2017-01-03"},{"1":"62.75","2":"2017-01-04"},{"1":"62.66","2":"2017-01-05"},{"1":"63.15","2":"2017-01-06"},{"1":"NA","2":"2017-01-07"},{"1":"NA","2":"2017-01-08"},{"1":"63.08","2":"2017-01-09"},{"1":"63.07","2":"2017-01-10"},{"1":"63.23","2":"2017-01-11"},{"1":"63.40","2":"2017-01-12"},{"1":"62.87","2":"2017-01-13"},{"1":"NA","2":"2017-01-14"},{"1":"NA","2":"2017-01-15"},{"1":"NA","2":"2017-01-16"},{"1":"62.70","2":"2017-01-17"},{"1":"62.70","2":"2017-01-18"},{"1":"62.98","2":"2017-01-19"},{"1":"62.82","2":"2017-01-20"},{"1":"NA","2":"2017-01-21"},{"1":"NA","2":"2017-01-22"},{"1":"63.12","2":"2017-01-23"},{"1":"63.74","2":"2017-01-24"},{"1":"64.10","2":"2017-01-25"},{"1":"64.54","2":"2017-01-26"},{"1":"65.91","2":"2017-01-27"},{"1":"NA","2":"2017-01-28"},{"1":"NA","2":"2017-01-29"},{"1":"65.79","2":"2017-01-30"},{"1":"65.15","2":"2017-01-31"},{"1":"64.62","2":"2017-02-01"},{"1":"63.41","2":"2017-02-02"},{"1":"63.70","2":"2017-02-03"},{"1":"NA","2":"2017-02-04"},{"1":"NA","2":"2017-02-05"},{"1":"63.65","2":"2017-02-06"},{"1":"63.78","2":"2017-02-07"},{"1":"63.81","2":"2017-02-08"},{"1":"64.44","2":"2017-02-09"},{"1":"64.30","2":"2017-02-10"},{"1":"NA","2":"2017-02-11"},{"1":"NA","2":"2017-02-12"},{"1":"64.86","2":"2017-02-13"},{"1":"64.72","2":"2017-02-14"},{"1":"64.57","2":"2017-02-15"},{"1":"65.24","2":"2017-02-16"},{"1":"64.69","2":"2017-02-17"},{"1":"NA","2":"2017-02-18"},{"1":"NA","2":"2017-02-19"},{"1":"NA","2":"2017-02-20"},{"1":"64.95","2":"2017-02-21"},{"1":"64.39","2":"2017-02-22"},{"1":"64.73","2":"2017-02-23"},{"1":"64.80","2":"2017-02-24"},{"1":"NA","2":"2017-02-25"},{"1":"NA","2":"2017-02-26"},{"1":"64.54","2":"2017-02-27"},{"1":"64.20","2":"2017-02-28"},{"1":"64.99","2":"2017-03-01"},{"1":"64.75","2":"2017-03-02"},{"1":"64.28","2":"2017-03-03"},{"1":"NA","2":"2017-03-04"},{"1":"NA","2":"2017-03-05"},{"1":"64.56","2":"2017-03-06"},{"1":"64.78","2":"2017-03-07"},{"1":"65.08","2":"2017-03-08"},{"1":"65.20","2":"2017-03-09"},{"1":"65.26","2":"2017-03-10"},{"1":"NA","2":"2017-03-11"},{"1":"NA","2":"2017-03-12"},{"1":"65.19","2":"2017-03-13"},{"1":"64.55","2":"2017-03-14"},{"1":"64.92","2":"2017-03-15"},{"1":"64.76","2":"2017-03-16"},{"1":"65.24","2":"2017-03-17"},{"1":"NA","2":"2017-03-18"},{"1":"NA","2":"2017-03-19"},{"1":"65.18","2":"2017-03-20"},{"1":"65.50","2":"2017-03-21"},{"1":"65.14","2":"2017-03-22"},{"1":"65.24","2":"2017-03-23"},{"1":"65.45","2":"2017-03-24"},{"1":"NA","2":"2017-03-25"},{"1":"NA","2":"2017-03-26"},{"1":"65.22","2":"2017-03-27"},{"1":"65.47","2":"2017-03-28"},{"1":"65.50","2":"2017-03-29"},{"1":"65.98","2":"2017-03-30"},{"1":"66.19","2":"2017-03-31"},{"1":"NA","2":"2017-04-01"},{"1":"NA","2":"2017-04-02"},{"1":"65.94","2":"2017-04-03"},{"1":"65.81","2":"2017-04-04"},{"1":"66.35","2":"2017-04-05"},{"1":"66.06","2":"2017-04-06"},{"1":"65.96","2":"2017-04-07"},{"1":"NA","2":"2017-04-08"},{"1":"NA","2":"2017-04-09"},{"1":"65.82","2":"2017-04-10"},{"1":"65.61","2":"2017-04-11"},{"1":"65.51","2":"2017-04-12"},{"1":"65.86","2":"2017-04-13"},{"1":"NA","2":"2017-04-14"},{"1":"NA","2":"2017-04-15"},{"1":"NA","2":"2017-04-16"},{"1":"65.49","2":"2017-04-17"},{"1":"65.71","2":"2017-04-18"},{"1":"65.75","2":"2017-04-19"},{"1":"65.75","2":"2017-04-20"},{"1":"66.70","2":"2017-04-21"},{"1":"NA","2":"2017-04-22"},{"1":"NA","2":"2017-04-23"},{"1":"67.66","2":"2017-04-24"},{"1":"68.04","2":"2017-04-25"},{"1":"68.31","2":"2017-04-26"},{"1":"68.38","2":"2017-04-27"},{"1":"69.14","2":"2017-04-28"},{"1":"NA","2":"2017-04-29"},{"1":"NA","2":"2017-04-30"},{"1":"69.55","2":"2017-05-01"},{"1":"69.71","2":"2017-05-02"},{"1":"69.38","2":"2017-05-03"},{"1":"69.08","2":"2017-05-04"},{"1":"69.03","2":"2017-05-05"},{"1":"NA","2":"2017-05-06"},{"1":"NA","2":"2017-05-07"},{"1":"69.05","2":"2017-05-08"},{"1":"69.28","2":"2017-05-09"},{"1":"69.56","2":"2017-05-10"},{"1":"68.73","2":"2017-05-11"},{"1":"68.61","2":"2017-05-12"},{"1":"NA","2":"2017-05-13"},{"1":"NA","2":"2017-05-14"},{"1":"68.48","2":"2017-05-15"},{"1":"69.44","2":"2017-05-16"},{"1":"69.10","2":"2017-05-17"},{"1":"68.13","2":"2017-05-18"},{"1":"68.10","2":"2017-05-19"},{"1":"NA","2":"2017-05-20"},{"1":"NA","2":"2017-05-21"},{"1":"68.50","2":"2017-05-22"},{"1":"68.75","2":"2017-05-23"},{"1":"68.88","2":"2017-05-24"},{"1":"69.88","2":"2017-05-25"},{"1":"70.22","2":"2017-05-26"},{"1":"NA","2":"2017-05-27"},{"1":"NA","2":"2017-05-28"},{"1":"NA","2":"2017-05-29"},{"1":"70.41","2":"2017-05-30"},{"1":"70.74","2":"2017-05-31"},{"1":"70.61","2":"2017-06-01"},{"1":"71.86","2":"2017-06-02"},{"1":"NA","2":"2017-06-03"},{"1":"NA","2":"2017-06-04"},{"1":"72.89","2":"2017-06-05"},{"1":"72.62","2":"2017-06-06"},{"1":"72.77","2":"2017-06-07"},{"1":"72.52","2":"2017-06-08"},{"1":"72.08","2":"2017-06-09"},{"1":"NA","2":"2017-06-10"},{"1":"NA","2":"2017-06-11"},{"1":"69.94","2":"2017-06-12"},{"1":"70.82","2":"2017-06-13"},{"1":"71.10","2":"2017-06-14"},{"1":"70.21","2":"2017-06-15"},{"1":"70.03","2":"2017-06-16"},{"1":"NA","2":"2017-06-17"},{"1":"NA","2":"2017-06-18"},{"1":"70.94","2":"2017-06-19"},{"1":"70.87","2":"2017-06-20"},{"1":"70.62","2":"2017-06-21"},{"1":"70.59","2":"2017-06-22"},{"1":"71.25","2":"2017-06-23"},{"1":"NA","2":"2017-06-24"},{"1":"NA","2":"2017-06-25"},{"1":"71.71","2":"2017-06-26"},{"1":"70.18","2":"2017-06-27"},{"1":"69.84","2":"2017-06-28"},{"1":"69.49","2":"2017-06-29"},{"1":"69.38","2":"2017-06-30"},{"1":"NA","2":"2017-07-01"},{"1":"NA","2":"2017-07-02"},{"1":"69.60","2":"2017-07-03"},{"1":"NA","2":"2017-07-04"},{"1":"69.44","2":"2017-07-05"},{"1":"68.78","2":"2017-07-06"},{"1":"69.84","2":"2017-07-07"},{"1":"NA","2":"2017-07-08"},{"1":"NA","2":"2017-07-09"},{"1":"70.25","2":"2017-07-10"},{"1":"70.68","2":"2017-07-11"},{"1":"71.28","2":"2017-07-12"},{"1":"72.04","2":"2017-07-13"},{"1":"73.27","2":"2017-07-14"},{"1":"NA","2":"2017-07-15"},{"1":"NA","2":"2017-07-16"},{"1":"73.45","2":"2017-07-17"},{"1":"73.39","2":"2017-07-18"},{"1":"74.04","2":"2017-07-19"},{"1":"74.30","2":"2017-07-20"},{"1":"74.29","2":"2017-07-21"},{"1":"NA","2":"2017-07-22"},{"1":"NA","2":"2017-07-23"},{"1":"73.75","2":"2017-07-24"},{"1":"74.31","2":"2017-07-25"},{"1":"74.38","2":"2017-07-26"},{"1":"74.42","2":"2017-07-27"},{"1":"73.31","2":"2017-07-28"},{"1":"NA","2":"2017-07-29"},{"1":"NA","2":"2017-07-30"},{"1":"73.44","2":"2017-07-31"},{"1":"73.42","2":"2017-08-01"},{"1":"72.56","2":"2017-08-02"},{"1":"72.44","2":"2017-08-03"},{"1":"73.04","2":"2017-08-04"},{"1":"NA","2":"2017-08-05"},{"1":"NA","2":"2017-08-06"},{"1":"72.90","2":"2017-08-07"},{"1":"73.13","2":"2017-08-08"},{"1":"72.51","2":"2017-08-09"},{"1":"72.19","2":"2017-08-10"},{"1":"72.70","2":"2017-08-11"},{"1":"NA","2":"2017-08-12"},{"1":"NA","2":"2017-08-13"},{"1":"73.72","2":"2017-08-14"},{"1":"73.59","2":"2017-08-15"},{"1":"74.10","2":"2017-08-16"},{"1":"73.87","2":"2017-08-17"},{"1":"72.84","2":"2017-08-18"},{"1":"NA","2":"2017-08-19"},{"1":"NA","2":"2017-08-20"},{"1":"72.48","2":"2017-08-21"},{"1":"73.24","2":"2017-08-22"},{"1":"73.15","2":"2017-08-23"},{"1":"72.86","2":"2017-08-24"},{"1":"73.35","2":"2017-08-25"},{"1":"NA","2":"2017-08-26"},{"1":"NA","2":"2017-08-27"},{"1":"73.09","2":"2017-08-28"},{"1":"73.16","2":"2017-08-29"},{"1":"74.21","2":"2017-08-30"},{"1":"74.96","2":"2017-08-31"},{"1":"74.74","2":"2017-09-01"},{"1":"NA","2":"2017-09-02"},{"1":"NA","2":"2017-09-03"},{"1":"NA","2":"2017-09-04"},{"1":"73.89","2":"2017-09-05"},{"1":"74.04","2":"2017-09-06"},{"1":"74.60","2":"2017-09-07"},{"1":"74.44","2":"2017-09-08"},{"1":"NA","2":"2017-09-09"},{"1":"NA","2":"2017-09-10"},{"1":"74.94","2":"2017-09-11"},{"1":"75.24","2":"2017-09-12"},{"1":"75.23","2":"2017-09-13"},{"1":"75.49","2":"2017-09-14"},{"1":"75.39","2":"2017-09-15"},{"1":"NA","2":"2017-09-16"},{"1":"NA","2":"2017-09-17"},{"1":"75.97","2":"2017-09-18"},{"1":"75.71","2":"2017-09-19"},{"1":"75.55","2":"2017-09-20"},{"1":"75.24","2":"2017-09-21"},{"1":"74.51","2":"2017-09-22"},{"1":"NA","2":"2017-09-23"},{"1":"NA","2":"2017-09-24"},{"1":"74.25","2":"2017-09-25"},{"1":"73.81","2":"2017-09-26"},{"1":"74.17","2":"2017-09-27"},{"1":"73.97","2":"2017-09-28"},{"1":"74.54","2":"2017-09-29"},{"1":"NA","2":"2017-09-30"},{"1":"NA","2":"2017-10-01"},{"1":"75.01","2":"2017-10-02"},{"1":"74.88","2":"2017-10-03"},{"1":"74.72","2":"2017-10-04"},{"1":"76.12","2":"2017-10-05"},{"1":"76.03","2":"2017-10-06"},{"1":"NA","2":"2017-10-07"},{"1":"NA","2":"2017-10-08"},{"1":"76.55","2":"2017-10-09"},{"1":"76.63","2":"2017-10-10"},{"1":"76.46","2":"2017-10-11"},{"1":"77.29","2":"2017-10-12"},{"1":"77.87","2":"2017-10-13"},{"1":"NA","2":"2017-10-14"},{"1":"NA","2":"2017-10-15"},{"1":"77.81","2":"2017-10-16"},{"1":"77.62","2":"2017-10-17"},{"1":"77.85","2":"2017-10-18"},{"1":"77.93","2":"2017-10-19"},{"1":"78.97","2":"2017-10-20"},{"1":"NA","2":"2017-10-21"},{"1":"NA","2":"2017-10-22"},{"1":"79.34","2":"2017-10-23"},{"1":"79.20","2":"2017-10-24"},{"1":"79.10","2":"2017-10-25"},{"1":"79.42","2":"2017-10-26"},{"1":"86.20","2":"2017-10-27"},{"1":"NA","2":"2017-10-28"},{"1":"NA","2":"2017-10-29"},{"1":"84.33","2":"2017-10-30"},{"1":"84.36","2":"2017-10-31"},{"1":"83.76","2":"2017-11-01"},{"1":"84.46","2":"2017-11-02"},{"1":"84.54","2":"2017-11-03"},{"1":"NA","2":"2017-11-04"},{"1":"NA","2":"2017-11-05"},{"1":"84.70","2":"2017-11-06"},{"1":"84.90","2":"2017-11-07"},{"1":"84.61","2":"2017-11-08"},{"1":"84.27","2":"2017-11-09"},{"1":"84.10","2":"2017-11-10"},{"1":"NA","2":"2017-11-11"},{"1":"NA","2":"2017-11-12"},{"1":"83.94","2":"2017-11-13"},{"1":"84.10","2":"2017-11-14"},{"1":"83.69","2":"2017-11-15"},{"1":"83.42","2":"2017-11-16"},{"1":"83.12","2":"2017-11-17"},{"1":"NA","2":"2017-11-18"},{"1":"NA","2":"2017-11-19"},{"1":"82.59","2":"2017-11-20"},{"1":"83.84","2":"2017-11-21"},{"1":"83.90","2":"2017-11-22"},{"1":"NA","2":"2017-11-23"},{"1":"83.43","2":"2017-11-24"},{"1":"NA","2":"2017-11-25"},{"1":"NA","2":"2017-11-26"},{"1":"83.98","2":"2017-11-27"},{"1":"85.06","2":"2017-11-28"},{"1":"84.92","2":"2017-11-29"},{"1":"84.52","2":"2017-11-30"},{"1":"84.81","2":"2017-12-01"},{"1":"NA","2":"2017-12-02"},{"1":"NA","2":"2017-12-03"},{"1":"84.43","2":"2017-12-04"},{"1":"82.68","2":"2017-12-05"},{"1":"83.14","2":"2017-12-06"},{"1":"82.80","2":"2017-12-07"},{"1":"84.58","2":"2017-12-08"},{"1":"NA","2":"2017-12-09"},{"1":"NA","2":"2017-12-10"},{"1":"85.37","2":"2017-12-11"},{"1":"86.05","2":"2017-12-12"},{"1":"86.00","2":"2017-12-13"},{"1":"85.87","2":"2017-12-14"},{"1":"87.09","2":"2017-12-15"},{"1":"NA","2":"2017-12-16"},{"1":"NA","2":"2017-12-17"},{"1":"87.50","2":"2017-12-18"},{"1":"86.35","2":"2017-12-19"},{"1":"86.30","2":"2017-12-20"},{"1":"86.10","2":"2017-12-21"},{"1":"85.63","2":"2017-12-22"},{"1":"NA","2":"2017-12-23"},{"1":"NA","2":"2017-12-24"},{"1":"NA","2":"2017-12-25"},{"1":"85.53","2":"2017-12-26"},{"1":"85.98","2":"2017-12-27"},{"1":"85.93","2":"2017-12-28"},{"1":"86.05","2":"2017-12-29"},{"1":"NA","2":"2017-12-30"},{"1":"NA","2":"2017-12-31"},{"1":"NA","2":"2018-01-01"},{"1":"86.31","2":"2018-01-02"},{"1":"86.51","2":"2018-01-03"},{"1":"87.66","2":"2018-01-04"},{"1":"88.41","2":"2018-01-05"},{"1":"NA","2":"2018-01-06"},{"1":"NA","2":"2018-01-07"},{"1":"88.58","2":"2018-01-08"},{"1":"88.73","2":"2018-01-09"},{"1":"88.19","2":"2018-01-10"},{"1":"88.13","2":"2018-01-11"},{"1":"89.78","2":"2018-01-12"},{"1":"NA","2":"2018-01-13"},{"1":"NA","2":"2018-01-14"},{"1":"NA","2":"2018-01-15"},{"1":"90.79","2":"2018-01-16"},{"1":"90.28","2":"2018-01-17"},{"1":"90.67","2":"2018-01-18"},{"1":"90.61","2":"2018-01-19"},{"1":"NA","2":"2018-01-20"},{"1":"NA","2":"2018-01-21"},{"1":"91.62","2":"2018-01-22"},{"1":"92.30","2":"2018-01-23"},{"1":"93.43","2":"2018-01-24"},{"1":"93.24","2":"2018-01-25"},{"1":"94.06","2":"2018-01-26"},{"1":"NA","2":"2018-01-27"},{"1":"NA","2":"2018-01-28"},{"1":"95.45","2":"2018-01-29"},{"1":"93.66","2":"2018-01-30"},{"1":"95.40","2":"2018-01-31"},{"1":"96.07","2":"2018-02-01"},{"1":"93.97","2":"2018-02-02"},{"1":"NA","2":"2018-02-03"},{"1":"NA","2":"2018-02-04"},{"1":"93.24","2":"2018-02-05"},{"1":"91.48","2":"2018-02-06"},{"1":"91.77","2":"2018-02-07"},{"1":"89.88","2":"2018-02-08"},{"1":"88.93","2":"2018-02-09"},{"1":"NA","2":"2018-02-10"},{"1":"NA","2":"2018-02-11"},{"1":"89.78","2":"2018-02-12"},{"1":"90.00","2":"2018-02-13"},{"1":"90.99","2":"2018-02-14"},{"1":"92.72","2":"2018-02-15"},{"1":"93.50","2":"2018-02-16"},{"1":"NA","2":"2018-02-17"},{"1":"NA","2":"2018-02-18"},{"1":"NA","2":"2018-02-19"},{"1":"93.06","2":"2018-02-20"},{"1":"93.36","2":"2018-02-21"},{"1":"92.73","2":"2018-02-22"},{"1":"94.07","2":"2018-02-23"},{"1":"NA","2":"2018-02-24"},{"1":"NA","2":"2018-02-25"},{"1":"95.45","2":"2018-02-26"},{"1":"95.84","2":"2018-02-27"},{"1":"95.71","2":"2018-02-28"},{"1":"94.57","2":"2018-03-01"},{"1":"93.15","2":"2018-03-02"},{"1":"NA","2":"2018-03-03"},{"1":"NA","2":"2018-03-04"},{"1":"94.27","2":"2018-03-05"},{"1":"94.49","2":"2018-03-06"},{"1":"93.94","2":"2018-03-07"},{"1":"95.10","2":"2018-03-08"},{"1":"96.54","2":"2018-03-09"},{"1":"NA","2":"2018-03-10"},{"1":"NA","2":"2018-03-11"},{"1":"97.21","2":"2018-03-12"},{"1":"97.24","2":"2018-03-13"},{"1":"95.41","2":"2018-03-14"},{"1":"94.58","2":"2018-03-15"},{"1":"95.38","2":"2018-03-16"},{"1":"NA","2":"2018-03-17"},{"1":"NA","2":"2018-03-18"},{"1":"93.90","2":"2018-03-19"},{"1":"93.77","2":"2018-03-20"},{"1":"94.05","2":"2018-03-21"},{"1":"91.75","2":"2018-03-22"},{"1":"90.46","2":"2018-03-23"},{"1":"NA","2":"2018-03-24"},{"1":"NA","2":"2018-03-25"},{"1":"94.00","2":"2018-03-26"},{"1":"95.14","2":"2018-03-27"},{"1":"91.23","2":"2018-03-28"},{"1":"92.29","2":"2018-03-29"},{"1":"NA","2":"2018-03-30"},{"1":"NA","2":"2018-03-31"},{"1":"NA","2":"2018-04-01"},{"1":"90.88","2":"2018-04-02"},{"1":"90.05","2":"2018-04-03"},{"1":"92.76","2":"2018-04-04"},{"1":"93.07","2":"2018-04-05"},{"1":"92.46","2":"2018-04-06"},{"1":"NA","2":"2018-04-07"},{"1":"NA","2":"2018-04-08"},{"1":"93.17","2":"2018-04-09"},{"1":"93.28","2":"2018-04-10"},{"1":"93.29","2":"2018-04-11"},{"1":"94.16","2":"2018-04-12"},{"1":"94.18","2":"2018-04-13"},{"1":"NA","2":"2018-04-14"},{"1":"NA","2":"2018-04-15"},{"1":"94.66","2":"2018-04-16"},{"1":"96.54","2":"2018-04-17"},{"1":"96.72","2":"2018-04-18"},{"1":"97.07","2":"2018-04-19"},{"1":"96.11","2":"2018-04-20"},{"1":"NA","2":"2018-04-21"},{"1":"NA","2":"2018-04-22"},{"1":"96.29","2":"2018-04-23"},{"1":"96.47","2":"2018-04-24"},{"1":"93.30","2":"2018-04-25"},{"1":"95.15","2":"2018-04-26"},{"1":"97.90","2":"2018-04-27"},{"1":"NA","2":"2018-04-28"},{"1":"NA","2":"2018-04-29"},{"1":"96.40","2":"2018-04-30"},{"1":"95.29","2":"2018-05-01"},{"1":"95.17","2":"2018-05-02"},{"1":"94.93","2":"2018-05-03"},{"1":"95.37","2":"2018-05-04"},{"1":"NA","2":"2018-05-05"},{"1":"NA","2":"2018-05-06"},{"1":"96.71","2":"2018-05-07"},{"1":"96.16","2":"2018-05-08"},{"1":"96.97","2":"2018-05-09"},{"1":"97.95","2":"2018-05-10"},{"1":"97.87","2":"2018-05-11"},{"1":"NA","2":"2018-05-12"},{"1":"NA","2":"2018-05-13"},{"1":"98.69","2":"2018-05-14"},{"1":"97.85","2":"2018-05-15"},{"1":"97.40","2":"2018-05-16"},{"1":"97.54","2":"2018-05-17"},{"1":"96.93","2":"2018-05-18"},{"1":"NA","2":"2018-05-19"},{"1":"NA","2":"2018-05-20"},{"1":"98.01","2":"2018-05-21"},{"1":"98.17","2":"2018-05-22"},{"1":"98.73","2":"2018-05-23"},{"1":"98.94","2":"2018-05-24"},{"1":"98.98","2":"2018-05-25"},{"1":"NA","2":"2018-05-26"},{"1":"NA","2":"2018-05-27"},{"1":"NA","2":"2018-05-28"},{"1":"98.88","2":"2018-05-29"},{"1":"99.25","2":"2018-05-30"},{"1":"99.99","2":"2018-05-31"},{"1":"100.86","2":"2018-06-01"},{"1":"NA","2":"2018-06-02"},{"1":"NA","2":"2018-06-03"},{"1":"101.86","2":"2018-06-04"},{"1":"102.33","2":"2018-06-05"},{"1":"102.60","2":"2018-06-06"},{"1":"102.69","2":"2018-06-07"},{"1":"101.95","2":"2018-06-08"},{"1":"NA","2":"2018-06-09"},{"1":"NA","2":"2018-06-10"},{"1":"101.59","2":"2018-06-11"},{"1":"101.45","2":"2018-06-12"},{"1":"102.01","2":"2018-06-13"},{"1":"102.03","2":"2018-06-14"},{"1":"101.53","2":"2018-06-15"},{"1":"NA","2":"2018-06-16"},{"1":"NA","2":"2018-06-17"},{"1":"101.11","2":"2018-06-18"},{"1":"101.00","2":"2018-06-19"},{"1":"102.52","2":"2018-06-20"},{"1":"102.46","2":"2018-06-21"},{"1":"100.77","2":"2018-06-22"},{"1":"NA","2":"2018-06-23"},{"1":"NA","2":"2018-06-24"},{"1":"100.11","2":"2018-06-25"},{"1":"100.08","2":"2018-06-26"},{"1":"100.02","2":"2018-06-27"},{"1":"99.11","2":"2018-06-28"},{"1":"99.91","2":"2018-06-29"},{"1":"NA","2":"2018-06-30"},{"1":"NA","2":"2018-07-01"},{"1":"100.06","2":"2018-07-02"},{"1":"100.63","2":"2018-07-03"},{"1":"NA","2":"2018-07-04"},{"1":"99.92","2":"2018-07-05"},{"1":"101.43","2":"2018-07-06"},{"1":"NA","2":"2018-07-07"},{"1":"NA","2":"2018-07-08"},{"1":"102.25","2":"2018-07-09"},{"1":"102.51","2":"2018-07-10"},{"1":"102.34","2":"2018-07-11"},{"1":"104.41","2":"2018-07-12"},{"1":"105.60","2":"2018-07-13"},{"1":"NA","2":"2018-07-14"},{"1":"NA","2":"2018-07-15"},{"1":"105.82","2":"2018-07-16"},{"1":"106.50","2":"2018-07-17"},{"1":"106.05","2":"2018-07-18"},{"1":"105.31","2":"2018-07-19"},{"1":"108.20","2":"2018-07-20"},{"1":"NA","2":"2018-07-21"},{"1":"NA","2":"2018-07-22"},{"1":"108.14","2":"2018-07-23"},{"1":"108.82","2":"2018-07-24"},{"1":"111.15","2":"2018-07-25"},{"1":"111.00","2":"2018-07-26"},{"1":"110.18","2":"2018-07-27"},{"1":"NA","2":"2018-07-28"},{"1":"NA","2":"2018-07-29"},{"1":"107.53","2":"2018-07-30"},{"1":"106.72","2":"2018-07-31"},{"1":"106.45","2":"2018-08-01"},{"1":"108.09","2":"2018-08-02"},{"1":"108.05","2":"2018-08-03"},{"1":"NA","2":"2018-08-04"},{"1":"NA","2":"2018-08-05"},{"1":"108.42","2":"2018-08-06"},{"1":"109.10","2":"2018-08-07"},{"1":"109.75","2":"2018-08-08"},{"1":"110.16","2":"2018-08-09"},{"1":"109.69","2":"2018-08-10"},{"1":"NA","2":"2018-08-11"},{"1":"NA","2":"2018-08-12"},{"1":"109.58","2":"2018-08-13"},{"1":"109.75","2":"2018-08-14"},{"1":"108.99","2":"2018-08-15"},{"1":"108.86","2":"2018-08-16"},{"1":"107.90","2":"2018-08-17"},{"1":"NA","2":"2018-08-18"},{"1":"NA","2":"2018-08-19"},{"1":"107.90","2":"2018-08-20"},{"1":"107.35","2":"2018-08-21"},{"1":"107.34","2":"2018-08-22"},{"1":"108.18","2":"2018-08-23"},{"1":"108.56","2":"2018-08-24"},{"1":"NA","2":"2018-08-25"},{"1":"NA","2":"2018-08-26"},{"1":"109.64","2":"2018-08-27"},{"1":"110.50","2":"2018-08-28"},{"1":"112.03","2":"2018-08-29"},{"1":"112.61","2":"2018-08-30"},{"1":"112.78","2":"2018-08-31"},{"1":"NA","2":"2018-09-01"},{"1":"NA","2":"2018-09-02"},{"1":"NA","2":"2018-09-03"},{"1":"111.96","2":"2018-09-04"},{"1":"111.42","2":"2018-09-05"},{"1":"108.99","2":"2018-09-06"},{"1":"108.72","2":"2018-09-07"},{"1":"NA","2":"2018-09-08"},{"1":"NA","2":"2018-09-09"},{"1":"109.64","2":"2018-09-10"},{"1":"111.59","2":"2018-09-11"},{"1":"111.85","2":"2018-09-12"},{"1":"113.73","2":"2018-09-13"},{"1":"113.73","2":"2018-09-14"},{"1":"NA","2":"2018-09-15"},{"1":"NA","2":"2018-09-16"},{"1":"113.70","2":"2018-09-17"},{"1":"113.70","2":"2018-09-18"},{"1":"113.32","2":"2018-09-19"},{"1":"113.80","2":"2018-09-20"},{"1":"115.29","2":"2018-09-21"},{"1":"NA","2":"2018-09-22"},{"1":"NA","2":"2018-09-23"},{"1":"114.90","2":"2018-09-24"},{"1":"115.10","2":"2018-09-25"},{"1":"115.06","2":"2018-09-26"},{"1":"114.91","2":"2018-09-27"},{"1":"114.57","2":"2018-09-28"},{"1":"NA","2":"2018-09-29"},{"1":"NA","2":"2018-09-30"},{"1":"115.68","2":"2018-10-01"},{"1":"115.84","2":"2018-10-02"},{"1":"116.18","2":"2018-10-03"},{"1":"114.76","2":"2018-10-04"},{"1":"113.17","2":"2018-10-05"},{"1":"NA","2":"2018-10-06"},{"1":"NA","2":"2018-10-07"},{"1":"112.03","2":"2018-10-08"},{"1":"113.08","2":"2018-10-09"},{"1":"111.50","2":"2018-10-10"},{"1":"108.93","2":"2018-10-11"},{"1":"111.24","2":"2018-10-12"},{"1":"NA","2":"2018-10-13"},{"1":"NA","2":"2018-10-14"},{"1":"109.48","2":"2018-10-15"},{"1":"111.41","2":"2018-10-16"},{"1":"111.81","2":"2018-10-17"},{"1":"110.53","2":"2018-10-18"},{"1":"110.86","2":"2018-10-19"},{"1":"NA","2":"2018-10-20"},{"1":"NA","2":"2018-10-21"},{"1":"110.54","2":"2018-10-22"},{"1":"108.97","2":"2018-10-23"},{"1":"108.49","2":"2018-10-24"},{"1":"109.27","2":"2018-10-25"},{"1":"108.75","2":"2018-10-26"},{"1":"NA","2":"2018-10-27"},{"1":"NA","2":"2018-10-28"},{"1":"108.70","2":"2018-10-29"},{"1":"104.38","2":"2018-10-30"},{"1":"108.14","2":"2018-10-31"},{"1":"107.32","2":"2018-11-01"},{"1":"107.32","2":"2018-11-02"},{"1":"NA","2":"2018-11-03"},{"1":"NA","2":"2018-11-04"},{"1":"107.74","2":"2018-11-05"},{"1":"108.84","2":"2018-11-06"},{"1":"112.24","2":"2018-11-07"},{"1":"112.21","2":"2018-11-08"},{"1":"111.45","2":"2018-11-09"},{"1":"NA","2":"2018-11-10"},{"1":"NA","2":"2018-11-11"},{"1":"109.96","2":"2018-11-12"},{"1":"108.74","2":"2018-11-13"},{"1":"108.26","2":"2018-11-14"},{"1":"107.80","2":"2018-11-15"},{"1":"108.88","2":"2018-11-16"},{"1":"NA","2":"2018-11-17"},{"1":"NA","2":"2018-11-18"},{"1":"108.56","2":"2018-11-19"},{"1":"102.97","2":"2018-11-20"},{"1":"104.43","2":"2018-11-21"},{"1":"NA","2":"2018-11-22"},{"1":"103.81","2":"2018-11-23"},{"1":"NA","2":"2018-11-24"},{"1":"NA","2":"2018-11-25"},{"1":"106.63","2":"2018-11-26"},{"1":"107.33","2":"2018-11-27"},{"1":"111.33","2":"2018-11-28"},{"1":"111.12","2":"2018-11-29"},{"1":"110.97","2":"2018-11-30"},{"1":"NA","2":"2018-12-01"},{"1":"NA","2":"2018-12-02"},{"1":"113.42","2":"2018-12-03"},{"1":"112.64","2":"2018-12-04"},{"1":"NA","2":"2018-12-05"},{"1":"109.24","2":"2018-12-06"},{"1":"109.45","2":"2018-12-07"},{"1":"NA","2":"2018-12-08"},{"1":"NA","2":"2018-12-09"},{"1":"107.98","2":"2018-12-10"},{"1":"110.95","2":"2018-12-11"},{"1":"111.27","2":"2018-12-12"},{"1":"110.87","2":"2018-12-13"},{"1":"109.26","2":"2018-12-14"},{"1":"NA","2":"2018-12-15"},{"1":"NA","2":"2018-12-16"},{"1":"105.80","2":"2018-12-17"},{"1":"104.51","2":"2018-12-18"},{"1":"106.88","2":"2018-12-19"},{"1":"104.31","2":"2018-12-20"},{"1":"103.00","2":"2018-12-21"},{"1":"NA","2":"2018-12-22"},{"1":"NA","2":"2018-12-23"},{"1":"97.97","2":"2018-12-24"},{"1":"NA","2":"2018-12-25"},{"1":"100.69","2":"2018-12-26"},{"1":"101.19","2":"2018-12-27"},{"1":"102.41","2":"2018-12-28"},{"1":"NA","2":"2018-12-29"},{"1":"NA","2":"2018-12-30"},{"1":"102.40","2":"2018-12-31"},{"1":"NA","2":"2019-01-01"},{"1":"101.75","2":"2019-01-02"},{"1":"100.19","2":"2019-01-03"},{"1":"102.51","2":"2019-01-04"},{"1":"NA","2":"2019-01-05"},{"1":"NA","2":"2019-01-06"},{"1":"103.27","2":"2019-01-07"},{"1":"103.97","2":"2019-01-08"},{"1":"104.88","2":"2019-01-09"},{"1":"103.75","2":"2019-01-10"},{"1":"103.44","2":"2019-01-11"},{"1":"NA","2":"2019-01-12"},{"1":"NA","2":"2019-01-13"},{"1":"102.87","2":"2019-01-14"},{"1":"105.05","2":"2019-01-15"},{"1":"106.26","2":"2019-01-16"},{"1":"106.63","2":"2019-01-17"},{"1":"107.90","2":"2019-01-18"},{"1":"NA","2":"2019-01-19"},{"1":"NA","2":"2019-01-20"},{"1":"NA","2":"2019-01-21"},{"1":"107.10","2":"2019-01-22"},{"1":"107.04","2":"2019-01-23"},{"1":"107.00","2":"2019-01-24"},{"1":"107.88","2":"2019-01-25"},{"1":"NA","2":"2019-01-26"},{"1":"NA","2":"2019-01-27"},{"1":"106.48","2":"2019-01-28"},{"1":"104.97","2":"2019-01-29"},{"1":"106.38","2":"2019-01-30"},{"1":"105.22","2":"2019-01-31"},{"1":"104.10","2":"2019-02-01"},{"1":"NA","2":"2019-02-02"},{"1":"NA","2":"2019-02-03"},{"1":"105.80","2":"2019-02-04"},{"1":"107.27","2":"2019-02-05"},{"1":"107.00","2":"2019-02-06"},{"1":"105.59","2":"2019-02-07"},{"1":"105.78","2":"2019-02-08"},{"1":"NA","2":"2019-02-09"},{"1":"NA","2":"2019-02-10"},{"1":"106.58","2":"2019-02-11"},{"1":"107.14","2":"2019-02-12"},{"1":"107.78","2":"2019-02-13"},{"1":"107.29","2":"2019-02-14"},{"1":"108.30","2":"2019-02-15"},{"1":"NA","2":"2019-02-16"},{"1":"NA","2":"2019-02-17"},{"1":"NA","2":"2019-02-18"},{"1":"108.66","2":"2019-02-19"},{"1":"107.94","2":"2019-02-20"},{"1":"109.48","2":"2019-02-21"},{"1":"111.20","2":"2019-02-22"},{"1":"NA","2":"2019-02-23"},{"1":"NA","2":"2019-02-24"},{"1":"112.18","2":"2019-02-25"},{"1":"113.24","2":"2019-02-26"},{"1":"112.36","2":"2019-02-27"},{"1":"112.88","2":"2019-02-28"},{"1":"113.02","2":"2019-03-01"},{"1":"NA","2":"2019-03-02"},{"1":"NA","2":"2019-03-03"},{"1":"113.25","2":"2019-03-04"},{"1":"112.39","2":"2019-03-05"},{"1":"112.66","2":"2019-03-06"},{"1":"111.55","2":"2019-03-07"},{"1":"110.71","2":"2019-03-08"},{"1":"NA","2":"2019-03-09"},{"1":"NA","2":"2019-03-10"},{"1":"112.95","2":"2019-03-11"},{"1":"113.99","2":"2019-03-12"},{"1":"115.00","2":"2019-03-13"},{"1":"115.20","2":"2019-03-14"},{"1":"117.25","2":"2019-03-15"},{"1":"NA","2":"2019-03-16"},{"1":"NA","2":"2019-03-17"},{"1":"117.61","2":"2019-03-18"},{"1":"118.44","2":"2019-03-19"},{"1":"118.75","2":"2019-03-20"},{"1":"120.82","2":"2019-03-21"},{"1":"119.59","2":"2019-03-22"},{"1":"NA","2":"2019-03-23"},{"1":"NA","2":"2019-03-24"},{"1":"118.01","2":"2019-03-25"},{"1":"118.71","2":"2019-03-26"},{"1":"118.21","2":"2019-03-27"},{"1":"117.58","2":"2019-03-28"},{"1":"118.32","2":"2019-03-29"},{"1":"NA","2":"2019-03-30"},{"1":"NA","2":"2019-03-31"},{"1":"119.11","2":"2019-04-01"},{"1":"119.48","2":"2019-04-02"},{"1":"120.43","2":"2019-04-03"},{"1":"120.23","2":"2019-04-04"},{"1":"120.23","2":"2019-04-05"},{"1":"NA","2":"2019-04-06"},{"1":"NA","2":"2019-04-07"},{"1":"120.02","2":"2019-04-08"},{"1":"119.54","2":"2019-04-09"},{"1":"120.35","2":"2019-04-10"},{"1":"120.85","2":"2019-04-11"},{"1":"120.98","2":"2019-04-12"},{"1":"NA","2":"2019-04-13"},{"1":"NA","2":"2019-04-14"},{"1":"121.58","2":"2019-04-15"},{"1":"121.65","2":"2019-04-16"},{"1":"121.85","2":"2019-04-17"},{"1":"123.52","2":"2019-04-18"},{"1":"NA","2":"2019-04-19"},{"1":"NA","2":"2019-04-20"},{"1":"NA","2":"2019-04-21"},{"1":"124.00","2":"2019-04-22"},{"1":"125.58","2":"2019-04-23"},{"1":"125.85","2":"2019-04-24"},{"1":"131.37","2":"2019-04-25"},{"1":"130.52","2":"2019-04-26"},{"1":"NA","2":"2019-04-27"},{"1":"NA","2":"2019-04-28"},{"1":"130.18","2":"2019-04-29"},{"1":"130.70","2":"2019-04-30"},{"1":"130.65","2":"2019-05-01"},{"1":"128.00","2":"2019-05-02"},{"1":"129.43","2":"2019-05-03"},{"1":"NA","2":"2019-05-04"},{"1":"NA","2":"2019-05-05"},{"1":"128.56","2":"2019-05-06"},{"1":"127.18","2":"2019-05-07"},{"1":"126.37","2":"2019-05-08"},{"1":"125.79","2":"2019-05-09"},{"1":"127.93","2":"2019-05-10"},{"1":"NA","2":"2019-05-11"},{"1":"NA","2":"2019-05-12"},{"1":"125.55","2":"2019-05-13"},{"1":"125.88","2":"2019-05-14"},{"1":"126.71","2":"2019-05-15"},{"1":"129.38","2":"2019-05-16"},{"1":"130.46","2":"2019-05-17"},{"1":"NA","2":"2019-05-18"},{"1":"NA","2":"2019-05-19"},{"1":"127.59","2":"2019-05-20"},{"1":"127.53","2":"2019-05-21"},{"1":"128.24","2":"2019-05-22"},{"1":"126.29","2":"2019-05-23"},{"1":"127.42","2":"2019-05-24"},{"1":"NA","2":"2019-05-25"},{"1":"NA","2":"2019-05-26"},{"1":"NA","2":"2019-05-27"},{"1":"128.00","2":"2019-05-28"},{"1":"125.39","2":"2019-05-29"},{"1":"125.76","2":"2019-05-30"},{"1":"124.62","2":"2019-05-31"},{"1":"NA","2":"2019-06-01"},{"1":"NA","2":"2019-06-02"},{"1":"124.37","2":"2019-06-03"},{"1":"123.28","2":"2019-06-04"},{"1":"125.87","2":"2019-06-05"},{"1":"127.97","2":"2019-06-06"},{"1":"132.25","2":"2019-06-07"},{"1":"NA","2":"2019-06-08"},{"1":"NA","2":"2019-06-09"},{"1":"134.08","2":"2019-06-10"},{"1":"134.24","2":"2019-06-11"},{"1":"131.97","2":"2019-06-12"},{"1":"132.67","2":"2019-06-13"},{"1":"133.79","2":"2019-06-14"},{"1":"NA","2":"2019-06-15"},{"1":"NA","2":"2019-06-16"},{"1":"133.73","2":"2019-06-17"},{"1":"135.24","2":"2019-06-18"},{"1":"135.93","2":"2019-06-19"},{"1":"137.66","2":"2019-06-20"},{"1":"137.73","2":"2019-06-21"},{"1":"NA","2":"2019-06-22"},{"1":"NA","2":"2019-06-23"},{"1":"138.40","2":"2019-06-24"},{"1":"137.59","2":"2019-06-25"},{"1":"135.74","2":"2019-06-26"},{"1":"134.71","2":"2019-06-27"},{"1":"134.60","2":"2019-06-28"},{"1":"NA","2":"2019-06-29"},{"1":"NA","2":"2019-06-30"},{"1":"136.70","2":"2019-07-01"},{"1":"136.59","2":"2019-07-02"},{"1":"137.74","2":"2019-07-03"},{"1":"NA","2":"2019-07-04"},{"1":"137.33","2":"2019-07-05"},{"1":"NA","2":"2019-07-06"},{"1":"NA","2":"2019-07-07"},{"1":"137.10","2":"2019-07-08"},{"1":"136.97","2":"2019-07-09"},{"1":"138.58","2":"2019-07-10"},{"1":"139.22","2":"2019-07-11"},{"1":"139.13","2":"2019-07-12"},{"1":"NA","2":"2019-07-13"},{"1":"NA","2":"2019-07-14"},{"1":"139.54","2":"2019-07-15"},{"1":"139.05","2":"2019-07-16"},{"1":"137.93","2":"2019-07-17"},{"1":"136.62","2":"2019-07-18"},{"1":"140.67","2":"2019-07-19"},{"1":"NA","2":"2019-07-20"},{"1":"NA","2":"2019-07-21"},{"1":"139.19","2":"2019-07-22"},{"1":"139.99","2":"2019-07-23"},{"1":"140.74","2":"2019-07-24"},{"1":"140.61","2":"2019-07-25"},{"1":"141.68","2":"2019-07-26"},{"1":"NA","2":"2019-07-27"},{"1":"NA","2":"2019-07-28"},{"1":"141.51","2":"2019-07-29"},{"1":"141.22","2":"2019-07-30"},{"1":"140.49","2":"2019-07-31"},{"1":"140.94","2":"2019-08-01"},{"1":"138.32","2":"2019-08-02"},{"1":"NA","2":"2019-08-03"},{"1":"NA","2":"2019-08-04"},{"1":"133.93","2":"2019-08-05"},{"1":"135.68","2":"2019-08-06"},{"1":"135.65","2":"2019-08-07"},{"1":"138.99","2":"2019-08-08"},{"1":"139.38","2":"2019-08-09"},{"1":"NA","2":"2019-08-10"},{"1":"NA","2":"2019-08-11"},{"1":"137.86","2":"2019-08-12"},{"1":"138.80","2":"2019-08-13"},{"1":"136.92","2":"2019-08-14"},{"1":"134.58","2":"2019-08-15"},{"1":"136.46","2":"2019-08-16"},{"1":"NA","2":"2019-08-17"},{"1":"NA","2":"2019-08-18"},{"1":"138.55","2":"2019-08-19"},{"1":"138.71","2":"2019-08-20"},{"1":"139.49","2":"2019-08-21"},{"1":"139.20","2":"2019-08-22"},{"1":"138.35","2":"2019-08-23"},{"1":"NA","2":"2019-08-24"},{"1":"NA","2":"2019-08-25"},{"1":"135.56","2":"2019-08-26"},{"1":"136.72","2":"2019-08-27"},{"1":"135.76","2":"2019-08-28"},{"1":"138.44","2":"2019-08-29"},{"1":"139.18","2":"2019-08-30"},{"1":"NA","2":"2019-08-31"},{"1":"NA","2":"2019-09-01"},{"1":"NA","2":"2019-09-02"},{"1":"137.20","2":"2019-09-03"},{"1":"137.69","2":"2019-09-04"},{"1":"140.38","2":"2019-09-05"},{"1":"140.18","2":"2019-09-06"},{"1":"NA","2":"2019-09-07"},{"1":"NA","2":"2019-09-08"},{"1":"139.75","2":"2019-09-09"},{"1":"136.89","2":"2019-09-10"},{"1":"136.27","2":"2019-09-11"},{"1":"138.42","2":"2019-09-12"},{"1":"138.06","2":"2019-09-13"},{"1":"NA","2":"2019-09-14"},{"1":"NA","2":"2019-09-15"},{"1":"136.70","2":"2019-09-16"},{"1":"137.52","2":"2019-09-17"},{"1":"138.67","2":"2019-09-18"},{"1":"142.37","2":"2019-09-19"},{"1":"141.65","2":"2019-09-20"},{"1":"NA","2":"2019-09-21"},{"1":"NA","2":"2019-09-22"},{"1":"139.63","2":"2019-09-23"},{"1":"140.69","2":"2019-09-24"},{"1":"139.96","2":"2019-09-25"},{"1":"140.18","2":"2019-09-26"},{"1":"140.36","2":"2019-09-27"},{"1":"NA","2":"2019-09-28"},{"1":"NA","2":"2019-09-29"},{"1":"139.22","2":"2019-09-30"},{"1":"140.25","2":"2019-10-01"},{"1":"136.37","2":"2019-10-02"},{"1":"136.75","2":"2019-10-03"},{"1":"138.25","2":"2019-10-04"},{"1":"NA","2":"2019-10-05"},{"1":"NA","2":"2019-10-06"},{"1":"138.18","2":"2019-10-07"},{"1":"137.76","2":"2019-10-08"},{"1":"138.70","2":"2019-10-09"},{"1":"139.67","2":"2019-10-10"},{"1":"141.03","2":"2019-10-11"},{"1":"NA","2":"2019-10-12"},{"1":"NA","2":"2019-10-13"},{"1":"140.29","2":"2019-10-14"},{"1":"141.79","2":"2019-10-15"},{"1":"140.99","2":"2019-10-16"},{"1":"141.42","2":"2019-10-17"},{"1":"140.00","2":"2019-10-18"},{"1":"NA","2":"2019-10-19"},{"1":"NA","2":"2019-10-20"},{"1":"138.50","2":"2019-10-21"},{"1":"140.01","2":"2019-10-22"},{"1":"137.45","2":"2019-10-23"},{"1":"140.42","2":"2019-10-24"},{"1":"141.14","2":"2019-10-25"},{"1":"NA","2":"2019-10-26"},{"1":"NA","2":"2019-10-27"},{"1":"145.67","2":"2019-10-28"},{"1":"144.50","2":"2019-10-29"},{"1":"145.00","2":"2019-10-30"},{"1":"144.93","2":"2019-10-31"},{"1":"144.42","2":"2019-11-01"},{"1":"NA","2":"2019-11-02"},{"1":"NA","2":"2019-11-03"},{"1":"145.00","2":"2019-11-04"},{"1":"145.02","2":"2019-11-05"},{"1":"144.52","2":"2019-11-06"},{"1":"144.88","2":"2019-11-07"},{"1":"145.99","2":"2019-11-08"},{"1":"NA","2":"2019-11-09"},{"1":"NA","2":"2019-11-10"},{"1":"146.42","2":"2019-11-11"},{"1":"147.57","2":"2019-11-12"},{"1":"147.46","2":"2019-11-13"},{"1":"148.41","2":"2019-11-14"},{"1":"149.99","2":"2019-11-15"},{"1":"NA","2":"2019-11-16"},{"1":"NA","2":"2019-11-17"},{"1":"150.55","2":"2019-11-18"},{"1":"151.33","2":"2019-11-19"},{"1":"150.84","2":"2019-11-20"},{"1":"149.80","2":"2019-11-21"},{"1":"150.30","2":"2019-11-22"},{"1":"NA","2":"2019-11-23"},{"1":"NA","2":"2019-11-24"},{"1":"151.35","2":"2019-11-25"},{"1":"152.42","2":"2019-11-26"},{"1":"152.50","2":"2019-11-27"},{"1":"NA","2":"2019-11-28"},{"1":"152.30","2":"2019-11-29"},{"1":"NA","2":"2019-11-30"},{"1":"NA","2":"2019-12-01"},{"1":"151.83","2":"2019-12-02"},{"1":"149.43","2":"2019-12-03"},{"1":"150.18","2":"2019-12-04"},{"1":"150.32","2":"2019-12-05"},{"1":"151.87","2":"2019-12-06"},{"1":"NA","2":"2019-12-07"},{"1":"NA","2":"2019-12-08"},{"1":"151.87","2":"2019-12-09"},{"1":"151.89","2":"2019-12-10"},{"1":"151.87","2":"2019-12-11"},{"1":"153.44","2":"2019-12-12"},{"1":"154.89","2":"2019-12-13"},{"1":"NA","2":"2019-12-14"},{"1":"NA","2":"2019-12-15"},{"1":"155.90","2":"2019-12-16"},{"1":"155.71","2":"2019-12-17"},{"1":"155.48","2":"2019-12-18"},{"1":"155.77","2":"2019-12-19"},{"1":"158.49","2":"2019-12-20"},{"1":"NA","2":"2019-12-21"},{"1":"NA","2":"2019-12-22"},{"1":"158.12","2":"2019-12-23"},{"1":"157.71","2":"2019-12-24"},{"1":"NA","2":"2019-12-25"},{"1":"158.73","2":"2019-12-26"},{"1":"159.55","2":"2019-12-27"},{"1":"NA","2":"2019-12-28"},{"1":"NA","2":"2019-12-29"},{"1":"159.02","2":"2019-12-30"},{"1":"157.77","2":"2019-12-31"},{"1":"NA","2":"2020-01-01"},{"1":"160.73","2":"2020-01-02"},{"1":"159.95","2":"2020-01-03"},{"1":"NA","2":"2020-01-04"},{"1":"NA","2":"2020-01-05"},{"1":"159.10","2":"2020-01-06"},{"1":"159.67","2":"2020-01-07"},{"1":"160.80","2":"2020-01-08"},{"1":"162.22","2":"2020-01-09"},{"1":"163.22","2":"2020-01-10"},{"1":"NA","2":"2020-01-11"},{"1":"NA","2":"2020-01-12"},{"1":"163.31","2":"2020-01-13"},{"1":"163.60","2":"2020-01-14"},{"1":"163.94","2":"2020-01-15"},{"1":"166.24","2":"2020-01-16"},{"1":"167.47","2":"2020-01-17"},{"1":"NA","2":"2020-01-18"},{"1":"NA","2":"2020-01-19"},{"1":"NA","2":"2020-01-20"},{"1":"168.19","2":"2020-01-21"},{"1":"167.49","2":"2020-01-22"},{"1":"166.80","2":"2020-01-23"},{"1":"167.53","2":"2020-01-24"},{"1":"NA","2":"2020-01-25"},{"1":"NA","2":"2020-01-26"},{"1":"163.38","2":"2020-01-27"},{"1":"165.76","2":"2020-01-28"},{"1":"168.75","2":"2020-01-29"},{"1":"174.05","2":"2020-01-30"},{"1":"172.40","2":"2020-01-31"},{"1":"NA","2":"2020-02-01"},{"1":"NA","2":"2020-02-02"},{"1":"174.50","2":"2020-02-03"},{"1":"180.64","2":"2020-02-04"},{"1":"184.20","2":"2020-02-05"},{"1":"183.82","2":"2020-02-06"},{"1":"185.63","2":"2020-02-07"},{"1":"NA","2":"2020-02-08"},{"1":"NA","2":"2020-02-09"},{"1":"188.84","2":"2020-02-10"},{"1":"190.70","2":"2020-02-11"},{"1":"185.85","2":"2020-02-12"},{"1":"186.23","2":"2020-02-13"},{"1":"185.41","2":"2020-02-14"},{"1":"NA","2":"2020-02-15"},{"1":"NA","2":"2020-02-16"},{"1":"NA","2":"2020-02-17"},{"1":"187.70","2":"2020-02-18"},{"1":"188.18","2":"2020-02-19"},{"1":"187.25","2":"2020-02-20"},{"1":"183.50","2":"2020-02-21"},{"1":"NA","2":"2020-02-22"},{"1":"NA","2":"2020-02-23"},{"1":"174.55","2":"2020-02-24"},{"1":"174.84","2":"2020-02-25"},{"1":"173.26","2":"2020-02-26"},{"1":"167.03","2":"2020-02-27"},{"1":"163.71","2":"2020-02-28"},{"1":"NA","2":"2020-02-29"},{"1":"NA","2":"2020-03-01"},{"1":"172.92","2":"2020-03-02"},{"1":"175.00","2":"2020-03-03"},{"1":"170.70","2":"2020-03-04"},{"1":"170.87","2":"2020-03-05"},{"1":"163.11","2":"2020-03-06"},{"1":"NA","2":"2020-03-07"},{"1":"NA","2":"2020-03-08"},{"1":"157.75","2":"2020-03-09"},{"1":"161.03","2":"2020-03-10"},{"1":"157.70","2":"2020-03-11"},{"1":"153.47","2":"2020-03-12"},{"1":"161.91","2":"2020-03-13"},{"1":"NA","2":"2020-03-14"},{"1":"NA","2":"2020-03-15"},{"1":"149.35","2":"2020-03-16"},{"1":"147.50","2":"2020-03-17"},{"1":"146.00","2":"2020-03-18"},{"1":"150.15","2":"2020-03-19"},{"1":"147.10","2":"2020-03-20"},{"1":"NA","2":"2020-03-21"},{"1":"NA","2":"2020-03-22"},{"1":"140.57","2":"2020-03-23"},{"1":"149.60","2":"2020-03-24"},{"1":"154.33","2":"2020-03-25"},{"1":"156.66","2":"2020-03-26"},{"1":"154.89","2":"2020-03-27"},{"1":"NA","2":"2020-03-28"},{"1":"NA","2":"2020-03-29"},{"1":"160.60","2":"2020-03-30"},{"1":"164.78","2":"2020-03-31"},{"1":"157.75","2":"2020-04-01"},{"1":"155.48","2":"2020-04-02"},{"1":"157.38","2":"2020-04-03"},{"1":"NA","2":"2020-04-04"},{"1":"NA","2":"2020-04-05"},{"1":"166.50","2":"2020-04-06"},{"1":"170.00","2":"2020-04-07"},{"1":"166.67","2":"2020-04-08"},{"1":"167.37","2":"2020-04-09"},{"1":"NA","2":"2020-04-10"},{"1":"NA","2":"2020-04-11"},{"1":"NA","2":"2020-04-12"},{"1":"165.57","2":"2020-04-13"},{"1":"173.75","2":"2020-04-14"},{"1":"173.57","2":"2020-04-15"},{"1":"177.28","2":"2020-04-16"},{"1":"180.00","2":"2020-04-17"},{"1":"NA","2":"2020-04-18"},{"1":"NA","2":"2020-04-19"},{"1":"178.75","2":"2020-04-20"},{"1":"173.67","2":"2020-04-21"},{"1":"174.00","2":"2020-04-22"},{"1":"175.06","2":"2020-04-23"},{"1":"174.56","2":"2020-04-24"},{"1":"NA","2":"2020-04-25"},{"1":"NA","2":"2020-04-26"},{"1":"176.90","2":"2020-04-27"},{"1":"175.67","2":"2020-04-28"},{"1":"177.68","2":"2020-04-29"},{"1":"180.40","2":"2020-04-30"},{"1":"178.64","2":"2020-05-01"},{"1":"NA","2":"2020-05-02"},{"1":"NA","2":"2020-05-03"},{"1":"179.00","2":"2020-05-04"},{"1":"183.65","2":"2020-05-05"},{"1":"184.20","2":"2020-05-06"},{"1":"184.55","2":"2020-05-07"},{"1":"185.00","2":"2020-05-08"},{"1":"NA","2":"2020-05-09"},{"1":"NA","2":"2020-05-10"},{"1":"187.51","2":"2020-05-11"},{"1":"187.04","2":"2020-05-12"},{"1":"184.05","2":"2020-05-13"},{"1":"180.69","2":"2020-05-14"},{"1":"187.06","2":"2020-05-15"},{"1":"NA","2":"2020-05-16"},{"1":"NA","2":"2020-05-17"},{"1":"186.20","2":"2020-05-18"},{"1":"186.60","2":"2020-05-19"},{"1":"185.85","2":"2020-05-20"},{"1":"186.67","2":"2020-05-21"},{"1":"184.46","2":"2020-05-22"},{"1":"NA","2":"2020-05-23"},{"1":"NA","2":"2020-05-24"},{"1":"NA","2":"2020-05-25"},{"1":"186.50","2":"2020-05-26"},{"1":"181.99","2":"2020-05-27"},{"1":"184.15","2":"2020-05-28"},{"1":"184.27","2":"2020-05-29"},{"1":"NA","2":"2020-05-30"},{"1":"NA","2":"2020-05-31"},{"1":"183.00","2":"2020-06-01"},{"1":"185.00","2":"2020-06-02"},{"1":"185.94","2":"2020-06-03"},{"1":"185.84","2":"2020-06-04"},{"1":"187.73","2":"2020-06-05"},{"1":"NA","2":"2020-06-06"},{"1":"NA","2":"2020-06-07"},{"1":"188.55","2":"2020-06-08"},{"1":"190.70","2":"2020-06-09"},{"1":"198.52","2":"2020-06-10"},{"1":"195.76","2":"2020-06-11"},{"1":"191.72","2":"2020-06-12"},{"1":"NA","2":"2020-06-13"},{"1":"NA","2":"2020-06-14"},{"1":"190.82","2":"2020-06-15"},{"1":"195.58","2":"2020-06-16"},{"1":"196.32","2":"2020-06-17"},{"1":"196.49","2":"2020-06-18"},{"1":"199.29","2":"2020-06-19"},{"1":"NA","2":"2020-06-20"},{"1":"NA","2":"2020-06-21"},{"1":"200.76","2":"2020-06-22"},{"1":"203.95","2":"2020-06-23"},{"1":"203.25","2":"2020-06-24"},{"1":"200.61","2":"2020-06-25"},{"1":"199.89","2":"2020-06-26"},{"1":"NA","2":"2020-06-27"},{"1":"NA","2":"2020-06-28"},{"1":"198.53","2":"2020-06-29"},{"1":"204.40","2":"2020-06-30"},{"1":"206.35","2":"2020-07-01"},{"1":"208.02","2":"2020-07-02"},{"1":"NA","2":"2020-07-03"},{"1":"NA","2":"2020-07-04"},{"1":"NA","2":"2020-07-05"},{"1":"211.13","2":"2020-07-06"},{"1":"214.67","2":"2020-07-07"},{"1":"213.26","2":"2020-07-08"},{"1":"216.38","2":"2020-07-09"},{"1":"214.08","2":"2020-07-10"},{"1":"NA","2":"2020-07-11"},{"1":"NA","2":"2020-07-12"},{"1":"215.80","2":"2020-07-13"},{"1":"208.85","2":"2020-07-14"},{"1":"211.33","2":"2020-07-15"},{"1":"205.70","2":"2020-07-16"},{"1":"205.04","2":"2020-07-17"},{"1":"NA","2":"2020-07-18"},{"1":"NA","2":"2020-07-19"},{"1":"212.30","2":"2020-07-20"},{"1":"213.94","2":"2020-07-21"},{"1":"212.30","2":"2020-07-22"},{"1":"210.92","2":"2020-07-23"},{"1":"202.86","2":"2020-07-24"},{"1":"NA","2":"2020-07-25"},{"1":"NA","2":"2020-07-26"},{"1":"203.97","2":"2020-07-27"},{"1":"204.70","2":"2020-07-28"},{"1":"204.65","2":"2020-07-29"},{"1":"204.46","2":"2020-07-30"},{"1":"205.10","2":"2020-07-31"},{"1":"NA","2":"2020-08-01"},{"1":"NA","2":"2020-08-02"},{"1":"217.64","2":"2020-08-03"},{"1":"214.77","2":"2020-08-04"},{"1":"215.00","2":"2020-08-05"},{"1":"216.37","2":"2020-08-06"},{"1":"215.70","2":"2020-08-07"},{"1":"NA","2":"2020-08-08"},{"1":"NA","2":"2020-08-09"},{"1":"211.88","2":"2020-08-10"},{"1":"207.65","2":"2020-08-11"},{"1":"210.28","2":"2020-08-12"},{"1":"211.35","2":"2020-08-13"},{"1":"209.59","2":"2020-08-14"},{"1":"NA","2":"2020-08-15"},{"1":"NA","2":"2020-08-16"},{"1":"211.19","2":"2020-08-17"},{"1":"212.36","2":"2020-08-18"},{"1":"212.10","2":"2020-08-19"},{"1":"215.00","2":"2020-08-20"},{"1":"216.25","2":"2020-08-21"},{"1":"NA","2":"2020-08-22"},{"1":"NA","2":"2020-08-23"},{"1":"215.52","2":"2020-08-24"},{"1":"216.61","2":"2020-08-25"},{"1":"222.09","2":"2020-08-26"},{"1":"231.15","2":"2020-08-27"},{"1":"230.64","2":"2020-08-28"},{"1":"NA","2":"2020-08-29"},{"1":"NA","2":"2020-08-30"},{"1":"228.70","2":"2020-08-31"},{"1":"227.45","2":"2020-09-01"},{"1":"232.86","2":"2020-09-02"},{"1":"229.31","2":"2020-09-03"},{"1":"218.36","2":"2020-09-04"},{"1":"NA","2":"2020-09-05"},{"1":"NA","2":"2020-09-06"},{"1":"NA","2":"2020-09-07"},{"1":"210.03","2":"2020-09-08"},{"1":"214.84","2":"2020-09-09"},{"1":"214.74","2":"2020-09-10"},{"1":"208.63","2":"2020-09-11"},{"1":"NA","2":"2020-09-12"},{"1":"NA","2":"2020-09-13"},{"1":"209.20","2":"2020-09-14"},{"1":"209.78","2":"2020-09-15"},{"1":"210.65","2":"2020-09-16"},{"1":"204.33","2":"2020-09-17"},{"1":"203.65","2":"2020-09-18"},{"1":"NA","2":"2020-09-19"},{"1":"NA","2":"2020-09-20"},{"1":"202.71","2":"2020-09-21"},{"1":"208.10","2":"2020-09-22"},{"1":"208.10","2":"2020-09-23"},{"1":"205.57","2":"2020-09-24"},{"1":"209.04","2":"2020-09-25"},{"1":"NA","2":"2020-09-26"},{"1":"NA","2":"2020-09-27"},{"1":"212.57","2":"2020-09-28"},{"1":"210.07","2":"2020-09-29"},{"1":"211.98","2":"2020-09-30"},{"1":"213.99","2":"2020-10-01"},{"1":"210.99","2":"2020-10-02"},{"1":"NA","2":"2020-10-03"},{"1":"NA","2":"2020-10-04"},{"1":"210.41","2":"2020-10-05"},{"1":"210.18","2":"2020-10-06"},{"1":"210.11","2":"2020-10-07"},{"1":"211.19","2":"2020-10-08"},{"1":"215.86","2":"2020-10-09"},{"1":"NA","2":"2020-10-10"},{"1":"NA","2":"2020-10-11"},{"1":"223.86","2":"2020-10-12"},{"1":"225.21","2":"2020-10-13"},{"1":"224.22","2":"2020-10-14"},{"1":"220.36","2":"2020-10-15"},{"1":"222.29","2":"2020-10-16"},{"1":"NA","2":"2020-10-17"},{"1":"NA","2":"2020-10-18"},{"1":"222.30","2":"2020-10-19"},{"1":"217.37","2":"2020-10-20"},{"1":"216.92","2":"2020-10-21"},{"1":"216.06","2":"2020-10-22"},{"1":"216.28","2":"2020-10-23"},{"1":"NA","2":"2020-10-24"},{"1":"NA","2":"2020-10-25"},{"1":"216.34","2":"2020-10-26"},{"1":"214.67","2":"2020-10-27"},{"1":"208.84","2":"2020-10-28"},{"1":"207.36","2":"2020-10-29"},{"1":"204.29","2":"2020-10-30"},{"1":"NA","2":"2020-10-31"},{"1":"NA","2":"2020-11-01"},{"1":"205.28","2":"2020-11-02"},{"1":"208.12","2":"2020-11-03"},{"1":"218.32","2":"2020-11-04"},{"1":"224.12","2":"2020-11-05"},{"1":"224.36","2":"2020-11-06"},{"1":"NA","2":"2020-11-07"},{"1":"NA","2":"2020-11-08"},{"1":"228.12","2":"2020-11-09"},{"1":"216.50","2":"2020-11-10"},{"1":"218.04","2":"2020-11-11"},{"1":"219.11","2":"2020-11-12"},{"1":"217.42","2":"2020-11-13"},{"1":"NA","2":"2020-11-14"},{"1":"NA","2":"2020-11-15"},{"1":"217.74","2":"2020-11-16"},{"1":"217.68","2":"2020-11-17"},{"1":"215.17","2":"2020-11-18"},{"1":"213.03","2":"2020-11-19"},{"1":"213.29","2":"2020-11-20"},{"1":"NA","2":"2020-11-21"},{"1":"NA","2":"2020-11-22"},{"1":"212.29","2":"2020-11-23"},{"1":"214.25","2":"2020-11-24"},{"1":"215.29","2":"2020-11-25"},{"1":"NA","2":"2020-11-26"},{"1":"216.27","2":"2020-11-27"},{"1":"NA","2":"2020-11-28"},{"1":"NA","2":"2020-11-29"},{"1":"214.76","2":"2020-11-30"},{"1":"217.32","2":"2020-12-01"},{"1":"215.47","2":"2020-12-02"},{"1":"216.38","2":"2020-12-03"},{"1":"215.38","2":"2020-12-04"},{"1":"NA","2":"2020-12-05"},{"1":"NA","2":"2020-12-06"},{"1":"215.54","2":"2020-12-07"},{"1":"216.95","2":"2020-12-08"},{"1":"215.23","2":"2020-12-09"},{"1":"213.08","2":"2020-12-10"},{"1":"213.32","2":"2020-12-11"},{"1":"NA","2":"2020-12-12"},{"1":"NA","2":"2020-12-13"},{"1":"216.21","2":"2020-12-14"},{"1":"215.42","2":"2020-12-15"},{"1":"220.11","2":"2020-12-16"},{"1":"220.89","2":"2020-12-17"},{"1":"219.69","2":"2020-12-18"},{"1":"NA","2":"2020-12-19"},{"1":"NA","2":"2020-12-20"},{"1":"224.00","2":"2020-12-21"},{"1":"225.63","2":"2020-12-22"},{"1":"223.56","2":"2020-12-23"},{"1":"223.61","2":"2020-12-24"},{"1":"NA","2":"2020-12-25"},{"1":"NA","2":"2020-12-26"},{"1":"NA","2":"2020-12-27"},{"1":"226.03","2":"2020-12-28"},{"1":"227.18","2":"2020-12-29"},{"1":"225.63","2":"2020-12-30"},{"1":"223.00","2":"2020-12-31"},{"1":"NA","2":"2021-01-01"},{"1":"NA","2":"2021-01-02"},{"1":"NA","2":"2021-01-03"},{"1":"223.00","2":"2021-01-04"},{"1":"218.52","2":"2021-01-05"},{"1":"216.49","2":"2021-01-06"},{"1":"219.34","2":"2021-01-07"},{"1":"220.58","2":"2021-01-08"},{"1":"NA","2":"2021-01-09"},{"1":"NA","2":"2021-01-10"},{"1":"218.91","2":"2021-01-11"},{"1":"217.10","2":"2021-01-12"},{"1":"216.76","2":"2021-01-13"},{"1":"217.46","2":"2021-01-14"},{"1":"214.51","2":"2021-01-15"},{"1":"NA","2":"2021-01-16"},{"1":"NA","2":"2021-01-17"},{"1":"NA","2":"2021-01-18"},{"1":"216.98","2":"2021-01-19"},{"1":"225.79","2":"2021-01-20"},{"1":"226.30","2":"2021-01-21"},{"1":"230.07","2":"2021-01-22"},{"1":"NA","2":"2021-01-23"},{"1":"NA","2":"2021-01-24"},{"1":"229.78","2":"2021-01-25"},{"1":"234.18","2":"2021-01-26"},{"1":"240.44","2":"2021-01-27"},{"1":"242.64","2":"2021-01-28"},{"1":"238.02","2":"2021-01-29"},{"1":"NA","2":"2021-01-30"},{"1":"NA","2":"2021-01-31"},{"1":"242.50","2":"2021-02-01"},{"1":"242.31","2":"2021-02-02"},{"1":"245.09","2":"2021-02-03"},{"1":"243.24","2":"2021-02-04"},{"1":"243.28","2":"2021-02-05"},{"1":"NA","2":"2021-02-06"},{"1":"NA","2":"2021-02-07"},{"1":"243.68","2":"2021-02-08"},{"1":"244.76","2":"2021-02-09"},{"1":"245.92","2":"2021-02-10"},{"1":"245.15","2":"2021-02-11"},{"1":"245.30","2":"2021-02-12"},{"1":"NA","2":"2021-02-13"},{"1":"NA","2":"2021-02-14"},{"1":"NA","2":"2021-02-15"},{"1":"246.13","2":"2021-02-16"},{"1":"244.31","2":"2021-02-17"},{"1":"243.93","2":"2021-02-18"},{"1":"243.86","2":"2021-02-19"},{"1":"NA","2":"2021-02-20"},{"1":"NA","2":"2021-02-21"},{"1":"237.93","2":"2021-02-22"},{"1":"234.83","2":"2021-02-23"},{"1":"235.20","2":"2021-02-24"},{"1":"234.59","2":"2021-02-25"},{"1":"235.37","2":"2021-02-26"},{"1":"NA","2":"2021-02-27"},{"1":"NA","2":"2021-02-28"},{"1":"237.47","2":"2021-03-01"},{"1":"237.30","2":"2021-03-02"},{"1":"233.58","2":"2021-03-03"},{"1":"232.49","2":"2021-03-04"},{"1":"233.27","2":"2021-03-05"},{"1":"NA","2":"2021-03-06"},{"1":"NA","2":"2021-03-07"},{"1":"233.37","2":"2021-03-08"},{"1":"235.38","2":"2021-03-09"},{"1":"237.00","2":"2021-03-10"},{"1":"239.17","2":"2021-03-11"},{"1":"235.82","2":"2021-03-12"},{"1":"NA","2":"2021-03-13"},{"1":"NA","2":"2021-03-14"},{"1":"235.19","2":"2021-03-15"},{"1":"240.06","2":"2021-03-16"},{"1":"238.55","2":"2021-03-17"},{"1":"234.19","2":"2021-03-18"},{"1":"232.47","2":"2021-03-19"},{"1":"NA","2":"2021-03-20"},{"1":"NA","2":"2021-03-21"},{"1":"236.90","2":"2021-03-22"},{"1":"241.05","2":"2021-03-23"},{"1":"238.00","2":"2021-03-24"},{"1":"236.94","2":"2021-03-25"},{"1":"236.71","2":"2021-03-26"},{"1":"NA","2":"2021-03-27"},{"1":"NA","2":"2021-03-28"},{"1":"236.80","2":"2021-03-29"},{"1":"233.85","2":"2021-03-30"},{"1":"239.10","2":"2021-03-31"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(microsoft<span class="sc">$</span>DateClean)</span></code></pre></div>
+<pre><code>## [1] 2192</code></pre>
+<p>Terdapat 681 data <code>High</code> yang kosong.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(microsoft))</span></code></pre></div>
+<pre><code>##      High DateClean 
+##       681         0</code></pre>
+<div id="handling-missing-value" class="section level2">
+<h2>Handling missing value</h2>
+<p>Mengisi nilai <code>High</code> yang kosong menggunakan fungsi
+<code>fill()</code> dengan urutan pengisian kebawah/
+<code>Down</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>microsoft <span class="ot">&lt;-</span> microsoft <span class="sc">%&gt;%</span> <span class="fu">fill</span>(High, <span class="at">.direction =</span> <span class="st">&quot;down&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(microsoft)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["High"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["DateClean"],"name":[2],"type":["date"],"align":["right"]}],"data":[{"1":"40.76","2":"2015-04-01","_rn_":"1"},{"1":"40.74","2":"2015-04-02","_rn_":"2"},{"1":"40.74","2":"2015-04-03","_rn_":"3"},{"1":"40.74","2":"2015-04-04","_rn_":"4"},{"1":"40.74","2":"2015-04-05","_rn_":"5"},{"1":"41.78","2":"2015-04-06","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Cek data <code>microsoft</code> terbawah.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(microsoft)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["High"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["DateClean"],"name":[2],"type":["date"],"align":["right"]}],"data":[{"1":"236.71","2":"2021-03-26","_rn_":"2187"},{"1":"236.71","2":"2021-03-27","_rn_":"2188"},{"1":"236.71","2":"2021-03-28","_rn_":"2189"},{"1":"236.80","2":"2021-03-29","_rn_":"2190"},{"1":"233.85","2":"2021-03-30","_rn_":"2191"},{"1":"239.10","2":"2021-03-31","_rn_":"2192"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Bila di cek dibawah ini data <code>High</code> yang kosong sudah
+terisi.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(microsoft))</span></code></pre></div>
+<pre><code>##      High DateClean 
+##         0         0</code></pre>
+</div>
+</div>
+<div id="object-ts-eda" class="section level1">
+<h1>Object TS &amp; EDA</h1>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>micro_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">data =</span> microsoft<span class="sc">$</span>High,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">start =</span> <span class="dv">2015</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">end =</span> <span class="dv">2021</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>micro_ts</span></code></pre></div>
+<pre><code>##        Jan   Feb   Mar   Apr   May   Jun   Jul   Aug   Sep   Oct   Nov   Dec
+## 2015 40.76 40.74 40.74 40.74 40.74 41.78 41.91 41.69 41.62 41.95 41.95 41.95
+## 2016 42.06 42.03 42.46 42.34 41.74 41.74 41.74 43.17 43.15 43.13 43.61 48.14
+## 2017 48.14 48.14 48.13 49.21 49.31 49.54 48.88 48.88 48.88 48.87 48.16 47.77
+## 2018 47.09 47.98 47.98 47.98 47.91 47.68 48.32 48.82 48.91 48.91 48.91 48.22
+## 2019 47.81 47.93 47.60 47.35 47.35 47.35 47.35 46.88 47.77 48.02 47.57 47.57
+## 2020 47.57 47.77 47.35 47.74 47.16 46.52 46.52 46.52 46.43 45.94 46.83 46.92
+## 2021 46.47</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(micro_ts)</span></code></pre></div>
+<p><img src="time_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>micro_dc <span class="ot">&lt;-</span> <span class="fu">decompose</span>(micro_ts, <span class="at">type =</span> <span class="st">&quot;additive&quot;</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(micro_dc)</span></code></pre></div>
+<p><img src="time_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+Insight :</p>
+<ul>
+<li>error tertangkap</li>
+<li>seasonal tertangkap</li>
+<li>trend cukup smooth, terdapat penurunan diawal lalu kemudian naik
+stabil.</li>
+<li>pola additive</li>
+</ul>
+</div>
+<div id="model-time-series-assumption" class="section level1">
+<h1>Model Time Series &amp; Assumption</h1>
+<div id="cross-validation" class="section level2">
+<h2>Cross Validation</h2>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 tahun terakhir sebagai data test (24 bulan)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>micro_train <span class="ot">&lt;-</span> <span class="fu">head</span>(micro_ts, <span class="at">n =</span> <span class="fu">length</span>(micro_ts) <span class="sc">-</span> <span class="dv">24</span>) <span class="co"># 12*2</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>micro_test <span class="ot">&lt;-</span> <span class="fu">tail</span>(micro_ts, <span class="at">n =</span> <span class="dv">24</span>)</span></code></pre></div>
+</div>
+<div id="modeling" class="section level2">
+<h2>Modeling</h2>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>model_micro <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(micro_train, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>model_micro</span></code></pre></div>
+<pre><code>## Holt-Winters exponential smoothing with trend and additive seasonal component.
+## 
+## Call:
+## HoltWinters(x = micro_train, seasonal = &quot;additive&quot;)
+## 
+## Smoothing parameters:
+##  alpha: 0.9186469
+##  beta : 0
+##  gamma: 1
+## 
+## Coefficients:
+##            [,1]
+## a   47.71393280
+## b    0.09412296
+## s1   0.12299915
+## s2   0.29895176
+## s3   0.21773368
+## s4  -0.48147373
+## s5  -0.85921138
+## s6   0.16853266
+## s7   0.30218783
+## s8   0.02810472
+## s9   0.10498535
+## s10  0.02832089
+## s11  0.22696702
+## s12  0.09606720</code></pre>
+</div>
+<div id="forecasting" class="section level2">
+<h2>Forecasting</h2>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>forecast_micro <span class="ot">&lt;-</span> <span class="fu">forecast</span>(<span class="at">object =</span> model_micro, </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">h =</span> <span class="dv">24</span>) <span class="co"># sepanjang data test</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>forecast_micro</span></code></pre></div>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## Feb 2019       47.93105 46.63764 49.22447 45.95295 49.90916
+## Mar 2019       48.20113 46.44479 49.95747 45.51504 50.88722
+## Apr 2019       48.21404 46.09353 50.33454 44.97101 51.45706
+## May 2019       47.60895 45.17825 50.03966 43.89151 51.32639
+## Jun 2019       47.32534 44.61976 50.03091 43.18752 51.46315
+## Jul 2019       48.44720 45.49222 51.40219 43.92795 52.96646
+## Aug 2019       48.67498 45.49006 51.85990 43.80406 53.54590
+## Sep 2019       48.49502 45.09568 51.89436 43.29618 53.69387
+## Oct 2019       48.66602 45.06501 52.26704 43.15874 54.17331
+## Nov 2019       48.68348 44.89150 52.47547 42.88415 54.48282
+## Dec 2019       48.97625 45.00247 52.95003 42.89888 55.05363
+## Jan 2020       48.93948 44.79186 53.08709 42.59624 55.28271
+## Feb 2020       49.06053 44.71592 53.40514 42.41602 55.70504
+## Mar 2020       49.33061 44.82645 53.83477 42.44209 56.21912
+## Apr 2020       49.34351 44.68526 54.00176 42.21934 56.46768
+## May 2020       48.73843 43.93103 53.54582 41.38615 56.09070
+## Jun 2020       48.45481 43.50276 53.40687 40.88130 56.02833
+## Jul 2020       49.57668 44.48407 54.66929 41.78821 57.36515
+## Aug 2020       49.80446 44.57507 55.03384 41.80680 57.80211
+## Sep 2020       49.62450 44.26182 54.98717 41.42300 57.82600
+## Oct 2020       49.79550 44.30277 55.28823 41.39510 58.19590
+## Nov 2020       49.81296 44.19318 55.43273 41.21826 58.40766
+## Dec 2020       50.10573 44.36172 55.84974 41.32102 58.89043
+## Jan 2021       50.06895 44.20333 55.93457 41.09826 59.03964</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(micro_ts) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(forecast_micro) <span class="co"># menambahkan layer tambahan: hasil prediksi</span></span></code></pre></div>
+<p><img src="time_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cara visualisasi lain: interactive</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_forecast</span>(forecast_micro) <span class="co"># masukan hasil forecast</span></span></code></pre></div>
+<div id="htmlwidget-997998db7e24c407dcb6" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-997998db7e24c407dcb6">{"x":{"visdat":{"4084422b829":["function () ","plotlyVisDat"]},"cur_data":"4084422b829","attrs":{"4084422b829":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333],"y":[40.76,40.74,40.74,40.74,40.74,41.78,41.91,41.69,41.62,41.95,41.95,41.95,42.06,42.03,42.46,42.34,41.74,41.74,41.74,43.17,43.15,43.13,43.61,48.14,48.14,48.14,48.13,49.21,49.31,49.54,48.88,48.88,48.88,48.87,48.16,47.77,47.09,47.98,47.98,47.98,47.91,47.68,48.32,48.82,48.91,48.91,48.91,48.22,47.81],"type":"scatter","mode":"lines","name":"Observed","line":{"width":2,"color":"#00526d"},"inherit":true},"4084422b829.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333],"ymin":[46.6376393912508,46.4447921284957,46.0935342276787,45.1782461282673,44.6197630088235,45.492219785408,45.4900594125275,45.0956788496224,45.0650070042445,44.8915009865769,45.002472008634,44.7918579975139,44.7159182755237,44.8264461974963,44.6852648435649,43.9310303748384,43.502755854985,44.4840705474025,44.5750726964727,44.2618239258165,44.3027723740912,44.1931847145112,44.3617169735763,44.2033340907855],"ymax":[49.2244704426418,49.9574688271796,50.3345365019663,50.0396556966486,50.0309094393486,51.4021866544878,51.8599032955954,51.8943635603363,52.2670425843239,52.4754655960517,52.9500327601352,53.0870930514372,53.4051426073199,53.8347658071302,54.0017569350311,53.5458224990285,53.4068676421381,54.6692869414444,55.0338410606012,54.9871695330933,55.2882282634282,55.4327329170683,55.849738844144,55.9345680071166],"type":"scatter","mode":"lines","hoveron":"points","fill":"toself","color":["gray75"],"name":"80% confidence","inherit":true},"4084422b829.2":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333],"ymin":[45.9529465711219,45.5150427682777,44.9710087323265,43.8915087414608,43.1875190639959,43.9279460458134,43.8040635800074,43.2961757064841,43.1587433349021,42.8841468095706,42.8988797461377,42.5962419059068,42.4160195213043,42.4420880250419,42.2193383423407,41.3861486242792,40.8812958153851,41.7882066127594,41.8068039289938,41.422996424208,41.3950978395571,41.2182560071859,41.3210212590139,41.0982640362701],"ymax":[49.9091632627707,50.8872181873977,51.4570619973185,51.326393083455,51.4631533841762,52.9664603940824,53.5458991281154,53.6938667034746,54.1733062536663,54.4828197730579,55.0536250226315,55.2827091430443,55.7050413615394,56.2191239795846,56.4676834362553,56.0907042495878,56.028327681738,57.3651508760875,57.8021098280801,57.8259970347018,58.1959027979624,58.4076616243937,58.8904345587064,59.039638061632],"type":"scatter","mode":"lines","hoveron":"points","fill":"toself","color":["gray85"],"name":"95% confidence","inherit":true},"4084422b829.3":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333],"y":[47.9310549169463,48.2011304778377,48.2140353648225,47.6089509124579,47.325336224086,48.4472032199479,48.6749813540614,48.4950212049794,48.6660247942842,48.6834832913143,48.9762523843846,48.9394755244755,49.0605304414218,49.3306060023132,49.343510889298,48.7384264369335,48.4548117485616,49.5766787444234,49.8044568785369,49.6244967294549,49.7955003187597,49.8129588157898,50.1057279088602,50.068951048951],"type":"scatter","mode":"lines","name":"Forecasted","line":{"width":2,"color":"#00526d","dash":"dash"},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"","xaxis":{"domain":[0,1],"automargin":true,"title":""},"yaxis":{"domain":[0,1],"automargin":true,"title":""},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333],"y":[40.76,40.74,40.74,40.74,40.74,41.78,41.91,41.69,41.62,41.95,41.95,41.95,42.06,42.03,42.46,42.34,41.74,41.74,41.74,43.17,43.15,43.13,43.61,48.14,48.14,48.14,48.13,49.21,49.31,49.54,48.88,48.88,48.88,48.87,48.16,47.77,47.09,47.98,47.98,47.98,47.91,47.68,48.32,48.82,48.91,48.91,48.91,48.22,47.81],"type":"scatter","mode":"lines","name":"Observed","line":{"color":"#00526d","width":2},"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(191,191,191,0.5)","x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333,2021.08333333333,2021.08333333333,2021,2020.91666666667,2020.83333333333,2020.75,2020.66666666667,2020.58333333333,2020.5,2020.41666666667,2020.33333333333,2020.25,2020.16666666667,2020.08333333333,2020,2019.91666666667,2019.83333333333,2019.75,2019.66666666667,2019.58333333333,2019.5,2019.41666666667,2019.33333333333,2019.25,2019.16666666667],"type":"scatter","mode":"lines","hoveron":"points","fill":"toself","name":"80% confidence","y":[46.6376393912508,46.4447921284957,46.0935342276787,45.1782461282673,44.6197630088235,45.492219785408,45.4900594125275,45.0956788496224,45.0650070042445,44.8915009865769,45.002472008634,44.7918579975139,44.7159182755237,44.8264461974963,44.6852648435649,43.9310303748384,43.502755854985,44.4840705474025,44.5750726964727,44.2618239258165,44.3027723740912,44.1931847145112,44.3617169735763,44.2033340907855,44.2033340907855,55.9345680071166,55.849738844144,55.4327329170683,55.2882282634282,54.9871695330933,55.0338410606012,54.6692869414444,53.4068676421381,53.5458224990285,54.0017569350311,53.8347658071302,53.4051426073199,53.0870930514372,52.9500327601352,52.4754655960517,52.2670425843239,51.8943635603363,51.8599032955954,51.4021866544878,50.0309094393486,50.0396556966486,50.3345365019663,49.9574688271796,49.2244704426418],"marker":{"color":"rgba(191,191,191,1)","line":{"color":"rgba(191,191,191,1)"}},"textfont":{"color":"rgba(191,191,191,1)"},"error_y":{"color":"rgba(191,191,191,1)"},"error_x":{"color":"rgba(191,191,191,1)"},"line":{"color":"rgba(191,191,191,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(217,217,217,0.5)","x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333,2021.08333333333,2021.08333333333,2021,2020.91666666667,2020.83333333333,2020.75,2020.66666666667,2020.58333333333,2020.5,2020.41666666667,2020.33333333333,2020.25,2020.16666666667,2020.08333333333,2020,2019.91666666667,2019.83333333333,2019.75,2019.66666666667,2019.58333333333,2019.5,2019.41666666667,2019.33333333333,2019.25,2019.16666666667],"type":"scatter","mode":"lines","hoveron":"points","fill":"toself","name":"95% confidence","y":[45.9529465711219,45.5150427682777,44.9710087323265,43.8915087414608,43.1875190639959,43.9279460458134,43.8040635800074,43.2961757064841,43.1587433349021,42.8841468095706,42.8988797461377,42.5962419059068,42.4160195213043,42.4420880250419,42.2193383423407,41.3861486242792,40.8812958153851,41.7882066127594,41.8068039289938,41.422996424208,41.3950978395571,41.2182560071859,41.3210212590139,41.0982640362701,41.0982640362701,59.039638061632,58.8904345587064,58.4076616243937,58.1959027979624,57.8259970347018,57.8021098280801,57.3651508760875,56.028327681738,56.0907042495878,56.4676834362553,56.2191239795846,55.7050413615394,55.2827091430443,55.0536250226315,54.4828197730579,54.1733062536663,53.6938667034746,53.5458991281154,52.9664603940824,51.4631533841762,51.326393083455,51.4570619973185,50.8872181873977,49.9091632627707],"marker":{"color":"rgba(217,217,217,1)","line":{"color":"rgba(217,217,217,1)"}},"textfont":{"color":"rgba(217,217,217,1)"},"error_y":{"color":"rgba(217,217,217,1)"},"error_x":{"color":"rgba(217,217,217,1)"},"line":{"color":"rgba(217,217,217,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021,2021.08333333333],"y":[47.9310549169463,48.2011304778377,48.2140353648225,47.6089509124579,47.325336224086,48.4472032199479,48.6749813540614,48.4950212049794,48.6660247942842,48.6834832913143,48.9762523843846,48.9394755244755,49.0605304414218,49.3306060023132,49.343510889298,48.7384264369335,48.4548117485616,49.5766787444234,49.8044568785369,49.6244967294549,49.7955003187597,49.8129588157898,50.1057279088602,50.068951048951],"type":"scatter","mode":"lines","name":"Forecasted","line":{"color":"#00526d","width":2,"dash":"dash"},"marker":{"color":"rgba(214,39,40,1)","line":{"color":"rgba(214,39,40,1)"}},"error_y":{"color":"rgba(214,39,40,1)"},"error_x":{"color":"rgba(214,39,40,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cara visualisasi lain: perbandingan prediksi dan aktual</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">test_forecast</span>(<span class="at">actual =</span> micro_ts, <span class="co"># data aktual full</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">forecast.obj =</span> forecast_micro, <span class="co"># hasil forecast</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">test =</span> micro_test) <span class="co"># data test</span></span></code></pre></div>
+<div id="htmlwidget-2152b9dc093fd231775d" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2152b9dc093fd231775d">{"x":{"visdat":{"40844e1263fe":["function () ","plotlyVisDat"]},"cur_data":"40844e1263fe","attrs":{"40844e1263fe":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2015,2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333,2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021],"y":[40.76,40.74,40.74,40.74,40.74,41.78,41.91,41.69,41.62,41.95,41.95,41.95,42.06,42.03,42.46,42.34,41.74,41.74,41.74,43.17,43.15,43.13,43.61,48.14,48.14,48.14,48.13,49.21,49.31,49.54,48.88,48.88,48.88,48.87,48.16,47.77,47.09,47.98,47.98,47.98,47.91,47.68,48.32,48.82,48.91,48.91,48.91,48.22,47.81,47.93,47.6,47.35,47.35,47.35,47.35,46.88,47.77,48.02,47.57,47.57,47.57,47.77,47.35,47.74,47.16,46.52,46.52,46.52,46.43,45.94,46.83,46.92,46.47],"mode":"lines+markers","name":"Actual","type":"scatter","hoverinfo":"y","line":{"color":"#00526d"},"marker":{"color":"#00526d"},"inherit":true},"40844e1263fe.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2015,2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333,2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021],"y":[null,null,null,null,null,null,null,null,null,null,null,null,41.5889903846154,42.0312215437128,42.4288056700507,42.3186685388595,41.7140542469566,41.5049288600943,43.2345825322534,41.6277951873066,42.9432431808746,43.4189693228147,43.139298171725,43.6258299164757,48.0239493998732,48.1016810935122,48.5382260637995,48.0236143669205,48.4896488875613,49.0273145311623,50.8712850962503,49.0552554775915,48.6843210581394,49.1095416933493,48.9370786703709,48.6062893042086,47.731425185118,47.1069803695616,48.273992779233,47.9940477116027,47.3275298025642,47.6216373284938,48.8445399356628,48.5236708443525,48.6161328531585,49.0961472408411,48.9290045780009,49.2898006737907,48.216274850887,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],"mode":"lines+markers","name":"Fitted","type":"scatter","line":{"color":"red"},"marker":{"color":"red"},"hoverinfo":"text","text":["Model:  HoltWinters <br> Actual:  40.76 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.78 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.91 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.69 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.62 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.06 <br> Fitted Value:  41.59 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.03 <br> Fitted Value:  42.03 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.46 <br> Fitted Value:  42.43 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.34 <br> Fitted Value:  42.32 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  41.71 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  41.5 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  43.23 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.17 <br> Fitted Value:  41.63 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.15 <br> Fitted Value:  42.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.13 <br> Fitted Value:  43.42 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.61 <br> Fitted Value:  43.14 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  43.63 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  48.02 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  48.1 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.13 <br> Fitted Value:  48.54 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.21 <br> Fitted Value:  48.02 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.31 <br> Fitted Value:  48.49 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.54 <br> Fitted Value:  49.03 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  50.87 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  49.06 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  48.68 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.87 <br> Fitted Value:  49.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.16 <br> Fitted Value:  48.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Fitted Value:  48.61 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.09 <br> Fitted Value:  47.73 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  47.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  48.27 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  47.99 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.91 <br> Fitted Value:  47.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.68 <br> Fitted Value:  47.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.32 <br> Fitted Value:  48.84 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.82 <br> Fitted Value:  48.52 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  48.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  49.1 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  48.93 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.22 <br> Fitted Value:  49.29 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.81 <br> Fitted Value:  48.22 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.93 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.6 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.88 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.02 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.74 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.16 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.43 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  45.94 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.83 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.92 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.47 <br> Fitted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07"],"inherit":true},"40844e1263fe.2":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2015,2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333,2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021],"y":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,47.9310549169463,48.2011304778377,48.2140353648225,47.6089509124579,47.325336224086,48.4472032199479,48.6749813540614,48.4950212049794,48.6660247942842,48.6834832913143,48.9762523843846,48.9394755244755,49.0605304414218,49.3306060023132,49.343510889298,48.7384264369335,48.4548117485616,49.5766787444234,49.8044568785369,49.6244967294549,49.7955003187597,49.8129588157898,50.1057279088602,50.068951048951],"mode":"lines+markers","name":"Forecasted","type":"scatter","hoverinfo":"text","text":["Model:  HoltWinters <br> Actual:  40.76 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  40.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.78 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.91 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.69 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.62 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.95 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.06 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.03 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.46 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.34 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.17 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.15 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.13 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.61 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.13 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.21 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.31 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.54 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.87 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.16 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.09 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.91 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.68 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.32 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.82 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.22 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.81 <br> Forecasted Value:  NA <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.93 <br> Forecasted Value:  47.93 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.6 <br> Forecasted Value:  48.2 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  48.21 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  47.61 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  47.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  48.45 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.88 <br> Forecasted Value:  48.67 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Forecasted Value:  48.5 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.02 <br> Forecasted Value:  48.67 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.68 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.98 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Forecasted Value:  49.06 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  49.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.74 <br> Forecasted Value:  49.34 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.16 <br> Forecasted Value:  48.74 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  48.45 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  49.58 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  49.8 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.43 <br> Forecasted Value:  49.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  45.94 <br> Forecasted Value:  49.8 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.83 <br> Forecasted Value:  49.81 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.92 <br> Forecasted Value:  50.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.47 <br> Forecasted Value:  50.07 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07"],"marker":{"color":"green"},"line":{"color":"green"},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"micro_ts - Actual vs Forecasted and Fitted","xaxis":{"domain":[0,1],"automargin":true,"title":"HoltWinters","showgrid":false},"yaxis":{"domain":[0,1],"automargin":true,"title":"micro_ts","showgrid":false},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2015,2015.08333333333,2015.16666666667,2015.25,2015.33333333333,2015.41666666667,2015.5,2015.58333333333,2015.66666666667,2015.75,2015.83333333333,2015.91666666667,2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019,2019.08333333333,2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021],"y":[40.76,40.74,40.74,40.74,40.74,41.78,41.91,41.69,41.62,41.95,41.95,41.95,42.06,42.03,42.46,42.34,41.74,41.74,41.74,43.17,43.15,43.13,43.61,48.14,48.14,48.14,48.13,49.21,49.31,49.54,48.88,48.88,48.88,48.87,48.16,47.77,47.09,47.98,47.98,47.98,47.91,47.68,48.32,48.82,48.91,48.91,48.91,48.22,47.81,47.93,47.6,47.35,47.35,47.35,47.35,46.88,47.77,48.02,47.57,47.57,47.57,47.77,47.35,47.74,47.16,46.52,46.52,46.52,46.43,45.94,46.83,46.92,46.47],"mode":"lines+markers","name":"Actual","type":"scatter","hoverinfo":["y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y","y"],"line":{"color":"#00526d"},"marker":{"color":"#00526d","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2016,2016.08333333333,2016.16666666667,2016.25,2016.33333333333,2016.41666666667,2016.5,2016.58333333333,2016.66666666667,2016.75,2016.83333333333,2016.91666666667,2017,2017.08333333333,2017.16666666667,2017.25,2017.33333333333,2017.41666666667,2017.5,2017.58333333333,2017.66666666667,2017.75,2017.83333333333,2017.91666666667,2018,2018.08333333333,2018.16666666667,2018.25,2018.33333333333,2018.41666666667,2018.5,2018.58333333333,2018.66666666667,2018.75,2018.83333333333,2018.91666666667,2019],"y":[41.5889903846154,42.0312215437128,42.4288056700507,42.3186685388595,41.7140542469566,41.5049288600943,43.2345825322534,41.6277951873066,42.9432431808746,43.4189693228147,43.139298171725,43.6258299164757,48.0239493998732,48.1016810935122,48.5382260637995,48.0236143669205,48.4896488875613,49.0273145311623,50.8712850962503,49.0552554775915,48.6843210581394,49.1095416933493,48.9370786703709,48.6062893042086,47.731425185118,47.1069803695616,48.273992779233,47.9940477116027,47.3275298025642,47.6216373284938,48.8445399356628,48.5236708443525,48.6161328531585,49.0961472408411,48.9290045780009,49.2898006737907,48.216274850887],"mode":"lines+markers","name":"Fitted","type":"scatter","line":{"color":"red"},"marker":{"color":"red","line":{"color":"rgba(255,127,14,1)"}},"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"text":["Model:  HoltWinters <br> Actual:  42.06 <br> Fitted Value:  41.59 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.03 <br> Fitted Value:  42.03 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.46 <br> Fitted Value:  42.43 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  42.34 <br> Fitted Value:  42.32 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  41.71 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  41.5 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  41.74 <br> Fitted Value:  43.23 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.17 <br> Fitted Value:  41.63 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.15 <br> Fitted Value:  42.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.13 <br> Fitted Value:  43.42 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  43.61 <br> Fitted Value:  43.14 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  43.63 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  48.02 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.14 <br> Fitted Value:  48.1 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.13 <br> Fitted Value:  48.54 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.21 <br> Fitted Value:  48.02 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.31 <br> Fitted Value:  48.49 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  49.54 <br> Fitted Value:  49.03 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  50.87 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  49.06 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.88 <br> Fitted Value:  48.68 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.87 <br> Fitted Value:  49.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.16 <br> Fitted Value:  48.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Fitted Value:  48.61 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.09 <br> Fitted Value:  47.73 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  47.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  48.27 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.98 <br> Fitted Value:  47.99 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.91 <br> Fitted Value:  47.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.68 <br> Fitted Value:  47.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.32 <br> Fitted Value:  48.84 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.82 <br> Fitted Value:  48.52 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  48.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  49.1 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.91 <br> Fitted Value:  48.93 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.22 <br> Fitted Value:  49.29 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.81 <br> Fitted Value:  48.22 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2019.08333333333,2019.16666666667,2019.25,2019.33333333333,2019.41666666667,2019.5,2019.58333333333,2019.66666666667,2019.75,2019.83333333333,2019.91666666667,2020,2020.08333333333,2020.16666666667,2020.25,2020.33333333333,2020.41666666667,2020.5,2020.58333333333,2020.66666666667,2020.75,2020.83333333333,2020.91666666667,2021],"y":[47.9310549169463,48.2011304778377,48.2140353648225,47.6089509124579,47.325336224086,48.4472032199479,48.6749813540614,48.4950212049794,48.6660247942842,48.6834832913143,48.9762523843846,48.9394755244755,49.0605304414218,49.3306060023132,49.343510889298,48.7384264369335,48.4548117485616,49.5766787444234,49.8044568785369,49.6244967294549,49.7955003187597,49.8129588157898,50.1057279088602,50.068951048951],"mode":"lines+markers","name":"Forecasted","type":"scatter","hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"text":["Model:  HoltWinters <br> Actual:  47.93 <br> Forecasted Value:  47.93 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.6 <br> Forecasted Value:  48.2 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  48.21 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  47.61 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  47.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  48.45 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.88 <br> Forecasted Value:  48.67 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Forecasted Value:  48.5 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  48.02 <br> Forecasted Value:  48.67 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.68 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.98 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.57 <br> Forecasted Value:  48.94 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.77 <br> Forecasted Value:  49.06 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.35 <br> Forecasted Value:  49.33 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.74 <br> Forecasted Value:  49.34 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  47.16 <br> Forecasted Value:  48.74 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  48.45 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  49.58 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.52 <br> Forecasted Value:  49.8 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.43 <br> Forecasted Value:  49.62 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  45.94 <br> Forecasted Value:  49.8 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.83 <br> Forecasted Value:  49.81 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.92 <br> Forecasted Value:  50.11 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07","Model:  HoltWinters <br> Actual:  46.47 <br> Forecasted Value:  50.07 <br> Training Set <br> MAPE:  1.26 <br> RMSE:  1 <br> Testing Set <br> MAPE:  3.68 <br> RMSE:  2.07"],"marker":{"color":"green","line":{"color":"rgba(44,160,44,1)"}},"line":{"color":"green"},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="sarima" class="section level2">
+<h2>SARIMA</h2>
+<div id="pengujian-stasioner" class="section level3">
+<h3>Pengujian Stasioner</h3>
+<p>p-value masih diatas 0.05 jadi belum stasioner.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(micro_train)</span></code></pre></div>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  micro_train
+## Dickey-Fuller = -1.1058, Lag order = 3, p-value = 0.9125
+## alternative hypothesis: stationary</code></pre>
+<p>Data harus di differencing sebanyak 2 kali untuk bisa stasioner.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">diff</span>(micro_train, <span class="at">differences =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## Warning in adf.test(diff(micro_train, differences = 2)): p-value smaller than
+## printed p-value</code></pre>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  diff(micro_train, differences = 2)
+## Dickey-Fuller = -5.522, Lag order = 3, p-value = 0.01
+## alternative hypothesis: stationary</code></pre>
+</div>
+<div id="model-sarima-otomatis" class="section level3">
+<h3>Model SARIMA otomatis</h3>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>model_auto <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(micro_train)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1168</span></span></code></pre></div>
+<pre><code>## [1] 1168</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_auto)</span></code></pre></div>
+<pre><code>## Series: micro_train 
+## ARIMA(0,1,0) 
+## 
+## sigma^2 = 0.6162:  log likelihood = -56.49
+## AIC=114.97   AICc=115.06   BIC=116.85
+## 
+## Training set error measures:
+##                     ME      RMSE       MAE      MPE      MAPE      MASE
+## Training set 0.1447094 0.7769322 0.3471584 0.313464 0.7491031 0.1324759
+##                    ACF1
+## Training set 0.05490479</code></pre>
+</div>
+</div>
+</div>
+<div id="model-evaluation-and-choose-the-best-model"
+class="section level1">
+<h1>Model Evaluation and choose the best model</h1>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MAPE</span>(<span class="at">y_pred =</span> forecast_micro<span class="sc">$</span>mean, <span class="co"># mean = point forecast. hasil forecast ke data test</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y_true =</span> micro_test)<span class="sc">*</span><span class="dv">100</span></span></code></pre></div>
+<pre><code>## [1] 3.684623</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
