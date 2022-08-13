@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dwi Retno" />
+
+<meta name="date" content="2022-05-06" />
+
+<title>Exploratory Data Analysis Amazon Best Selling Books 2009-2022</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Supervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Cost---SAVE.html">Regression</a>
+    </li>
+    <li>
+      <a href="Airplane.html">Classification I</a>
+    </li>
+    <li>
+      <a href="about.html">Classification II</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unsupervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="happy.html">K-means</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="neuraldeep.html">Deep Learning</a>
+</li>
+<li>
+  <a href="time.html">Time Series</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Exploratory Data Analysis Amazon Best
+Selling Books 2009-2022</h1>
+<h4 class="author">Dwi Retno</h4>
+<h4 class="date">06 May 2022</h4>
+
+</div>
+
+
+<hr />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+  body { 
+    text-align: justify; 
+    font-size: 20px;
+    margin :17px;
+    font-family: 'Pangolin', cursive;
+  }
+</style>
+<p><br> <img src="books.png" alt="Amazon Books" /> <br><br></p>
+<div id="about-dataset" class="section level2 tabset">
+<h2 class="tabset">1. About Dataset</h2>
+<hr />
+<div id="context" class="section level3">
+<h3>1.1 Context</h3>
+<p>Dataset yang digunakan yaitu <a href="">Amazon</a> berisi Top 50 buku
+yang banyak terjual (<em>Best Selling</em>).Data terdiri dari tahun 2009
+sampai tahun 2022.</p>
+</div>
+<div id="content" class="section level3">
+<h3>1.2 Content</h3>
+<p>Data terdiri dari :</p>
+<ul>
+<li><code>Name</code> : Berisi Judul buku</li>
+<li><code>Author</code> : Berisi nama pengarang buku</li>
+<li><code>User Rating</code> : Rata-rata rating dari pembaca untuk buku
+(dari 5 bintang)</li>
+<li><code>Reviews</code> : Banyaknya buku yang di review</li>
+<li><code>Price</code> : Harga Buku (yang dibulatkan)</li>
+<li><code>Year</code> : Tahun Buku</li>
+<li><code>Genre</code> : Tipe Buku</li>
+</ul>
+</div>
+</div>
+<div id="input-data" class="section level2">
+<h2>2. Input Data</h2>
+<hr />
+<p>Pastikan data ditempatkan ditempatkan di tempat yang sama dengan file
+R kita.Jika ingin membaca file maka gunakan <em>function</em>
+<code>read_csv()</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>amazonBook <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;amazon_book.csv&quot;</span>)</span></code></pre></div>
+<div id="data-inspection" class="section level3">
+<h3>2.2 Data Inspection</h3>
+<p>Untuk mengetahui isi data kita dari data teratas.Maka kita akan
+menggunakan <em>function</em> <code>head()</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(amazonBook)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Author"],"name":[2],"type":["chr"],"align":["left"]},{"label":["User.Rating"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Reviews"],"name":[4],"type":["int"],"align":["right"]},{"label":["Price"],"name":[5],"type":["int"],"align":["right"]},{"label":["Year"],"name":[6],"type":["int"],"align":["right"]},{"label":["Genre"],"name":[7],"type":["chr"],"align":["left"]}],"data":[{"1":"Act Like a Lady, Think Like a Man: What Men Really Think About Love, Relationships, Intimacy, and Commitment","2":"Steve Harvey","3":"4.6","4":"5013","5":"17","6":"2009","7":"Non Fiction","_rn_":"1"},{"1":"Arguing with Idiots: How to Stop Small Minds and Big Government","2":"Glenn Beck","3":"4.6","4":"798","5":"5","6":"2009","7":"Non Fiction","_rn_":"2"},{"1":"Breaking Dawn (The Twilight Saga, Book 4)","2":"Stephenie Meyer","3":"4.6","4":"9769","5":"13","6":"2009","7":"Fiction","_rn_":"3"},{"1":"Crazy Love: Overwhelmed by a Relentless God","2":"Francis Chan","3":"4.7","4":"1542","5":"14","6":"2009","7":"Non Fiction","_rn_":"4"},{"1":"Dead And Gone: A Sookie Stackhouse Novel (Sookie Stackhouse/True Blood)","2":"Charlaine Harris","3":"4.6","4":"1541","5":"4","6":"2009","7":"Fiction","_rn_":"5"},{"1":"Diary of a Wimpy Kid: The Last Straw (Book 3)","2":"Jeff Kinney","3":"4.8","4":"3837","5":"15","6":"2009","7":"Fiction","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Untuk mengetahui isi data kita dari data terbawah.Kita dapat
+menggunakan <em>function</em> <code>tail()</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(amazonBook)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Author"],"name":[2],"type":["chr"],"align":["left"]},{"label":["User.Rating"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Reviews"],"name":[4],"type":["int"],"align":["right"]},{"label":["Price"],"name":[5],"type":["int"],"align":["right"]},{"label":["Year"],"name":[6],"type":["int"],"align":["right"]},{"label":["Genre"],"name":[7],"type":["chr"],"align":["left"]}],"data":[{"1":"The Whole Body Reset: Your Weight-Loss Plan for a Flat Belly, Optimum Health & a Body You'll Love at Midlife and Beyond","2":"Stephen Perrine","3":"4.2","4":"206","5":"20","6":"2022","7":"Non Fiction","_rn_":"695"},{"1":"The Wonderful Things You Will Be","2":"Emily Winfield Martin","3":"4.9","4":"20920","5":"9","6":"2022","7":"Fiction","_rn_":"696"},{"1":"Ugly Love: A Novel","2":"Colleen Hoover","3":"4.7","4":"33929","5":"10","6":"2022","7":"Fiction","_rn_":"697"},{"1":"Verity","2":"Colleen Hoover","3":"4.6","4":"71826","5":"11","6":"2022","7":"Fiction","_rn_":"698"},{"1":"What to Expect When You're Expecting","2":"Heidi Murkoff","3":"4.8","4":"27052","5":"13","6":"2022","7":"Non Fiction","_rn_":"699"},{"1":"Where the Crawdads Sing","2":"Delia Owens","3":"4.8","4":"208917","5":"10","6":"2022","7":"Fiction","_rn_":"700"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="data-cleansing" class="section level3">
+<h3>2.3 Data Cleansing</h3>
+<p>Setelah itu, kita harus mengecek tipe data pada data amazon ini
+apakah sudah sesuai atau belum.Sebelumnya harus melihat struktur data
+pada database ini dapat menggunakan <code>str()</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(amazonBook)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    700 obs. of  7 variables:
+##  $ Name       : chr  &quot;Act Like a Lady, Think Like a Man: What Men Really Think About Love, Relationships, Intimacy, and Commitment&quot; &quot;Arguing with Idiots: How to Stop Small Minds and Big Government&quot; &quot;Breaking Dawn (The Twilight Saga, Book 4)&quot; &quot;Crazy Love: Overwhelmed by a Relentless God&quot; ...
+##  $ Author     : chr  &quot;Steve Harvey&quot; &quot;Glenn Beck&quot; &quot;Stephenie Meyer&quot; &quot;Francis Chan&quot; ...
+##  $ User.Rating: num  4.6 4.6 4.6 4.7 4.6 4.8 4.6 4.8 4.5 4.3 ...
+##  $ Reviews    : int  5013 798 9769 1542 1541 3837 37 3181 720 956 ...
+##  $ Price      : int  17 5 13 14 4 15 6 12 1 14 ...
+##  $ Year       : int  2009 2009 2009 2009 2009 2009 2009 2009 2009 2009 ...
+##  $ Genre      : chr  &quot;Non Fiction&quot; &quot;Non Fiction&quot; &quot;Fiction&quot; &quot;Non Fiction&quot; ...</code></pre>
+<p>Mengubah tipe kolom <code>Genre</code> menjadi
+<code>factor</code>.Pada hasil <code>str</code> dibawah kolom
+<code>Genre</code> sudah berubah tipe data menjadi Factor.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>amazonBook<span class="sc">$</span>Genre <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(amazonBook<span class="sc">$</span>Genre)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(amazonBook)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    700 obs. of  7 variables:
+##  $ Name       : chr  &quot;Act Like a Lady, Think Like a Man: What Men Really Think About Love, Relationships, Intimacy, and Commitment&quot; &quot;Arguing with Idiots: How to Stop Small Minds and Big Government&quot; &quot;Breaking Dawn (The Twilight Saga, Book 4)&quot; &quot;Crazy Love: Overwhelmed by a Relentless God&quot; ...
+##  $ Author     : chr  &quot;Steve Harvey&quot; &quot;Glenn Beck&quot; &quot;Stephenie Meyer&quot; &quot;Francis Chan&quot; ...
+##  $ User.Rating: num  4.6 4.6 4.6 4.7 4.6 4.8 4.6 4.8 4.5 4.3 ...
+##  $ Reviews    : int  5013 798 9769 1542 1541 3837 37 3181 720 956 ...
+##  $ Price      : int  17 5 13 14 4 15 6 12 1 14 ...
+##  $ Year       : int  2009 2009 2009 2009 2009 2009 2009 2009 2009 2009 ...
+##  $ Genre      : Factor w/ 2 levels &quot;Fiction&quot;,&quot;Non Fiction&quot;: 2 2 1 2 1 1 2 1 2 2 ...</code></pre>
+<p>Saatnya untuk mengecek apakah ada <em>missing value</em> menggunakan
+fungsi <code>is.na()</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(amazonBook))</span></code></pre></div>
+<pre><code>##        Name      Author User.Rating     Reviews       Price        Year 
+##           0           0           0           0           0           0 
+##       Genre 
+##           0</code></pre>
+<p>Dan ternyata pada data Amazon tidak ada <em>missing value</em>.</p>
+</div>
+</div>
+<div id="data-explanation" class="section level2">
+<h2>3. Data Explanation</h2>
+<hr />
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(amazonBook)</span></code></pre></div>
+<pre><code>##      Name              Author           User.Rating      Reviews      
+##  Length:700         Length:700         Min.   :3.30   Min.   :    37  
+##  Class :character   Class :character   1st Qu.:4.50   1st Qu.:  4987  
+##  Mode  :character   Mode  :character   Median :4.70   Median : 10284  
+##                                        Mean   :4.64   Mean   : 19255  
+##                                        3rd Qu.:4.80   3rd Qu.: 23358  
+##                                        Max.   :4.90   Max.   :208917  
+##      Price            Year              Genre    
+##  Min.   :  0.0   Min.   :2009   Fiction    :312  
+##  1st Qu.:  7.0   1st Qu.:2012   Non Fiction:388  
+##  Median : 11.0   Median :2016                    
+##  Mean   : 12.7   Mean   :2016                    
+##  3rd Qu.: 15.0   3rd Qu.:2019                    
+##  Max.   :105.0   Max.   :2022</code></pre>
+<p>Rata-rata Rating untuk setiap Genre ?</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="at">formula=</span>User.Rating<span class="sc">~</span>Genre,<span class="at">data=</span>amazonBook,<span class="at">FUN=</span>mean)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Genre"],"name":[1],"type":["fct"],"align":["left"]},{"label":["User.Rating"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Fiction","2":"4.664103"},{"1":"Non Fiction","2":"4.620361"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Rata-rata harga buku setiap genre ?</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="at">formula=</span>Price<span class="sc">~</span>Genre,<span class="at">data=</span>amazonBook,<span class="at">FUN=</span>mean)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Genre"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Price"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Fiction","2":"10.66346"},{"1":"Non Fiction","2":"14.33763"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Total Reviews dari tiap Genre buku ?</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(Reviews<span class="sc">~</span>Genre, amazonBook)</span></code></pre></div>
+<pre><code>## Genre
+##     Fiction Non Fiction 
+##     7498641     5979996</code></pre>
+</div>
+<div id="data-manipulation" class="section level2">
+<h2>4. Data Manipulation</h2>
+<hr />
+<p>Kita ingin mengetahui buku Fiction dengan user rating tertinggi di
+tahun 2012</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>amazonBook[amazonBook<span class="sc">$</span>Genre <span class="sc">==</span> <span class="st">&#39;Fiction&#39;</span> <span class="sc">&amp;</span> amazonBook<span class="sc">$</span>User.Rating <span class="sc">==</span> <span class="fu">max</span>(amazonBook<span class="sc">$</span>User.Rating) <span class="sc">&amp;</span> amazonBook<span class="sc">$</span>Year <span class="sc">==</span> <span class="st">&quot;2012&quot;</span>,]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Author"],"name":[2],"type":["chr"],"align":["left"]},{"label":["User.Rating"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Reviews"],"name":[4],"type":["int"],"align":["right"]},{"label":["Price"],"name":[5],"type":["int"],"align":["right"]},{"label":["Year"],"name":[6],"type":["int"],"align":["right"]},{"label":["Genre"],"name":[7],"type":["fct"],"align":["left"]}],"data":[{"1":"Goodnight, Goodnight Construction Site (Hardcover Books for Toddlers, Preschool Books for Kids)","2":"Sherri Duskey Rinker","3":"4.9","4":"7038","5":"7","6":"2012","7":"Fiction","_rn_":"161"},{"1":"Oh, the Places You'll Go!","2":"Dr. Seuss","3":"4.9","4":"21834","5":"8","6":"2012","7":"Fiction","_rn_":"168"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Mencari buku dengan harga dibawah rata-rata dengan genre Non
+Fiction</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(amazonBook[amazonBook<span class="sc">$</span>Price <span class="sc">&lt;</span> <span class="fu">mean</span>(amazonBook<span class="sc">$</span>Price) <span class="sc">&amp;</span> amazonBook<span class="sc">$</span>Genre <span class="sc">==</span> <span class="st">&quot;Non Fiction&quot;</span>,])</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Author"],"name":[2],"type":["chr"],"align":["left"]},{"label":["User.Rating"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Reviews"],"name":[4],"type":["int"],"align":["right"]},{"label":["Price"],"name":[5],"type":["int"],"align":["right"]},{"label":["Year"],"name":[6],"type":["int"],"align":["right"]},{"label":["Genre"],"name":[7],"type":["fct"],"align":["left"]}],"data":[{"1":"Arguing with Idiots: How to Stop Small Minds and Big Government","2":"Glenn Beck","3":"4.6","4":"798","5":"5","6":"2009","7":"Non Fiction","_rn_":"2"},{"1":"Divine Soul Mind Body Healing and Transmission System: The Divine Way to Heal You, Humanity, Mother Earth, and Allâ\\200¦","2":"Zhi Gang Sha","3":"4.6","4":"37","5":"6","6":"2009","7":"Non Fiction","_rn_":"7"},{"1":"Eat This Not That! Supermarket Survival Guide: The No-Diet Weight Loss Solution","2":"David Zinczenko","3":"4.5","4":"720","5":"1","6":"2009","7":"Non Fiction","_rn_":"9"},{"1":"Glenn Beck's Common Sense: The Case Against an Out-of-Control Government, Inspired by Thomas Paine","2":"Glenn Beck","3":"4.6","4":"1365","5":"11","6":"2009","7":"Non Fiction","_rn_":"13"},{"1":"Going Rogue: An American Life","2":"Sarah Palin","3":"4.6","4":"1636","5":"6","6":"2009","7":"Non Fiction","_rn_":"14"},{"1":"Have a Little Faith: A True Story","2":"Mitch Albom","3":"4.8","4":"1930","5":"4","6":"2009","7":"Non Fiction","_rn_":"16"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Buku Fiksi yang memiliki rating rendah?</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>amazonBook[amazonBook<span class="sc">$</span>Genre <span class="sc">==</span> <span class="st">&#39;Fiction&#39;</span><span class="sc">&amp;</span> amazonBook<span class="sc">$</span>User.Rating <span class="sc">==</span> <span class="fu">min</span>(amazonBook<span class="sc">$</span>User.Rating),]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Author"],"name":[2],"type":["chr"],"align":["left"]},{"label":["User.Rating"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Reviews"],"name":[4],"type":["int"],"align":["right"]},{"label":["Price"],"name":[5],"type":["int"],"align":["right"]},{"label":["Year"],"name":[6],"type":["int"],"align":["right"]},{"label":["Genre"],"name":[7],"type":["fct"],"align":["left"]}],"data":[{"1":"The Casual Vacancy","2":"J.K. Rowling","3":"3.3","4":"9372","5":"12","6":"2012","7":"Fiction","_rn_":"179"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Penjelasan :</p>
+<ul>
+<li>Data ini terdiri dari 700 data Top Buku yang dijual di Amazon Book
+dari tahun 2009 sampai 2022.Buku yang dijual memiliki 2 Genre yaitu
+Fiksi dan Non Fiksi.</li>
+<li>Rating terendah sebesar 3,3 dan rating buku tertinggi sebesar
+4.9.</li>
+<li>Harga buku terendah sebesar $ 0 dan tertinggi sebesar $ 105.</li>
+<li>Buku Fiksi terdapat 312 buah dan mendapatkan rata -rata rating dari
+pengguna sebesar 4,66.Sedangkan buku Non Fiksi terdapat 388 buah dan
+mendapatkan rata -rata rating dari pengguna sebesar 4,62.</li>
+<li>Rata-rata harga buku fiksi yang direview sebesar $ 10,6 dan buku non
+fiksi sebesar $ 14,3.</li>
+<li>Total buku yang sudah di review sebesar 7,498,641 dengan genre
+fiksi.</li>
+<li>Buku Fiksi dengan rating rendah diduduki oleh <em>The Casual
+Vacancy</em> dengan rating 3,3.</li>
+</ul>
+<!-- Buku dengan rating tertinggi tiap tahun -->
+<!-- grafik tahun dan harga buku fiksi/non -->
+<!-- grafik persebaran review dengan user rating buku fiksi/non -->
+</div>
+<div id="visualisation" class="section level2">
+<h2>5. Visualisation</h2>
+<hr />
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Count_book <span class="ot">&lt;-</span> amazonBook <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">group_by</span>(Genre,Year) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">arrange</span>(Year)</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;Genre&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Count_book, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> count ,<span class="at">colour =</span> Genre))<span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">2009</span>, <span class="dv">2022</span>, <span class="at">by =</span> <span class="dv">2</span>))<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Top Buku Amazon sejak tahun 2009 - 2022&quot;</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Jumlah buku&quot;</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Genre Buku&quot;</span>)<span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Penjelasan :</p>
+<ul>
+<li>Dapat dilihat pada grafik menunjukan buku Fiksi lebih memiliki
+sedikit jumlah buku pada tiap tahun dibandingkan buku Non fiksi.</li>
+<li>Buku Fiksi dan Non fiksi pada tahun 2021 memiliki jumlah buku yang
+sama yaitu sebesar 25 buah buku.</li>
+</ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Mean_book <span class="ot">&lt;-</span> amazonBook <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">group_by</span>(Genre, Price) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Price)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">arrange</span>(Price)</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;Genre&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Mean_book, <span class="fu">aes</span>(<span class="at">x =</span> Genre, <span class="at">y =</span> Price))<span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">&quot;#eb6864&quot;</span>)<span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()<span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rata-rata Harga Buku berdasarkan genre&quot;</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Harga&quot;</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Genre Buku&quot;</span>)<span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Penjelasan :</p>
+<ul>
+<li>Terdapat outlier/nilai ekstrim di bagian atas boxplot fiksi dan non
+fiksi dsertai bagian whisker bagian atas lebih panjang daripada whisker
+bawah.</li>
+<li>Dapat dilihat pada bagian non fiksi letak garis median pada box
+terletak tepat ditengah box.</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_ratings <span class="ot">&lt;-</span> amazonBook <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">group_by</span>(Genre,Year) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(User.Rating)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">arrange</span>(Year)</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;Genre&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mean_ratings, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> mean ,<span class="at">colour =</span> Genre))<span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">2009</span>, <span class="dv">2022</span>, <span class="at">by =</span> <span class="dv">2</span>))<span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rata-rata Rating user berdasarkan genre&quot;</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Rating dari User&quot;</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Genre Buku&quot;</span>)<span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Penjelasan :</p>
+<ul>
+<li>Dilihat dari grafik diatas bahwa user memberikan rating buku fiksi
+dari tahun 2011 ke 2012 mengalami penurunan.Kemudian rating mengalami
+peningkatan dari tahun 2013 sampai tahun 2019 sebesar kurang lebih
+4,8.</li>
+<li>Dibandingkan grafik rating user fiksi ,pada buku non fiksi mengalami
+peningkatan pada besarnya user raring di tahun 2021.</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mean_review <span class="ot">&lt;-</span> amazonBook <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">group_by</span>(Genre,Year) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(Reviews)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">arrange</span>(Year)</span></code></pre></div>
+<pre><code>## `summarise()` has grouped output by &#39;Genre&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mean_review, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Mean ,<span class="at">colour =</span> Genre))<span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">2009</span>, <span class="dv">2022</span>, <span class="at">by =</span> <span class="dv">2</span>))<span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rata-rata Review berdasarkan genre&quot;</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Review&quot;</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Genre Buku&quot;</span>)<span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Penjelasan :</p>
+<ul>
+<li>Dilihat dari pergerakan grafik jumlah review buku meningkat secara
+kompak untuk buku genre fiksi dan non fiksi di tahun 2020.</li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
