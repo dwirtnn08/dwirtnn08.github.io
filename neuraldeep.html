@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dwi Retno" />
+
+<meta name="date" content="2022-06-30" />
+
+<title>Neural Network</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Supervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Cost---SAVE.html">Regression</a>
+    </li>
+    <li>
+      <a href="Airplane.html">Classification I</a>
+    </li>
+    <li>
+      <a href="about.html">Classification II</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unsupervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="happy.html">K-means</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="neuraldeep.html">Deep Learning</a>
+</li>
+<li>
+  <a href="time.html">Time Series</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Neural Network</h1>
+<h4 class="author">Dwi Retno</h4>
+<h4 class="date">2022-06-30</h4>
+
+</div>
+
+
+<style>
+ @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
+  body { 
+    text-align : justify; 
+    font-size : 17px;
+    font-family : 'Delius', cursive;
+  }
+</style>
+<p>Pada kasus ini akan menggunakan image classification untuk
+mengklasifikasikan gambar x-ray dari pasien yang terkena covid,
+pneumonia dan juga pasien normal.</p>
+<div id="load-library" class="section level1">
+<h1>Load Library</h1>
+<p>Library yang akan digunakan pada kasus ini adalah tidyverse untuk
+data wrangling, imager untuk image manipulation , keras untuk deep
+learning, caret untuk model evaluation.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tensorflow)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.6     v purrr   0.3.4
+## v tibble  3.1.7     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">use_condaenv</span>(<span class="st">&quot;r-tensorflow&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imager)</span></code></pre></div>
+<pre><code>## Loading required package: magrittr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     set_names</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre><code>## 
+## Attaching package: &#39;imager&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
+## 
+##     add</code></pre>
+<pre><code>## The following object is masked from &#39;package:stringr&#39;:
+## 
+##     boundary</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     fill</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     convolve, spectrum</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     frame</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     save.image</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code></pre></div>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## 
+## Attaching package: &#39;caret&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     lift</code></pre>
+<pre><code>## The following object is masked from &#39;package:tensorflow&#39;:
+## 
+##     train</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;grid&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:imager&#39;:
+## 
+##     depth</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<p>Objek folder_train berisi nama folder yang ada pada folder train yang
+berisi nama label kita yaitu covid, normal, pneumonia.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>folder_train <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;Covid19-dataset/train/&quot;</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>folder_train</span></code></pre></div>
+<pre><code>## [1] &quot;covid&quot;     &quot;normal&quot;    &quot;pneumonia&quot;</code></pre>
+<p>Folder nama tersebut akan dikombinasikan dengan path atau direktori
+dari folder train sehingga kita bisa mengakses isi didalam setiap
+folder.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>folder_path <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Covid19-dataset/train/&quot;</span>, folder_train, <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>folder_path</span></code></pre></div>
+<pre><code>## [1] &quot;Covid19-dataset/train/covid/&quot;     &quot;Covid19-dataset/train/normal/&quot;   
+## [3] &quot;Covid19-dataset/train/pneumonia/&quot;</code></pre>
+<p>menggunakan fungsi map() untuk loop dan mengumpulkan nama file dari
+tiap folder dan akan menggembalikan berupa list.Jika ingin
+mengkombinasikan file nama dari 3 folder berbeda dapat menggunakan
+unlist()</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>file_name_train <span class="ot">&lt;-</span> <span class="fu">map</span>(folder_path, <span class="cf">function</span>(x) <span class="fu">paste0</span>(x, <span class="fu">list.files</span>(x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(file_name_train)</span></code></pre></div>
+<pre><code>## [1] &quot;Covid19-dataset/train/covid/Covid01.jpeg&quot; 
+## [2] &quot;Covid19-dataset/train/covid/Covid010.jpeg&quot;
+## [3] &quot;Covid19-dataset/train/covid/Covid012.jpeg&quot;
+## [4] &quot;Covid19-dataset/train/covid/Covid015.jpeg&quot;
+## [5] &quot;Covid19-dataset/train/covid/Covid019.jpeg&quot;
+## [6] &quot;Covid19-dataset/train/covid/Covid02.jpeg&quot;</code></pre>
+<p>Berikut ini adalah data terbawah dari train kita.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(file_name_train)</span></code></pre></div>
+<pre><code>## [1] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (68).jpeg&quot;
+## [2] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (69).jpeg&quot;
+## [3] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (7).jpeg&quot; 
+## [4] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (70).jpeg&quot;
+## [5] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (8).jpeg&quot; 
+## [6] &quot;Covid19-dataset/train/pneumonia/Pneumonia 3 (9).jpeg&quot;</code></pre>
+<p>Jumlah gambar dari folder train (covid, normal, pneumonia) sejumlah
+210 gambar.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(file_name_train)</span></code></pre></div>
+<pre><code>## [1] 210</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random pilih gambar</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>sample_image_train <span class="ot">&lt;-</span> <span class="fu">sample</span>(file_name_train,<span class="dv">6</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># load image ke R</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>img_train <span class="ot">&lt;-</span> <span class="fu">map</span>(sample_image_train, load.image)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Buat skolase foto grid 2x3</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(img_train, plot)</span></code></pre></div>
+<p><img src="neural---Copy--2-_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre><code>## [[1]]
+## Image. Width: 1216 pix Height: 872 pix Depth: 1 Colour channels: 3 
+## 
+## [[2]]
+## Image. Width: 2010 pix Height: 1705 pix Depth: 1 Colour channels: 3 
+## 
+## [[3]]
+## Image. Width: 1803 pix Height: 1238 pix Depth: 1 Colour channels: 3 
+## 
+## [[4]]
+## Image. Width: 1582 pix Height: 1333 pix Depth: 1 Colour channels: 3 
+## 
+## [[5]]
+## Image. Width: 1400 pix Height: 1048 pix Depth: 1 Colour channels: 3 
+## 
+## [[6]]
+## Image. Width: 1360 pix Height: 920 pix Depth: 1 Colour channels: 3</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(<span class="fu">load.image</span>(file_name_train[<span class="dv">1</span>]))</span></code></pre></div>
+<pre><code>## [1] 4248 3480    1    3</code></pre>
+<p>Function dibawah untuk mendapatkan informasi dimensi height dan
+weight serta nama file data train dibawah.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for acquiring width and height of an image</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>get_dim <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  img <span class="ot">&lt;-</span> <span class="fu">load.image</span>(x) </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  df_img <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">height =</span> <span class="fu">height</span>(img),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">width =</span> <span class="fu">width</span>(img),</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">filename =</span> x</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                       )</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_img)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="fu">get_dim</span>(file_name_train[<span class="dv">1</span>])</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["height"],"name":[1],"type":["int"],"align":["right"]},{"label":["width"],"name":[2],"type":["int"],"align":["right"]},{"label":["filename"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"3480","2":"4248","3":"Covid19-dataset/train/covid/Covid01.jpeg"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly get 50 sample images</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>sample_file <span class="ot">&lt;-</span> <span class="fu">sample</span>(file_name_train, <span class="dv">100</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the get_dim() function for each image</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>file_dim <span class="ot">&lt;-</span> <span class="fu">map_df</span>(sample_file, get_dim)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(file_dim, <span class="dv">10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["height"],"name":[1],"type":["int"],"align":["right"]},{"label":["width"],"name":[2],"type":["int"],"align":["right"]},{"label":["filename"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"872","2":"1216","3":"Covid19-dataset/train/pneumonia/Pneumonia 3 (65).jpeg","_rn_":"1"},{"1":"1705","2":"2010","3":"Covid19-dataset/train/normal/Normal 4 (38).jpeg","_rn_":"2"},{"1":"1238","2":"1803","3":"Covid19-dataset/train/normal/Normal 4 (47).jpeg","_rn_":"3"},{"1":"1333","2":"1582","3":"Covid19-dataset/train/pneumonia/Pneumonia 3 (69).jpeg","_rn_":"4"},{"1":"1048","2":"1400","3":"Covid19-dataset/train/pneumonia/Pneumonia 3 (19).jpeg","_rn_":"5"},{"1":"920","2":"1360","3":"Covid19-dataset/train/pneumonia/Pneumonia 3 (61).jpeg","_rn_":"6"},{"1":"2840","2":"2972","3":"Covid19-dataset/train/covid/Covid015.jpeg","_rn_":"7"},{"1":"1550","2":"1598","3":"Covid19-dataset/train/covid/Covid078.jpeg","_rn_":"8"},{"1":"391","2":"439","3":"Covid19-dataset/train/covid/Covid092.jpeg","_rn_":"9"},{"1":"1538","2":"2028","3":"Covid19-dataset/train/normal/Normal 4 (34).jpeg","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(file_dim)</span></code></pre></div>
+<pre><code>##      height         width        filename        
+##  Min.   : 391   Min.   : 439   Length:100        
+##  1st Qu.:1010   1st Qu.:1342   Class :character  
+##  Median :1370   Median :1632   Mode  :character  
+##  Mean   :1420   Mean   :1724                     
+##  3rd Qu.:1768   3rd Qu.:2033                     
+##  Max.   :2840   Max.   :2972</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>folder_list_test <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">&quot;Covid19-dataset/test/&quot;</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>folder_path_test <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Covid19-dataset/test/&quot;</span>, folder_list_test, <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>file_name_test <span class="ot">&lt;-</span> <span class="fu">map</span>(folder_path_test,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">paste0</span>(x, <span class="fu">list.files</span>(x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>()</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 data teratas </span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(file_name_test)</span></code></pre></div>
+<pre><code>## [1] &quot;Covid19-dataset/test/test/PN 0101 (7).jpeg&quot;                                          
+## [2] &quot;Covid19-dataset/test/test/PN 0101 (8).jpeg&quot;                                          
+## [3] &quot;Covid19-dataset/test/test/PN 0101 (9).jpeg&quot;                                          
+## [4] &quot;Covid19-dataset/test/test/radiopaedia-2019-novel-coronavirus-infected-pneumonia.jpeg&quot;
+## [5] &quot;Covid19-dataset/test/test/Vietnam_coronavirus.jpeg&quot;                                  
+## [6] &quot;Covid19-dataset/test/test/x-ray_coronavirus_US.jpeg&quot;</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random pilih gambar</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>sample_image_test <span class="ot">&lt;-</span> <span class="fu">sample</span>(file_name_test, <span class="dv">6</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># load image ke R</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>img_test <span class="ot">&lt;-</span> <span class="fu">map</span>(sample_image_test, load.image)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Buat skolase foto grid 2x3</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(img_test, plot)</span></code></pre></div>
+<p><img src="neural---Copy--2-_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre><code>## [[1]]
+## Image. Width: 880 pix Height: 891 pix Depth: 1 Colour channels: 3 
+## 
+## [[2]]
+## Image. Width: 651 pix Height: 655 pix Depth: 1 Colour channels: 1 
+## 
+## [[3]]
+## Image. Width: 1152 pix Height: 832 pix Depth: 1 Colour channels: 3 
+## 
+## [[4]]
+## Image. Width: 972 pix Height: 733 pix Depth: 1 Colour channels: 1 
+## 
+## [[5]]
+## Image. Width: 1754 pix Height: 1377 pix Depth: 1 Colour channels: 3 
+## 
+## [[6]]
+## Image. Width: 651 pix Height: 659 pix Depth: 1 Colour channels: 3</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>get_dim <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  img <span class="ot">&lt;-</span> <span class="fu">load.image</span>(x)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  df_img <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">height =</span> <span class="fu">height</span>(img),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">width =</span> <span class="fu">width</span>(img),</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">filename =</span> x)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_img)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="fu">get_dim</span>(file_name_test[<span class="dv">1</span>])</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["height"],"name":[1],"type":["int"],"align":["right"]},{"label":["width"],"name":[2],"type":["int"],"align":["right"]},{"label":["filename"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"876","2":"882","3":"Covid19-dataset/test/test/COVID-_Vietnam_coronavirus.jpeg"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>sample_file_test <span class="ot">&lt;-</span> <span class="fu">sample</span>(file_name_test)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>file_dim_test <span class="ot">&lt;-</span> <span class="fu">map_df</span>(sample_file_test, get_dim)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(file_dim_test, <span class="dv">10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["height"],"name":[1],"type":["int"],"align":["right"]},{"label":["width"],"name":[2],"type":["int"],"align":["right"]},{"label":["filename"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"891","2":"880","3":"Covid19-dataset/test/test/COVID-Vietnam_coronavirus.jpeg","_rn_":"1"},{"1":"655","2":"651","3":"Covid19-dataset/test/test/COVID-00022.jpeg","_rn_":"2"},{"1":"832","2":"1152","3":"Covid19-dataset/test/test/PN 0101 (2).jpeg","_rn_":"3"},{"1":"733","2":"972","3":"Covid19-dataset/test/test/COVID-00037.jpeg","_rn_":"4"},{"1":"1377","2":"1754","3":"Covid19-dataset/test/test/NO 0101 (19).jpeg","_rn_":"5"},{"1":"659","2":"651","3":"Covid19-dataset/test/test/COVID-0100.jpeg","_rn_":"6"},{"1":"813","2":"1272","3":"Covid19-dataset/test/test/PN 0101 (7).jpeg","_rn_":"7"},{"1":"1146","2":"1262","3":"Covid19-dataset/test/test/radiopaedia-2019-novel-coronavirus-infected-pneumonia.jpeg","_rn_":"8"},{"1":"1434","2":"1782","3":"Covid19-dataset/test/test/NO 0112.jpeg","_rn_":"9"},{"1":"856","2":"1224","3":"Covid19-dataset/test/test/PN 0101 (20).jpeg","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(file_dim)</span></code></pre></div>
+<pre><code>##      height         width        filename        
+##  Min.   : 391   Min.   : 439   Length:100        
+##  1st Qu.:1010   1st Qu.:1342   Class :character  
+##  Median :1370   Median :1632   Mode  :character  
+##  Mean   :1420   Mean   :1724                     
+##  3rd Qu.:1768   3rd Qu.:2033                     
+##  Max.   :2840   Max.   :2972</code></pre>
+<p>Pada data train memiliki dimensi height terkecil sebesar 391 dan
+height terbesar sebesar 2840, dan width terkecil sebesar 439 dan
+terbesar sebesar 2972.Data test memiliki data height dan width yang
+beragam yaitu masing-masing ukuran besar 2166 &amp; 2352 serta height
+width kecil sebesar 341 &amp; 416.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(file_dim_test)</span></code></pre></div>
+<pre><code>##      height           width        filename        
+##  Min.   : 341.0   Min.   : 416   Length:66         
+##  1st Qu.: 813.8   1st Qu.: 972   Class :character  
+##  Median : 888.0   Median :1223   Mode  :character  
+##  Mean   :1021.8   Mean   :1269                     
+##  3rd Qu.:1363.2   3rd Qu.:1751                     
+##  Max.   :2166.0   Max.   :2352</code></pre>
+<p>Semakin dimensi gambar yang digunakan untuk training lebih besar maka
+informasi nya banyak tapi waktu untuk trainingnya lama, kalau terlalu
+kecil maka makin banyak informasi yang hilang dari gambarnya.</p>
+</div>
+<div id="data-prepocessing" class="section level1">
+<h1>Data Prepocessing</h1>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>target_size <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">200</span>,<span class="dv">200</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>batch_size <span class="ot">&lt;-</span> <span class="dv">32</span></span></code></pre></div>
+<p>Dibagian function image_data_generator data asli akan dijadikan
+beberapa variasi.Data akan di rescale jadi skala data menjadi 0 dan 1,
+data akan di flip secara horizontal dan vertical, dan data akan di
+rotate dengan 45 derajat serta di zoom sebesar 0.25.Serta membagi data
+validasi sebesar 20%.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Image Generator</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>train_data_gen <span class="ot">&lt;-</span> <span class="fu">image_data_generator</span>(<span class="at">rescale =</span> <span class="fl">1.</span><span class="sc">/</span><span class="dv">255</span>, <span class="co"># Scaling pixel value</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">horizontal_flip =</span> T, <span class="co"># Flip image horizontally</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">vertical_flip =</span> T, <span class="co"># Flip image vertically </span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">rotation_range =</span> <span class="dv">45</span>, <span class="co"># Rotate image from 0 to 45 degrees</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">zoom_range =</span> <span class="fl">0.25</span>, <span class="co"># Zoom in or zoom out range</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">validation_split =</span> <span class="fl">0.2</span> <span class="co"># 20% data as validation data</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>                                       )</span></code></pre></div>
+<pre><code>## Loaded Tensorflow version 2.9.1</code></pre>
+<p>Kita dapat menggunakan function flow_images_from_directory dari
+library keras untuk menghasilkan kumpulan data dari gambar dalam
+direktori dengan data tambahan yang sudah di augmentasi.Kita akan
+menggunakan color_mode nya RGB.</p>
+<p>Pembagian kelas training dan validasi sebesar 80:20.Kita harus
+membagi data antara data train dan validasi untuk mencegah model dari
+overfitting (bagus di data train dan buruk saat di test) dan untuk
+meningkatkan kemampuan model dalam menggeneralisasi gambar.Jadi data
+yang dipakai untuk mengetest gambar bukanlah gambar yang sama dengan
+gambar yang akan digunakan untuk train.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Training Dataset</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>train_image_array_gen <span class="ot">&lt;-</span> <span class="fu">flow_images_from_directory</span>(<span class="at">directory =</span> <span class="st">&quot;Covid19-dataset/train/&quot;</span>, <span class="co"># Folder of the data</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">target_size =</span> target_size, <span class="co"># target of the image dimension (64 x 64)  </span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">color_mode =</span> <span class="st">&quot;rgb&quot;</span>, <span class="co"># use RGB color</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">batch_size =</span> batch_size , </span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">seed =</span> <span class="dv">100</span>,  <span class="co"># set random seed</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">subset =</span> <span class="st">&quot;training&quot;</span>, <span class="co"># declare that this is for training data</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">generator =</span> train_data_gen</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>                                                    )</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Validation Dataset</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>val_image_array_gen <span class="ot">&lt;-</span> <span class="fu">flow_images_from_directory</span>(<span class="at">directory =</span> <span class="st">&quot;Covid19-dataset/train/&quot;</span>,</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">target_size =</span> target_size, </span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">color_mode =</span> <span class="st">&quot;rgb&quot;</span>, </span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">batch_size =</span> batch_size ,</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">seed =</span> <span class="dv">100</span>,</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">subset =</span> <span class="st">&quot;validation&quot;</span>, <span class="co"># declare that this is the validation data</span></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">generator =</span> train_data_gen</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>                                                  )</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of training samples</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>train_samples <span class="ot">&lt;-</span> train_image_array_gen<span class="sc">$</span>n</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of validation samples</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>valid_samples <span class="ot">&lt;-</span> val_image_array_gen<span class="sc">$</span>n</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of target classes/categories</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>output_n <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(train_image_array_gen<span class="sc">$</span>classes)</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the class proportion</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Frequency&quot;</span> <span class="ot">=</span> <span class="fu">factor</span>(train_image_array_gen<span class="sc">$</span>classes)</span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prop.table</span>()</span></code></pre></div>
+<pre><code>## 
+## Frequency
+##         0         1         2 
+## 0.3333333 0.3333333 0.3333333</code></pre>
+<p>Proporsi kelas covid, normal, dan pneumonia (0.33) dapat dilhat jika
+masing-masing kelas proporsinya seimbang.Efek jika ada kelas yang
+imbalance adalah mempengaruhi performa model dan mempengaruhi nilai
+akurasi serta metriks lainnya.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># input shape of the image</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(target_size, <span class="dv">3</span>) </span></code></pre></div>
+<pre><code>## [1] 200 200   3</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Image Generator</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>test_data_gen <span class="ot">&lt;-</span> <span class="fu">image_data_generator</span>(<span class="at">rescale =</span> <span class="fl">1.</span><span class="sc">/</span><span class="dv">255</span>, <span class="co"># Scaling pixel value</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">horizontal_flip =</span> T, <span class="co"># Flip image horizontally</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">vertical_flip =</span> T, <span class="co"># Flip image vertically</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">rotation_range =</span> <span class="dv">45</span>, <span class="co"># Rotate image from 0 to 45 degrees</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">zoom_range =</span> <span class="fl">0.25</span>, <span class="co"># Zoom in or zoom out range</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>                                       )</span></code></pre></div>
+<p>Melakukan augmentasi pada data test agar input data dari test set
+sama seperti yang sudah dilakukan pada data train.Contohnya seperti
+image cropping, yang kita lakukan di training set juga akan dilakukan di
+data test agar mereka memiliki ukuran yang sama.Pada data test juga kita
+akan menggunakan color_mode RGB.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>test_image_array_gen <span class="ot">&lt;-</span> <span class="fu">flow_images_from_directory</span>(<span class="at">directory =</span> <span class="st">&quot;Covid19-dataset/test/&quot;</span>,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">target_size =</span> target_size,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">color_mode =</span> <span class="st">&quot;rgb&quot;</span>,</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">batch_size =</span> batch_size,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">seed =</span> <span class="dv">100</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">generator =</span> test_data_gen</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>                                                  )</span></code></pre></div>
+<p>Pada pembuatan model dibawah akan menggunakan concolutional layer
+sebanyak 1 layer dan untuk model big tuning sebanyak 5 layer.Menggunakan
+flatten layer yang sebagai proses untuk mengkonversi semua yang
+dihasilkan dari 2D array dari fitur pool kedalam suatu single vektor
+linear.Activation output menggunakan softmax karena klasifikasi
+multiclass.</p>
+</div>
+<div id="model-architecture" class="section level1">
+<h1>Model Architecture</h1>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set Initial Random Weight</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>tensorflow<span class="sc">::</span>tf<span class="sc">$</span>random<span class="sc">$</span><span class="fu">set_seed</span>(<span class="dv">100</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>(<span class="at">name =</span> <span class="st">&quot;simple_model&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convolution Layer</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">16</span>,</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>),</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>,</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">input_shape =</span> <span class="fu">c</span>(target_size, <span class="dv">3</span>) </span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max Pooling Layer</span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flattening Layer</span></span>
+<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_flatten</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dense Layer</span></span>
+<span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">16</span>,</span>
+<span id="cb66-22"><a href="#cb66-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-23"><a href="#cb66-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-24"><a href="#cb66-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Output Layer</span></span>
+<span id="cb66-25"><a href="#cb66-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> output_n,</span>
+<span id="cb66-26"><a href="#cb66-26" aria-hidden="true" tabindex="-1"></a>              <span class="at">activation =</span> <span class="st">&quot;softmax&quot;</span>,</span>
+<span id="cb66-27"><a href="#cb66-27" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">&quot;Output&quot;</span>)</span>
+<span id="cb66-28"><a href="#cb66-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb66-29"><a href="#cb66-29" aria-hidden="true" tabindex="-1"></a>model</span></code></pre></div>
+<pre><code>## Model: &quot;simple_model&quot;
+## ________________________________________________________________________________
+##  Layer (type)                       Output Shape                    Param #     
+## ================================================================================
+##  conv2d (Conv2D)                    (None, 200, 200, 16)            448         
+##  max_pooling2d (MaxPooling2D)       (None, 100, 100, 16)            0           
+##  flatten (Flatten)                  (None, 160000)                  0           
+##  dense (Dense)                      (None, 16)                      2560016     
+##  Output (Dense)                     (None, 3)                       51          
+## ================================================================================
+## Total params: 2,560,515
+## Trainable params: 2,560,515
+## Non-trainable params: 0
+## ________________________________________________________________________________</code></pre>
+<p>Lost function yang akan digunakan adalah categorical
+crossentropy.Saya menggunakan adam optimizer dengan learning rate 0,01
+untuk model yang simple, tapi kalau yang model yang besar / dituning
+saya pakai 0,01.Epoch yang saya gunakan untuk train model sejumlah
+10.</p>
+<p>Pada tahap pembuatan simple_model ini saya menggunakan convolution
+layer untuk mengekstrak fitur dari 2D menggunakan relu activation
+function.Max Pooling layer untuk downsample fitur gambar /mengurangi
+fitur gambar dan dapat mengurangi banyaknya parameter yang
+belajar.Pooling layer meringkas fitur yang dihasilkan pada convolution
+layer.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">compile</span>(</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">optimizer =</span> <span class="fu">optimizer_adam</span>(<span class="at">learning_rate =</span> <span class="fl">0.01</span>),</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="st">&quot;accuracy&quot;</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit data into model</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> </span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># training data</span></span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  train_image_array_gen,</span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># training epochs</span></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">steps_per_epoch =</span> <span class="fu">as.integer</span>(train_samples <span class="sc">/</span> batch_size), </span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">10</span>, </span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># validation data</span></span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_data =</span> val_image_array_gen,</span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_steps =</span> <span class="fu">as.integer</span>(valid_samples <span class="sc">/</span> batch_size)</span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(history)</span></code></pre></div>
+<p><img src="neural---Copy--2-_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+</div>
+<div id="model-evaluation" class="section level1">
+<h1>Model Evaluation</h1>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>val_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">file_name =</span> <span class="fu">paste0</span>(<span class="st">&quot;Covid19-dataset/train/&quot;</span>, val_image_array_gen<span class="sc">$</span>filenames)) <span class="sc">%&gt;%</span> </span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">str_extract</span>(file_name, <span class="st">&quot;covid|normal|pneumonia&quot;</span>))</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(val_data, <span class="dv">10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["file_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (13).jpeg","2":"pneumonia","_rn_":"33"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (14).jpeg","2":"pneumonia","_rn_":"34"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (15).jpeg","2":"pneumonia","_rn_":"35"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (16).jpeg","2":"pneumonia","_rn_":"36"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (17).jpeg","2":"pneumonia","_rn_":"37"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (18).jpeg","2":"pneumonia","_rn_":"38"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (19).jpeg","2":"pneumonia","_rn_":"39"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (2).jpeg","2":"pneumonia","_rn_":"40"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (20).jpeg","2":"pneumonia","_rn_":"41"},{"1":"Covid19-dataset/train/pneumonia\\\\Pneumonia 3 (21).jpeg","2":"pneumonia","_rn_":"42"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to convert image to array</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>image_prep <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  arrays <span class="ot">&lt;-</span> <span class="fu">lapply</span>(x, <span class="cf">function</span>(path) {</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    img <span class="ot">&lt;-</span> <span class="fu">image_load</span>(path, <span class="at">target_size =</span> target_size, </span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">grayscale =</span> F <span class="co"># Set FALSE if image is RGB</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>                      )</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">image_to_array</span>(img)</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x, <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">dim</span>(x)))</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x<span class="sc">/</span><span class="dv">255</span> <span class="co"># rescale image pixel</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(abind<span class="sc">::</span>abind, <span class="fu">c</span>(arrays, <span class="fu">list</span>(<span class="at">along =</span> <span class="dv">1</span>)))</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>test_x <span class="ot">&lt;-</span> <span class="fu">image_prep</span>(val_data<span class="sc">$</span>file_name)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check dimension of testing data set</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test_x)</span></code></pre></div>
+<pre><code>## [1]  42 200 200   3</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>pred_test <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(test_x) <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>()</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_test, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## tf.Tensor([0 0 0 0 0 0 0 0 0 0], shape=(10), dtype=int64)</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert encoding to label</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>decode <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">case_when</span>(x <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;covid&quot;</span>,</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;normal&quot;</span>,</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;pneumonia&quot;</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>pred_test <span class="ot">&lt;-</span> <span class="fu">sapply</span>(pred_test, decode) </span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_test, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot; &quot;covid&quot;
+## [10] &quot;covid&quot;</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred_test), </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.factor</span>(val_data<span class="sc">$</span>class)</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                )</span></code></pre></div>
+<pre><code>## Warning in levels(reference) != levels(data): longer object length is not a
+## multiple of shorter object length</code></pre>
+<pre><code>## Warning in confusionMatrix.default(as.factor(pred_test),
+## as.factor(val_data$class)): Levels are not in the same order for reference and
+## data. Refactoring data to match.</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##            Reference
+## Prediction  covid normal pneumonia
+##   covid        14     13        12
+##   normal        0      0         0
+##   pneumonia     0      1         2
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.381           
+##                  95% CI : (0.2357, 0.5436)
+##     No Information Rate : 0.3333          
+##     P-Value [Acc &gt; NIR] : 0.3071          
+##                                           
+##                   Kappa : 0.0714          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 9.537e-06       
+## 
+## Statistics by Class:
+## 
+##                      Class: covid Class: normal Class: pneumonia
+## Sensitivity                1.0000        0.0000          0.14286
+## Specificity                0.1071        1.0000          0.96429
+## Pos Pred Value             0.3590           NaN          0.66667
+## Neg Pred Value             1.0000        0.6667          0.69231
+## Prevalence                 0.3333        0.3333          0.33333
+## Detection Rate             0.3333        0.0000          0.04762
+## Detection Prevalence       0.9286        0.0000          0.07143
+## Balanced Accuracy          0.5536        0.5000          0.55357</code></pre>
+<p>Dibandingkan dengan model big, model simple cenderung underfitting
+akurasi sebesar 0.65 karena dari bentuk arsitekturnya terlalu sederhana
+sehingga model gagal untuk mempelajari dataset.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>tensorflow<span class="sc">::</span>tf<span class="sc">$</span>random<span class="sc">$</span><span class="fu">set_seed</span>(<span class="dv">100</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>model_big <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>(<span class="at">name =</span> <span class="st">&quot;model_big&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First convolutional layer</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">128</span>,</span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="co"># 5 x 5 filters</span></span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>,</span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">input_shape =</span> <span class="fu">c</span>(target_size, <span class="dv">3</span>)</span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max pooling layer</span></span>
+<span id="cb81-14"><a href="#cb81-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-15"><a href="#cb81-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-16"><a href="#cb81-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Second convolutional layer</span></span>
+<span id="cb81-17"><a href="#cb81-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">64</span>,</span>
+<span id="cb81-18"><a href="#cb81-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>), <span class="co"># 3 x 3 filters</span></span>
+<span id="cb81-19"><a href="#cb81-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb81-20"><a href="#cb81-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span></span>
+<span id="cb81-21"><a href="#cb81-21" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-22"><a href="#cb81-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-23"><a href="#cb81-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max pooling layer</span></span>
+<span id="cb81-24"><a href="#cb81-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-25"><a href="#cb81-25" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb81-26"><a href="#cb81-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-27"><a href="#cb81-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Third convolutional layer</span></span>
+<span id="cb81-28"><a href="#cb81-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">32</span>,</span>
+<span id="cb81-29"><a href="#cb81-29" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>),</span>
+<span id="cb81-30"><a href="#cb81-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb81-31"><a href="#cb81-31" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span></span>
+<span id="cb81-32"><a href="#cb81-32" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-33"><a href="#cb81-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-34"><a href="#cb81-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max pooling layer</span></span>
+<span id="cb81-35"><a href="#cb81-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-36"><a href="#cb81-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-37"><a href="#cb81-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fourth convolutional layer</span></span>
+<span id="cb81-38"><a href="#cb81-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">64</span>,</span>
+<span id="cb81-39"><a href="#cb81-39" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>),</span>
+<span id="cb81-40"><a href="#cb81-40" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb81-41"><a href="#cb81-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span></span>
+<span id="cb81-42"><a href="#cb81-42" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-43"><a href="#cb81-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-44"><a href="#cb81-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max pooling layer</span></span>
+<span id="cb81-45"><a href="#cb81-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-46"><a href="#cb81-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-47"><a href="#cb81-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fifth convolutional layer</span></span>
+<span id="cb81-48"><a href="#cb81-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_conv_2d</span>(<span class="at">filters =</span> <span class="dv">64</span>,</span>
+<span id="cb81-49"><a href="#cb81-49" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel_size =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>),</span>
+<span id="cb81-50"><a href="#cb81-50" aria-hidden="true" tabindex="-1"></a>                <span class="at">padding =</span> <span class="st">&quot;same&quot;</span>,</span>
+<span id="cb81-51"><a href="#cb81-51" aria-hidden="true" tabindex="-1"></a>                <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span></span>
+<span id="cb81-52"><a href="#cb81-52" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-53"><a href="#cb81-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-54"><a href="#cb81-54" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Max pooling layer</span></span>
+<span id="cb81-55"><a href="#cb81-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_max_pooling_2d</span>(<span class="at">pool_size =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-56"><a href="#cb81-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-57"><a href="#cb81-57" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Flattening layer</span></span>
+<span id="cb81-58"><a href="#cb81-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_flatten</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb81-59"><a href="#cb81-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-60"><a href="#cb81-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dense layer</span></span>
+<span id="cb81-61"><a href="#cb81-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">32</span>,</span>
+<span id="cb81-62"><a href="#cb81-62" aria-hidden="true" tabindex="-1"></a>              <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-63"><a href="#cb81-63" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb81-64"><a href="#cb81-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Output layer</span></span>
+<span id="cb81-65"><a href="#cb81-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">name =</span> <span class="st">&quot;Output&quot;</span>,</span>
+<span id="cb81-66"><a href="#cb81-66" aria-hidden="true" tabindex="-1"></a>              <span class="at">units =</span> <span class="dv">3</span>, </span>
+<span id="cb81-67"><a href="#cb81-67" aria-hidden="true" tabindex="-1"></a>              <span class="at">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span>
+<span id="cb81-68"><a href="#cb81-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-69"><a href="#cb81-69" aria-hidden="true" tabindex="-1"></a>model_big</span></code></pre></div>
+<pre><code>## Model: &quot;model_big&quot;
+## ________________________________________________________________________________
+##  Layer (type)                       Output Shape                    Param #     
+## ================================================================================
+##  conv2d_5 (Conv2D)                  (None, 200, 200, 128)           9728        
+##  max_pooling2d_5 (MaxPooling2D)     (None, 100, 100, 128)           0           
+##  conv2d_4 (Conv2D)                  (None, 100, 100, 64)            73792       
+##  max_pooling2d_4 (MaxPooling2D)     (None, 50, 50, 64)              0           
+##  conv2d_3 (Conv2D)                  (None, 50, 50, 32)              51232       
+##  max_pooling2d_3 (MaxPooling2D)     (None, 25, 25, 32)              0           
+##  conv2d_2 (Conv2D)                  (None, 25, 25, 64)              18496       
+##  max_pooling2d_2 (MaxPooling2D)     (None, 12, 12, 64)              0           
+##  conv2d_1 (Conv2D)                  (None, 12, 12, 64)              36928       
+##  max_pooling2d_1 (MaxPooling2D)     (None, 6, 6, 64)                0           
+##  flatten_1 (Flatten)                (None, 2304)                    0           
+##  dense_1 (Dense)                    (None, 32)                      73760       
+##  Output (Dense)                     (None, 3)                       99          
+## ================================================================================
+## Total params: 264,035
+## Trainable params: 264,035
+## Non-trainable params: 0
+## ________________________________________________________________________________</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>model_big <span class="sc">%&gt;%</span> </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">compile</span>(</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">optimizer =</span> <span class="fu">optimizer_adam</span>(<span class="at">learning_rate =</span> <span class="fl">0.001</span>),</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="st">&quot;accuracy&quot;</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model_big <span class="sc">%&gt;%</span> </span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># training data</span></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  train_image_array_gen,</span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># epochs</span></span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">steps_per_epoch =</span> <span class="fu">as.integer</span>(train_samples <span class="sc">/</span> batch_size), </span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">50</span>, </span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># validation data</span></span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_data =</span> val_image_array_gen,</span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_steps =</span> <span class="fu">as.integer</span>(valid_samples <span class="sc">/</span> batch_size),</span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb83-21"><a href="#cb83-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># print progress but don&#39;t create graphic</span></span>
+<span id="cb83-22"><a href="#cb83-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="dv">1</span>,</span>
+<span id="cb83-23"><a href="#cb83-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">view_metrics =</span> <span class="dv">0</span></span>
+<span id="cb83-24"><a href="#cb83-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-25"><a href="#cb83-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-26"><a href="#cb83-26" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(history)</span></code></pre></div>
+<p><img src="neural---Copy--2-_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>pred_test <span class="ot">&lt;-</span> model_big <span class="sc">%&gt;%</span> <span class="fu">predict</span>(test_x) <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>() </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_test, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## tf.Tensor([0 0 0 0 1 0 2 2 0 0], shape=(10), dtype=int64)</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert encoding to label</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>decode <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">case_when</span>(x <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;covid&quot;</span>,</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;normal&quot;</span>,</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;pneumonia&quot;</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>pred_test <span class="ot">&lt;-</span> <span class="fu">sapply</span>(pred_test, decode) </span>
+<span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_test, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;covid&quot;     &quot;covid&quot;     &quot;covid&quot;     &quot;covid&quot;     &quot;normal&quot;    &quot;covid&quot;    
+##  [7] &quot;pneumonia&quot; &quot;pneumonia&quot; &quot;covid&quot;     &quot;covid&quot;</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred_test), </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.factor</span>(val_data<span class="sc">$</span>class)</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>                )</span></code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##            Reference
+## Prediction  covid normal pneumonia
+##   covid        10      1         0
+##   normal        2     12         2
+##   pneumonia     2      1        12
+## 
+## Overall Statistics
+##                                          
+##                Accuracy : 0.8095         
+##                  95% CI : (0.6588, 0.914)
+##     No Information Rate : 0.3333         
+##     P-Value [Acc &gt; NIR] : 3.11e-10       
+##                                          
+##                   Kappa : 0.7143         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.4459         
+## 
+## Statistics by Class:
+## 
+##                      Class: covid Class: normal Class: pneumonia
+## Sensitivity                0.7143        0.8571           0.8571
+## Specificity                0.9643        0.8571           0.8929
+## Pos Pred Value             0.9091        0.7500           0.8000
+## Neg Pred Value             0.8710        0.9231           0.9259
+## Prevalence                 0.3333        0.3333           0.3333
+## Detection Rate             0.2381        0.2857           0.2857
+## Detection Prevalence       0.2619        0.3810           0.3571
+## Balanced Accuracy          0.8393        0.8571           0.8750</code></pre>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">file_name =</span> <span class="fu">paste0</span>(<span class="st">&quot;Covid19-dataset/test/&quot;</span>, test_image_array_gen<span class="sc">$</span>filenames)) <span class="sc">%&gt;%</span> </span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">str_extract</span>(file_name, <span class="st">&quot;covid|normal|pneumonia&quot;</span>)) </span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(test_data, <span class="dv">10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["file_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"Covid19-dataset/test/test\\\\COVID-00003b.jpeg","2":"NA","_rn_":"1"},{"1":"Covid19-dataset/test/test\\\\COVID-00012.jpeg","2":"NA","_rn_":"2"},{"1":"Covid19-dataset/test/test\\\\COVID-00022.jpeg","2":"NA","_rn_":"3"},{"1":"Covid19-dataset/test/test\\\\COVID-00033.jpeg","2":"NA","_rn_":"4"},{"1":"Covid19-dataset/test/test\\\\COVID-00037.jpeg","2":"NA","_rn_":"5"},{"1":"Covid19-dataset/test/test\\\\COVID-0100.jpeg","2":"NA","_rn_":"6"},{"1":"Covid19-dataset/test/test\\\\COVID-0102.jpeg","2":"NA","_rn_":"7"},{"1":"Covid19-dataset/test/test\\\\COVID-0105.jpeg","2":"NA","_rn_":"8"},{"1":"Covid19-dataset/test/test\\\\COVID-0106.jpeg","2":"NA","_rn_":"9"},{"1":"Covid19-dataset/test/test\\\\COVID-0108.jpeg","2":"NA","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">image_prep</span>(test_data<span class="sc">$</span>file_name)</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check dimension of testing data set</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span></code></pre></div>
+<pre><code>## [1]  66 200 200   3</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict label on array</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>pred_test_new <span class="ot">&lt;-</span> model_big <span class="sc">%&gt;%</span> <span class="fu">predict</span>(test) <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>()</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert encoding to label</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>decode <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">case_when</span>(x <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;covid&quot;</span>,</span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;normal&quot;</span>,</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>            x <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;pneumonia&quot;</span></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a>pred_test_new <span class="ot">&lt;-</span> <span class="fu">sapply</span>(pred_test_new, decode)</span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a><span class="co"># check first 3 data</span></span>
+<span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_test_new, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;covid&quot; &quot;covid&quot; &quot;covid&quot;</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred_test_new), </span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.factor</span>(check_data<span class="sc">$</span>class)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>                )</span></code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##            Reference
+## Prediction  covid normal pneumonia
+##   covid        21      0         3
+##   normal        4     18         5
+##   pneumonia     1      2        12
+## 
+## Overall Statistics
+##                                          
+##                Accuracy : 0.7727         
+##                  95% CI : (0.653, 0.8669)
+##     No Information Rate : 0.3939         
+##     P-Value [Acc &gt; NIR] : 4.185e-10      
+##                                          
+##                   Kappa : 0.6577         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.09851        
+## 
+## Statistics by Class:
+## 
+##                      Class: covid Class: normal Class: pneumonia
+## Sensitivity                0.8077        0.9000           0.6000
+## Specificity                0.9250        0.8043           0.9348
+## Pos Pred Value             0.8750        0.6667           0.8000
+## Neg Pred Value             0.8810        0.9487           0.8431
+## Prevalence                 0.3939        0.3030           0.3030
+## Detection Rate             0.3182        0.2727           0.1818
+## Detection Prevalence       0.3636        0.4091           0.2273
+## Balanced Accuracy          0.8663        0.8522           0.7674</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Dwi Retno" />
+
+<meta name="date" content="2022-06-11" />
+
+<title>World Happiness Report</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
+<script src="site_libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
+<script src="site_libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
+<link href="site_libs/ggiraphjs-0.4.2/ggiraphjs.min.css" rel="stylesheet" />
+<script src="site_libs/ggiraphjs-0.4.2/ggiraphjs.min.js"></script>
+<script src="site_libs/girafe-binding-0.8.2/girafe.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Supervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Cost---SAVE.html">Regression</a>
+    </li>
+    <li>
+      <a href="Airplane.html">Classification I</a>
+    </li>
+    <li>
+      <a href="about.html">Classification II</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unsupervised Learning
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="happy.html">K-means</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="neuraldeep.html">Deep Learning</a>
+</li>
+<li>
+  <a href="time.html">Time Series</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">World Happiness Report</h1>
+<h4 class="author">Dwi Retno</h4>
+<h4 class="date">2022-06-11</h4>
+
+</div>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue&family=Marcellus&display=swap');
+  body { 
+    text-align : justify; 
+    font-size : 20px;
+    font-family: 'Comic Neue', cursive;
+  }
+  h1{
+    font-family: 'Marcellus', serif;
+  }
+</style>
+<p><img src="data_input/2971789594.jpg" /></p>
+<p>Data yang digunakan berasal dari <a href="">Kaggle</a>.Tujuan
+clustering ini untuk mengelompokkan data negara berdasarkan seberapa
+bahagia negara tersebut dari tingkat emosi positif/ negatif, korupsi,
+tingkat kesehatan dll.</p>
+<p>Keterangan Data :</p>
+<ul>
+<li><code>Country</code> = Name of the country.</li>
+<li><code>Ladder</code> = Cantril Ladder is a measure of life
+satisfaction.</li>
+<li><code>SD of Ladder</code> = Standard deviation of the ladder.</li>
+<li><code>Positive affect</code> = Measure of positive emotion.</li>
+<li><code>Negative affect</code> = Measure of negative emotion.</li>
+<li><code>Social support</code> = The extent to which Social support
+contributed to the calculation of the Happiness Score.</li>
+<li><code>Freedom</code> = The extent to which Freedom contributed to
+the calculation of the Happiness Score.</li>
+<li><code>Corruption</code> = The extent to which Perception of
+Corruption contributes to Happiness Score.</li>
+<li><code>Generosity</code> = The extent to which Generosity contributed
+to the calculation of the Happiness Score.</li>
+<li><code>Log of GDP per capita</code> = The extent to which GDP
+contributes to the calculation of the Happiness Score.</li>
+<li><code>Healthy life expectancy</code> = The extent to which Life
+expectancy contributed to the calculation of the Happiness Score.</li>
+</ul>
+<div id="load-library-and-read-data" class="section level1">
+<h1>Load Library and Read Data</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># tahap eda</span></span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally) <span class="co"># visualisasi korelasi</span></span></code></pre></div>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
+##   method from   
+##   +.gg   ggplot2</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra) <span class="co"># visualisasi elbow method</span></span></code></pre></div>
+<pre><code>## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR) <span class="co"># PCA</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># data cleansing</span></span></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v tibble  3.1.7     v purrr   0.3.4
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggiraphExtra) <span class="co"># buat lebih mudah profiling</span></span></code></pre></div>
+<p>Data csv disimpan dalam objek <code>happiness</code>.Dan berikut ini
+5 data teratas pada data <code>happiness</code> dibawah.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>happiness <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;world-happiness-report-2019.csv&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(happiness)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Country..region."],"name":[1],"type":["chr"],"align":["left"]},{"label":["Ladder"],"name":[2],"type":["int"],"align":["right"]},{"label":["SD.of.Ladder"],"name":[3],"type":["int"],"align":["right"]},{"label":["Positive.affect"],"name":[4],"type":["int"],"align":["right"]},{"label":["Negative.affect"],"name":[5],"type":["int"],"align":["right"]},{"label":["Social.support"],"name":[6],"type":["int"],"align":["right"]},{"label":["Freedom"],"name":[7],"type":["int"],"align":["right"]},{"label":["Corruption"],"name":[8],"type":["int"],"align":["right"]},{"label":["Generosity"],"name":[9],"type":["int"],"align":["right"]},{"label":["Log.of.GDP.per.capita"],"name":[10],"type":["int"],"align":["right"]},{"label":["Healthy.life.expectancy"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"Finland","2":"1","3":"4","4":"41","5":"10","6":"2","7":"5","8":"4","9":"47","10":"22","11":"27","_rn_":"1"},{"1":"Denmark","2":"2","3":"13","4":"24","5":"26","6":"4","7":"6","8":"3","9":"22","10":"14","11":"23","_rn_":"2"},{"1":"Norway","2":"3","3":"8","4":"16","5":"29","6":"3","7":"3","8":"8","9":"11","10":"7","11":"12","_rn_":"3"},{"1":"Iceland","2":"4","3":"9","4":"3","5":"3","6":"1","7":"7","8":"45","9":"3","10":"15","11":"13","_rn_":"4"},{"1":"Netherlands","2":"5","3":"1","4":"12","5":"25","6":"15","7":"19","8":"12","9":"7","10":"12","11":"18","_rn_":"5"},{"1":"Switzerland","2":"6","3":"11","4":"44","5":"21","6":"13","7":"11","8":"7","9":"16","10":"8","11":"4","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Berikut ini adalah tipe data dari data
+<code>happiness</code>.Sepertinya semua tipe data sudah sesuai, maka
+akan kita lanjutkan dengan cek <em>missing value</em>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(happiness)</span></code></pre></div>
+<pre><code>## Rows: 156
+## Columns: 11
+## $ Country..region.        &lt;chr&gt; &quot;Finland&quot;, &quot;Denmark&quot;, &quot;Norway&quot;, &quot;Iceland&quot;, &quot;Ne~
+## $ Ladder                  &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,~
+## $ SD.of.Ladder            &lt;int&gt; 4, 13, 8, 9, 1, 11, 18, 15, 23, 10, 26, 62, 14~
+## $ Positive.affect         &lt;int&gt; 41, 24, 16, 3, 12, 44, 34, 22, 18, 64, 47, 4, ~
+## $ Negative.affect         &lt;int&gt; 10, 26, 29, 3, 25, 21, 8, 12, 49, 24, 37, 87, ~
+## $ Social.support          &lt;int&gt; 2, 4, 3, 1, 15, 13, 25, 5, 20, 31, 7, 42, 38, ~
+## $ Freedom                 &lt;int&gt; 5, 6, 3, 7, 19, 11, 10, 8, 9, 26, 17, 16, 93, ~
+## $ Corruption              &lt;int&gt; 4, 3, 8, 45, 12, 7, 6, 5, 11, 19, 13, 58, 74, ~
+## $ Generosity              &lt;int&gt; 47, 22, 11, 3, 7, 16, 17, 8, 14, 25, 6, 75, 24~
+## $ Log.of.GDP.per.capita   &lt;int&gt; 22, 14, 7, 15, 12, 8, 13, 26, 19, 16, 18, 67, ~
+## $ Healthy.life.expectancy &lt;int&gt; 27, 23, 12, 13, 18, 4, 17, 14, 8, 15, 10, 28, ~</code></pre>
+<p>Terdapat cukup banyak data yang hilang/ <em>missing</em> ada data
+<code>Positive.affect</code>, <code>Negative.affect</code>
+<code>Social.support</code>, <code>Freedom</code>,
+<code>Corruption</code>, <code>Generosity</code>,
+<code>Log.of.GDP.per.capita</code>,
+<code>Healthy.life.expectancy</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(happiness))</span></code></pre></div>
+<pre><code>##        Country..region.                  Ladder            SD.of.Ladder 
+##                       0                       0                       0 
+##         Positive.affect         Negative.affect          Social.support 
+##                       1                       1                       1 
+##                 Freedom              Corruption              Generosity 
+##                       1                       8                       1 
+##   Log.of.GDP.per.capita Healthy.life.expectancy 
+##                       4                       6</code></pre>
+<p>Untuk <em>handling missing value</em> ini, saya akan melakukan
+imputasi dengan mengisi nilai yg kosong dengan nilai rata-rata dari data
+untuk setiap kolom.Dan saya juga akan mengubah nama kolom
+<code>Log.of.GDP.per.capita</code> menjadi <code>Log.GDP</code> dan
+kolom <code>Healthy.life.expectancy</code> menjadi
+<code>Healty.expectancy</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>happiness_clean <span class="ot">&lt;-</span> happiness <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Log.GDP =</span> Log.of.GDP.per.capita,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Healty.expectancy =</span> Healthy.life.expectancy) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Positive.affect =</span> <span class="fu">replace_na</span>(Positive.affect, <span class="fu">mean</span>(Positive.affect, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Negative.affect =</span> <span class="fu">replace_na</span>(Negative.affect, <span class="fu">mean</span>(Negative.affect, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Social.support =</span> <span class="fu">replace_na</span>(Social.support, <span class="fu">mean</span>(Social.support, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Freedom =</span> <span class="fu">replace_na</span>(Freedom, <span class="fu">mean</span>(Freedom, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Corruption =</span> <span class="fu">replace_na</span>(Corruption,<span class="fu">round</span>(<span class="fu">mean</span>(Corruption, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Generosity =</span> <span class="fu">replace_na</span>(Generosity,<span class="fu">mean</span>(Generosity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Log.GDP =</span> <span class="fu">replace_na</span>(Log.GDP,<span class="fu">round</span>(<span class="fu">mean</span>(Log.GDP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Healty.expectancy =</span> <span class="fu">replace_na</span>(Healty.expectancy,<span class="fu">round</span>(<span class="fu">mean</span>(Healty.expectancy, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>                                    </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(happiness_clean))</span></code></pre></div>
+<pre><code>##  Country..region.            Ladder      SD.of.Ladder   Positive.affect 
+##                 0                 0                 0                 0 
+##   Negative.affect    Social.support           Freedom        Corruption 
+##                 0                 0                 0                 0 
+##        Generosity           Log.GDP Healty.expectancy 
+##                 0                 0                 0</code></pre>
+<p>Nah, sepertinya sudah terisi semua kolom yang kosong.Setelah itu,
+kita jadikan kolom <code>Country..region.</code> menjadi rowname.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>happiness_clean <span class="ot">&lt;-</span> happiness_clean <span class="sc">%&gt;%</span> <span class="fu">column_to_rownames</span>(<span class="st">&quot;Country..region.&quot;</span>)</span></code></pre></div>
+<p>Berikut ini adalah ringkasan data <code>happiness_clean.</code></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(happiness_clean)</span></code></pre></div>
+<pre><code>##      Ladder        SD.of.Ladder    Positive.affect  Negative.affect 
+##  Min.   :  1.00   Min.   :  1.00   Min.   :  1.00   Min.   :  1.00  
+##  1st Qu.: 39.75   1st Qu.: 39.75   1st Qu.: 39.75   1st Qu.: 39.75  
+##  Median : 78.50   Median : 78.50   Median : 78.00   Median : 78.00  
+##  Mean   : 78.50   Mean   : 78.50   Mean   : 78.00   Mean   : 78.00  
+##  3rd Qu.:117.25   3rd Qu.:117.25   3rd Qu.:116.25   3rd Qu.:116.25  
+##  Max.   :156.00   Max.   :156.00   Max.   :155.00   Max.   :155.00  
+##  Social.support      Freedom         Corruption       Generosity    
+##  Min.   :  1.00   Min.   :  1.00   Min.   :  1.00   Min.   :  1.00  
+##  1st Qu.: 39.75   1st Qu.: 39.75   1st Qu.: 39.75   1st Qu.: 39.75  
+##  Median : 78.00   Median : 78.00   Median : 74.00   Median : 78.00  
+##  Mean   : 78.00   Mean   : 78.00   Mean   : 74.47   Mean   : 78.00  
+##  3rd Qu.:116.25   3rd Qu.:116.25   3rd Qu.:109.25   3rd Qu.:116.25  
+##  Max.   :155.00   Max.   :155.00   Max.   :148.00   Max.   :155.00  
+##     Log.GDP       Healty.expectancy
+##  Min.   :  1.00   Min.   :  1.00   
+##  1st Qu.: 39.75   1st Qu.: 39.75   
+##  Median : 76.00   Median : 76.00   
+##  Mean   : 76.49   Mean   : 75.52   
+##  3rd Qu.:113.25   3rd Qu.:111.25   
+##  Max.   :152.00   Max.   :150.00</code></pre>
+<p>Kita akan analisis PCA dengan menggunakan fungsi <code>PCA()</code>
+dari library <code>factoMineR</code>.Sebelumnya, data yang akan
+dianalisis akan menggunakan data numerik saja.Setelah data numerik yang
+dipilih maka akan disimpan dalam objek <code>happiness_num</code>.</p>
+<p>Analisis <code>PCA</code>,<code>X</code> diisi dengan objek yang
+berisi data <code>happiness_clean</code> yang <strong>numerik</strong>,
+<code>scale.unit</code> diisi <code>FALSE</code> karena data sudah
+terskala dengan benar.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hanya mengambil data numerik saja</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>happiness_num <span class="ot">&lt;-</span> happiness_clean <span class="sc">%&gt;%</span> <span class="fu">select_if</span>(is.numeric)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>happy_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(<span class="at">X =</span> happiness_num,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">scale.unit =</span> F,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">graph =</span> F)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(happy_pca)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## PCA(X = happiness_num, scale.unit = F, graph = F) 
+## 
+## 
+## Eigenvalues
+##                          Dim.1     Dim.2     Dim.3     Dim.4     Dim.5
+## Variance             10306.900  2676.605  1753.369  1383.845  1162.535
+## % of var.               53.095    13.788     9.032     7.129     5.989
+## Cumulative % of var.    53.095    66.884    75.916    83.045    89.034
+##                          Dim.6     Dim.7     Dim.8     Dim.9    Dim.10
+## Variance               576.019   531.792   455.657   287.979   277.330
+## % of var.                2.967     2.739     2.347     1.484     1.429
+## Cumulative % of var.    92.001    94.741    97.088    98.571   100.000
+## 
+## Individuals (the 10 first)
+##                         Dist      Dim.1      ctr     cos2      Dim.2      ctr
+## Finland           |  199.763 | -189.905    2.243    0.904 |  -14.135    0.048
+## Denmark           |  203.298 | -196.181    2.394    0.931 |  -30.430    0.222
+## Norway            |  214.328 | -208.483    2.703    0.946 |  -31.314    0.235
+## Iceland           |  216.295 | -213.013    2.822    0.970 |  -26.841    0.173
+## Netherlands       |  205.997 | -199.537    2.476    0.938 |  -26.592    0.169
+## Switzerland       |  202.815 | -196.973    2.413    0.943 |  -11.515    0.032
+## Sweden            |  197.247 | -190.151    2.249    0.929 |  -25.589    0.157
+## New Zealand       |  206.842 | -199.547    2.476    0.931 |  -33.558    0.270
+## Canada            |  190.958 | -182.118    2.063    0.910 |  -37.662    0.340
+## Austria           |  174.978 | -167.725    1.750    0.919 |    5.605    0.008
+##                       cos2      Dim.3      ctr     cos2  
+## Finland              0.005 |  -41.411    0.627    0.043 |
+## Denmark              0.022 |  -36.989    0.500    0.033 |
+## Norway               0.021 |  -32.862    0.395    0.024 |
+## Iceland              0.015 |   -3.793    0.005    0.000 |
+## Netherlands          0.017 |  -36.383    0.484    0.031 |
+## Switzerland          0.003 |  -42.835    0.671    0.045 |
+## Sweden               0.017 |  -42.208    0.651    0.046 |
+## New Zealand          0.026 |  -38.528    0.543    0.035 |
+## Canada               0.039 |  -27.597    0.278    0.021 |
+## Austria              0.001 |  -45.130    0.745    0.067 |
+## 
+## Variables
+##                       Dim.1     ctr    cos2     Dim.2     ctr    cos2     Dim.3
+## Ladder            |  40.412  15.845   0.805 |  -2.757   0.284   0.004 |  -8.591
+## SD.of.Ladder      |  31.957   9.908   0.504 | -18.792  13.193   0.174 |  16.963
+## Positive.affect   |  25.019   6.073   0.315 |  29.328  32.136   0.432 | -14.423
+## Negative.affect   |  32.103   9.999   0.518 |  -3.794   0.538   0.007 |   2.459
+## Social.support    |  38.637  14.484   0.750 |  -9.080   3.080   0.041 |  -7.334
+## Freedom           |  29.953   8.705   0.451 |  27.029  27.294   0.367 |  -0.996
+## Corruption        |  12.988   1.637   0.097 |  16.088   9.670   0.149 |  31.567
+## Generosity        |  28.386   7.818   0.405 |   9.839   3.617   0.049 |   9.330
+## Log.GDP           |  37.006  13.287   0.730 | -11.982   5.364   0.077 |  -1.592
+## Healty.expectancy |  35.526  12.245   0.700 | -11.361   4.823   0.072 |  -6.073
+##                       ctr    cos2  
+## Ladder              4.209   0.036 |
+## SD.of.Ladder       16.411   0.142 |
+## Positive.affect    11.864   0.105 |
+## Negative.affect     0.345   0.003 |
+## Social.support      3.067   0.027 |
+## Freedom             0.057   0.000 |
+## Corruption         56.834   0.575 |
+## Generosity          4.965   0.044 |
+## Log.GDP             0.145   0.001 |
+## Healty.expectancy   2.103   0.020 |</code></pre>
+<p>Berikut ini visualisasi PCA.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.PCA</span>(<span class="at">x =</span> happy_pca,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">choix =</span> <span class="st">&quot;var&quot;</span>)</span></code></pre></div>
+<p><img src="happy_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>insight :</p>
+<ul>
+<li>PC1 merangkum paling banyak di Ladder, health.expectancy dan log
+GDP</li>
+<li>PC2 merangkum paling banyak di corruption, positive effect,
+Freedom</li>
+<li>Pasangan variabel yang saling berkolerasi tinggi positif :
+<ul>
+<li>corruption dan positive.effect</li>
+<li>health.expectancy dan log GDP</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(<span class="at">X =</span> happy_pca,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">axes =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="happy_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+Untuk memilih nilai <code>K</code> yang optimum secara objektif dapat
+menggunakan <code>Elbow method</code>.Dengan menggunakan fungsi
+<code>fviz_nbclust()</code> dari library <code>factoextra</code>.Dipilih
+nilai k sebesar 5 karena tidak terlalu melambai jika dibandingkan dengan
+nilai k yang lain.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using Elbow Method</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(happiness_num, kmeans, <span class="at">method =</span> <span class="st">&quot;wss&quot;</span> )<span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">&quot;Elbow Method&quot;</span>)<span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="happy_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Melakukan K-means dengan banyaknya centroid berjumlah 5.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="at">sample.kind =</span> <span class="st">&quot;Rounding&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in RNGkind(sample.kind = &quot;Rounding&quot;): non-uniform &#39;Rounding&#39; sampler
+## used</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># kmeans cluster</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>happy_cluster <span class="ot">&lt;-</span><span class="fu">kmeans</span>(<span class="at">x =</span> happiness_num,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">centers =</span> <span class="dv">5</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>happy_cluster<span class="sc">$</span>cluster</span></code></pre></div>
+<pre><code>##                  Finland                  Denmark                   Norway 
+##                        4                        4                        4 
+##                  Iceland              Netherlands              Switzerland 
+##                        4                        4                        4 
+##                   Sweden              New Zealand                   Canada 
+##                        4                        4                        4 
+##                  Austria                Australia               Costa Rica 
+##                        4                        4                        1 
+##                   Israel               Luxembourg           United Kingdom 
+##                        2                        4                        4 
+##                  Ireland                  Germany                  Belgium 
+##                        4                        4                        4 
+##            United States           Czech Republic     United Arab Emirates 
+##                        4                        2                        4 
+##                    Malta                   Mexico                   France 
+##                        4                        1                        4 
+##                   Taiwan                    Chile                Guatemala 
+##                        3                        1                        1 
+##             Saudi Arabia                    Qatar                    Spain 
+##                        1                        1                        2 
+##                   Panama                   Brazil                  Uruguay 
+##                        1                        1                        1 
+##                Singapore              El Salvador                    Italy 
+##                        4                        1                        2 
+##                  Bahrain                 Slovakia      Trinidad and Tobago 
+##                        1                        2                        3 
+##                   Poland               Uzbekistan                Lithuania 
+##                        2                        3                        2 
+##                 Colombia                 Slovenia                Nicaragua 
+##                        1                        2                        1 
+##                   Kosovo                Argentina                  Romania 
+##                        3                        1                        1 
+##                   Cyprus                  Ecuador                   Kuwait 
+##                        1                        1                        1 
+##                 Thailand                   Latvia              South Korea 
+##                        3                        2                        2 
+##                  Estonia                  Jamaica                Mauritius 
+##                        4                        1                        3 
+##                    Japan                 Honduras               Kazakhstan 
+##                        4                        3                        2 
+##                  Bolivia                  Hungary                 Paraguay 
+##                        1                        2                        3 
+##          Northern Cyprus                     Peru                 Portugal 
+##                        2                        1                        1 
+##                 Pakistan                   Russia              Philippines 
+##                        5                        2                        1 
+##                   Serbia                  Moldova                    Libya 
+##                        2                        2                        1 
+##               Montenegro               Tajikistan                  Croatia 
+##                        2                        5                        2 
+##                Hong Kong       Dominican Republic  Bosnia and Herzegovina  
+##                        4                        1                        2 
+##                   Turkey                 Malaysia                  Belarus 
+##                        2                        3                        2 
+##                   Greece                 Mongolia                Macedonia 
+##                        2                        2                        2 
+##                  Nigeria               Kyrgyzstan             Turkmenistan 
+##                        3                        3                        2 
+##                  Algeria                  Morocco               Azerbaijan 
+##                        5                        5                        2 
+##                  Lebanon                Indonesia                    China 
+##                        2                        3                        1 
+##                  Vietnam                   Bhutan                 Cameroon 
+##                        2                        3                        5 
+##                 Bulgaria                    Ghana              Ivory Coast 
+##                        2                        5                        5 
+##                    Nepal                   Jordan                    Benin 
+##                        5                        5                        5 
+##      Congo (Brazzaville)                    Gabon                     Laos 
+##                        5                        5                        3 
+##             South Africa                  Albania                Venezuela 
+##                        3                        5                        5 
+##                 Cambodia  Palestinian Territories                  Senegal 
+##                        3                        5                        5 
+##                  Somalia                  Namibia                    Niger 
+##                        3                        5                        5 
+##             Burkina Faso                  Armenia                     Iran 
+##                        5                        5                        5 
+##                   Guinea                  Georgia                   Gambia 
+##                        5                        5                        5 
+##                    Kenya               Mauritania               Mozambique 
+##                        3                        5                        5 
+##                  Tunisia               Bangladesh                     Iraq 
+##                        5                        5                        5 
+##         Congo (Kinshasa)                     Mali             Sierra Leone 
+##                        5                        5                        5 
+##                Sri Lanka                  Myanmar                     Chad 
+##                        3                        3                        5 
+##                  Ukraine                 Ethiopia                Swaziland 
+##                        2                        5                        5 
+##                   Uganda                    Egypt                   Zambia 
+##                        5                        5                        5 
+##                     Togo                    India                  Liberia 
+##                        5                        5                        5 
+##                  Comoros               Madagascar                  Lesotho 
+##                        5                        5                        5 
+##                  Burundi                 Zimbabwe                    Haiti 
+##                        5                        5                        5 
+##                 Botswana                    Syria                   Malawi 
+##                        5                        5                        5 
+##                    Yemen                   Rwanda                 Tanzania 
+##                        5                        5                        5 
+##              Afghanistan Central African Republic              South Sudan 
+##                        5                        5                        5</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>happiness_clean[<span class="st">&quot;Indonesia&quot;</span>,]</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Ladder"],"name":[1],"type":["int"],"align":["right"]},{"label":["SD.of.Ladder"],"name":[2],"type":["int"],"align":["right"]},{"label":["Positive.affect"],"name":[3],"type":["int"],"align":["right"]},{"label":["Negative.affect"],"name":[4],"type":["int"],"align":["right"]},{"label":["Social.support"],"name":[5],"type":["int"],"align":["right"]},{"label":["Freedom"],"name":[6],"type":["int"],"align":["right"]},{"label":["Corruption"],"name":[7],"type":["int"],"align":["right"]},{"label":["Generosity"],"name":[8],"type":["int"],"align":["right"]},{"label":["Log.GDP"],"name":[9],"type":["int"],"align":["right"]},{"label":["Healty.expectancy"],"name":[10],"type":["int"],"align":["right"]}],"data":[{"1":"92","2":"108","3":"9","4":"104","5":"94","6":"48","7":"129","8":"2","9":"83","10":"98","_rn_":"Indonesia"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Hasil dari <code>happy_cluster</code> diatas kita masukkan kedalam
+objek dari dataframe <code>happiness_clean</code> pada kolom
+<code>kelompok</code>.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>happiness_clean<span class="sc">$</span>kelompok <span class="ot">&lt;-</span> happy_cluster<span class="sc">$</span>cluster</span></code></pre></div>
+<p>Dibawah ini adalah tabel <code>happiness_clean</code> yang diurutkan
+berdasarkan kelompok dengan ringkasan mean dari semua kolom.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>happiness_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(kelompok) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(mean)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["kelompok"],"name":[1],"type":["int"],"align":["right"]},{"label":["Ladder"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["SD.of.Ladder"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Positive.affect"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Negative.affect"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Social.support"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Freedom"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Corruption"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Generosity"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Log.GDP"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Healty.expectancy"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"46.34615","3":"99.46154","4":"42.5000","5":"87.69231","6":"64.69231","7":"52.19231","8":"85.15385","9":"92.03846","10":"61.23077","11":"54.34615"},{"1":"2","2":"66.40000","3":"45.76667","4":"116.0667","5":"59.10000","6":"49.83333","7":"107.60000","8":"103.06667","9":"77.73333","10":"55.90000","11":"54.23333"},{"1":"3","2":"81.70000","3":"86.05000","4":"30.5000","5":"54.35000","6":"77.25000","7":"43.50000","8":"88.15000","9":"40.05000","10":"87.35000","11":"92.25000"},{"1":"4","2":"18.95833","3":"20.95833","4":"44.8750","5":"31.87500","6":"23.33333","7":"28.50000","8":"19.04167","9":"24.83333","10":"15.79167","11":"21.45833"},{"1":"5","2":"124.28571","3":"108.26786","4":"105.2500","5":"111.83929","6":"122.96429","7":"107.66071","8":"73.07143","9":"107.96429","10":"116.73214","11":"113.94643"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Profiling :</p>
+<p>Cluster 1 : Tingkat tidak ada yang mendominasi atau standar.</p>
+<p>Cluster 2 : Tingkat efek positif, korupsi tinggi</p>
+<p>Cluster 3 : Tingkat efek positif rendah</p>
+<p>Cluster 4 : Tingkat kebebasan, efek negatif, korupsi, bantuan sosial,
+harapan kesehatan, deramawan rendah</p>
+<p>Cluster 5 : Tingkat efek negatif, bantuan sosial, kebebasan
+tinggi</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggiraphExtra)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggRadar</span>(<span class="at">data=</span>happiness_clean, <span class="fu">aes</span>(<span class="at">colour=</span>kelompok), <span class="at">interactive=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div id="htmlwidget-7bcf5e8b2b9fe14766c3" style="width:672px;height:480px;" class="girafe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7bcf5e8b2b9fe14766c3">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' id='svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd' viewBox='0 0 432 360'>\n <defs>\n  <clipPath id='svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c1'>\n   <rect x='0' y='0' width='432' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c2'>\n   <rect x='50.4' y='0' width='331.19' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c3'>\n   <rect x='85.99' y='44.68' width='290.13' height='290.13'/>\n  <\/clipPath>\n <\/defs>\n <g>\n  <g clip-path='url(#svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c1)'>\n   <rect x='0' y='0' width='432' height='360' fill='#FFFFFF' stroke='#FFFFFF' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c2)'>\n   <rect x='50.4' y='0' width='331.19' height='360' fill='#FFFFFF' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c3)'>\n   <rect x='85.99' y='44.68' width='290.13' height='290.13' fill='#EBEBEB' stroke='none'/>\n   <polyline points='231.05,189.74 271.40,65.57' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 336.68,113.00' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 361.61,189.74' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 336.68,266.48' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 271.40,313.91' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 190.71,313.91' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 125.43,266.48' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 100.50,189.74' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 125.43,113.00' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,189.74 190.71,65.57' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,172.76 232.13,172.80 233.20,172.90 234.27,173.07 235.32,173.31 236.35,173.61 237.36,173.98 238.35,174.41 239.31,174.90 240.23,175.46 241.12,176.07 241.97,176.73 242.77,177.45 243.53,178.22 244.23,179.03 244.88,179.89 245.48,180.79 246.02,181.72 246.50,182.69 246.91,183.68 247.27,184.70 247.55,185.74 247.77,186.79 247.93,187.86 248.01,188.93 248.03,190.01 247.98,191.09 247.86,192.16 247.67,193.22 247.42,194.27 247.10,195.29 246.71,196.30 246.27,197.28 245.76,198.23 245.19,199.15 244.56,200.02 243.89,200.86 243.15,201.65 242.37,202.39 241.55,203.09 240.68,203.73 239.78,204.31 238.83,204.83 237.86,205.30 236.86,205.70 235.84,206.03 234.79,206.30 233.74,206.51 232.67,206.64 231.59,206.71 230.51,206.71 229.44,206.64 228.37,206.51 227.31,206.30 226.27,206.03 225.25,205.70 224.25,205.30 223.27,204.83 222.33,204.31 221.42,203.73 220.56,203.09 219.73,202.39 218.95,201.65 218.22,200.86 217.54,200.02 216.92,199.15 216.35,198.23 215.84,197.28 215.39,196.30 215.01,195.29 214.69,194.27 214.43,193.22 214.25,192.16 214.13,191.09 214.08,190.01 214.09,188.93 214.18,187.86 214.33,186.79 214.55,185.74 214.84,184.70 215.19,183.68 215.61,182.69 216.09,181.72 216.63,180.79 217.22,179.89 217.87,179.03 218.58,178.22 219.34,177.45 220.14,176.73 220.99,176.07 221.87,175.46 222.80,174.90 223.76,174.41 224.74,173.98 225.76,173.61 226.79,173.31 227.84,173.07 228.90,172.90 229.98,172.80 231.05,172.76' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,139.48 234.24,139.58 237.42,139.89 240.56,140.39 243.68,141.09 246.74,141.99 249.73,143.08 252.65,144.36 255.49,145.82 258.23,147.46 260.85,149.27 263.36,151.24 265.74,153.37 267.97,155.64 270.06,158.05 271.99,160.59 273.76,163.24 275.35,166.00 276.77,168.86 278.00,171.80 279.05,174.82 279.90,177.89 280.55,181.01 281.00,184.17 281.26,187.35 281.31,190.54 281.15,193.72 280.80,196.89 280.25,200.03 279.49,203.13 278.55,206.18 277.41,209.16 276.08,212.06 274.58,214.87 272.90,217.58 271.05,220.18 269.04,222.65 266.87,225.00 264.56,227.20 262.12,229.25 259.55,231.14 256.87,232.86 254.08,234.41 251.20,235.78 248.24,236.97 245.21,237.96 242.13,238.76 238.99,239.37 235.83,239.77 232.65,239.97 229.46,239.97 226.28,239.77 223.11,239.37 219.98,238.76 216.89,237.96 213.86,236.97 210.90,235.78 208.02,234.41 205.24,232.86 202.55,231.14 199.99,229.25 197.54,227.20 195.23,225.00 193.07,222.65 191.06,220.18 189.21,217.58 187.53,214.87 186.02,212.06 184.70,209.16 183.56,206.18 182.61,203.13 181.86,200.03 181.31,196.89 180.95,193.72 180.80,190.54 180.85,187.35 181.10,184.17 181.56,181.01 182.21,177.89 183.06,174.82 184.10,171.80 185.34,168.86 186.75,166.00 188.35,163.24 190.11,160.59 192.05,158.05 194.13,155.64 196.37,153.37 198.75,151.24 201.25,149.27 203.88,147.46 206.62,145.82 209.45,144.36 212.37,143.08 215.37,141.99 218.43,141.09 221.54,140.39 224.69,139.89 227.87,139.58 231.05,139.48' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,106.20 236.35,106.37 241.63,106.87 246.86,107.71 252.03,108.88 257.12,110.37 262.10,112.19 266.96,114.31 271.67,116.74 276.22,119.46 280.58,122.47 284.75,125.75 288.70,129.28 292.42,133.06 295.89,137.07 299.10,141.28 302.04,145.70 304.69,150.29 307.04,155.04 309.09,159.93 310.82,164.94 312.24,170.05 313.32,175.23 314.08,180.48 314.50,185.77 314.58,191.07 314.33,196.36 313.74,201.63 312.82,206.85 311.57,212.00 310.00,217.06 308.10,222.02 305.90,226.84 303.40,231.51 300.60,236.01 297.53,240.33 294.19,244.45 290.59,248.34 286.75,252.00 282.69,255.41 278.42,258.55 273.96,261.41 269.33,263.99 264.55,266.27 259.62,268.24 254.59,269.89 249.46,271.23 244.25,272.23 238.99,272.90 233.70,273.24 228.40,273.24 223.11,272.90 217.85,272.23 212.65,271.23 207.52,269.89 202.48,268.24 197.56,266.27 192.77,263.99 188.14,261.41 183.68,258.55 179.41,255.41 175.35,252.00 171.52,248.34 167.92,244.45 164.58,240.33 161.50,236.01 158.71,231.51 156.20,226.84 154.00,222.02 152.11,217.06 150.54,212.00 149.29,206.85 148.37,201.63 147.78,196.36 147.53,191.07 147.61,185.77 148.03,180.48 148.78,175.23 149.87,170.05 151.28,164.94 153.02,159.93 155.06,155.04 157.42,150.29 160.07,145.70 163.01,141.28 166.22,137.07 169.69,133.06 173.41,129.28 177.36,125.75 181.52,122.47 185.89,119.46 190.44,116.74 195.15,114.31 200.01,112.19 204.99,110.37 210.07,108.88 215.24,107.71 220.48,106.87 225.75,106.37 231.05,106.20' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='231.05,59.18 239.33,59.45 247.58,60.23 255.76,61.54 263.84,63.37 271.79,65.70 279.58,68.54 287.17,71.86 294.53,75.65 301.64,79.91 308.46,84.61 314.97,89.73 321.15,95.25 326.96,101.16 332.38,107.42 337.40,114.01 341.99,120.91 346.13,128.08 349.81,135.51 353.01,143.15 355.72,150.98 357.93,158.96 359.63,167.07 360.81,175.27 361.46,183.53 361.59,191.81 361.20,200.09 360.28,208.32 358.84,216.48 356.89,224.53 354.43,232.44 351.47,240.18 348.03,247.72 344.12,255.02 339.75,262.06 334.95,268.81 329.72,275.24 324.10,281.32 318.10,287.04 311.76,292.37 305.09,297.28 298.12,301.76 290.88,305.78 283.40,309.34 275.71,312.42 267.84,315.01 259.82,317.09 251.68,318.66 243.46,319.71 235.20,320.23 226.91,320.23 218.64,319.71 210.43,318.66 202.29,317.09 194.27,315.01 186.40,312.42 178.71,309.34 171.23,305.78 163.99,301.76 157.02,297.28 150.35,292.37 144.00,287.04 138.01,281.32 132.38,275.24 127.16,268.81 122.36,262.06 117.99,255.02 114.08,247.72 110.63,240.18 107.68,232.44 105.22,224.53 103.26,216.48 101.83,208.32 100.91,200.09 100.51,191.81 100.64,183.53 101.30,175.27 102.48,167.07 104.18,158.96 106.38,150.98 109.09,143.15 112.29,135.51 115.97,128.08 120.12,120.91 124.70,114.01 129.72,107.42 135.15,101.16 140.96,95.25 147.13,89.73 153.64,84.61 160.47,79.91 167.58,75.65 174.94,71.86 182.53,68.54 190.32,65.70 198.26,63.37 206.35,61.54 214.53,60.23 222.77,59.45 231.05,59.18' fill='none' stroke='#FFFFFF' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polygon points='241.06,158.94 303.38,137.19 259.59,189.74 293.65,235.22 247.28,239.69 219.00,226.84 167.17,236.15 148.99,189.74 190.54,160.31 217.68,148.58' fill='#F8766D' fill-opacity='0.3' stroke='#F8766D' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round' title='kelompok=1'/>\n   <polygon points='247.71,138.47 256.75,171.07 339.08,189.74 268.65,217.06 242.32,224.42 200.50,283.78 150.77,248.07 164.44,189.74 195.30,163.76 217.72,148.70' fill='#A3A500' fill-opacity='0.3' stroke='#A3A500' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round' title='kelompok=2'/>\n   <polygon points='252.79,122.85 291.73,145.65 246.63,189.74 264.50,214.04 251.48,252.59 221.90,217.91 164.43,238.14 205.16,189.74 167.26,143.39 204.60,108.33' fill='#00BF7D' fill-opacity='0.3' stroke='#00BF7D' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round' title='kelompok=3'/>\n   <polygon points='231.97,186.91 235.20,186.73 262.16,189.74 244.86,199.77 233.47,197.19 226.91,202.50 227.72,192.16 221.60,189.74 231.05,189.74 229.03,183.51' fill='#00B0F6' fill-opacity='0.3' stroke='#00B0F6' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round' title='kelompok=4'/>\n   <polygon points='266.91,79.37 311.03,131.63 327.40,189.74 314.76,250.55 266.74,299.57 200.48,283.84 178.24,228.11 131.78,189.74 141.06,124.36 197.11,85.28' fill='#E76BF3' fill-opacity='0.3' stroke='#E76BF3' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round' title='kelompok=5'/>\n   <circle cx='241.06' cy='158.94' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='1' title='kelompok=1&amp;lt;br&amp;gt;Ladder=0.3'/>\n   <circle cx='303.38' cy='137.19' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='2' title='kelompok=1&amp;lt;br&amp;gt;SD.of.Ladder=0.6'/>\n   <circle cx='259.59' cy='189.74' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='3' title='kelompok=1&amp;lt;br&amp;gt;Positive.affect=0.3'/>\n   <circle cx='293.65' cy='235.22' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='4' title='kelompok=1&amp;lt;br&amp;gt;Negative.affect=0.6'/>\n   <circle cx='247.28' cy='239.69' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='5' title='kelompok=1&amp;lt;br&amp;gt;Social.support=0.4'/>\n   <circle cx='219' cy='226.84' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='6' title='kelompok=1&amp;lt;br&amp;gt;Freedom=0.3'/>\n   <circle cx='167.17' cy='236.15' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='7' title='kelompok=1&amp;lt;br&amp;gt;Corruption=0.6'/>\n   <circle cx='148.99' cy='189.74' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='8' title='kelompok=1&amp;lt;br&amp;gt;Generosity=0.6'/>\n   <circle cx='190.54' cy='160.31' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='9' title='kelompok=1&amp;lt;br&amp;gt;Log.GDP=0.4'/>\n   <circle cx='217.68' cy='148.58' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='10' title='kelompok=1&amp;lt;br&amp;gt;Healty.expectancy=0.4'/>\n   <circle cx='247.71' cy='138.47' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='11' title='kelompok=2&amp;lt;br&amp;gt;Ladder=0.4'/>\n   <circle cx='256.75' cy='171.07' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='12' title='kelompok=2&amp;lt;br&amp;gt;SD.of.Ladder=0.3'/>\n   <circle cx='339.08' cy='189.74' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='13' title='kelompok=2&amp;lt;br&amp;gt;Positive.affect=0.7'/>\n   <circle cx='268.65' cy='217.06' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='14' title='kelompok=2&amp;lt;br&amp;gt;Negative.affect=0.4'/>\n   <circle cx='242.32' cy='224.42' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='15' title='kelompok=2&amp;lt;br&amp;gt;Social.support=0.3'/>\n   <circle cx='200.5' cy='283.78' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='16' title='kelompok=2&amp;lt;br&amp;gt;Freedom=0.7'/>\n   <circle cx='150.77' cy='248.07' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='17' title='kelompok=2&amp;lt;br&amp;gt;Corruption=0.7'/>\n   <circle cx='164.44' cy='189.74' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='18' title='kelompok=2&amp;lt;br&amp;gt;Generosity=0.5'/>\n   <circle cx='195.3' cy='163.76' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='19' title='kelompok=2&amp;lt;br&amp;gt;Log.GDP=0.4'/>\n   <circle cx='217.72' cy='148.7' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='20' title='kelompok=2&amp;lt;br&amp;gt;Healty.expectancy=0.4'/>\n   <circle cx='252.79' cy='122.85' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='21' title='kelompok=3&amp;lt;br&amp;gt;Ladder=0.5'/>\n   <circle cx='291.73' cy='145.65' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='22' title='kelompok=3&amp;lt;br&amp;gt;SD.of.Ladder=0.5'/>\n   <circle cx='246.63' cy='189.74' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='23' title='kelompok=3&amp;lt;br&amp;gt;Positive.affect=0.2'/>\n   <circle cx='264.5' cy='214.04' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='24' title='kelompok=3&amp;lt;br&amp;gt;Negative.affect=0.3'/>\n   <circle cx='251.48' cy='252.59' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='25' title='kelompok=3&amp;lt;br&amp;gt;Social.support=0.5'/>\n   <circle cx='221.9' cy='217.91' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='26' title='kelompok=3&amp;lt;br&amp;gt;Freedom=0.3'/>\n   <circle cx='164.43' cy='238.14' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='27' title='kelompok=3&amp;lt;br&amp;gt;Corruption=0.6'/>\n   <circle cx='205.16' cy='189.74' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='28' title='kelompok=3&amp;lt;br&amp;gt;Generosity=0.3'/>\n   <circle cx='167.26' cy='143.39' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='29' title='kelompok=3&amp;lt;br&amp;gt;Log.GDP=0.6'/>\n   <circle cx='204.6' cy='108.33' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='30' title='kelompok=3&amp;lt;br&amp;gt;Healty.expectancy=0.6'/>\n   <circle cx='231.97' cy='186.91' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='31' title='kelompok=4&amp;lt;br&amp;gt;Ladder=0.1'/>\n   <circle cx='235.2' cy='186.73' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='32' title='kelompok=4&amp;lt;br&amp;gt;SD.of.Ladder=0.1'/>\n   <circle cx='262.16' cy='189.74' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='33' title='kelompok=4&amp;lt;br&amp;gt;Positive.affect=0.3'/>\n   <circle cx='244.86' cy='199.77' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='34' title='kelompok=4&amp;lt;br&amp;gt;Negative.affect=0.2'/>\n   <circle cx='233.47' cy='197.19' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='35' title='kelompok=4&amp;lt;br&amp;gt;Social.support=0.1'/>\n   <circle cx='226.91' cy='202.5' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='36' title='kelompok=4&amp;lt;br&amp;gt;Freedom=0.2'/>\n   <circle cx='227.72' cy='192.16' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='37' title='kelompok=4&amp;lt;br&amp;gt;Corruption=0.1'/>\n   <circle cx='221.6' cy='189.74' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='38' title='kelompok=4&amp;lt;br&amp;gt;Generosity=0.2'/>\n   <circle cx='231.05' cy='189.74' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='39' title='kelompok=4&amp;lt;br&amp;gt;Log.GDP=0.1'/>\n   <circle cx='229.03' cy='183.51' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='40' title='kelompok=4&amp;lt;br&amp;gt;Healty.expectancy=0.1'/>\n   <circle cx='266.91' cy='79.37' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='41' title='kelompok=5&amp;lt;br&amp;gt;Ladder=0.8'/>\n   <circle cx='311.03' cy='131.63' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='42' title='kelompok=5&amp;lt;br&amp;gt;SD.of.Ladder=0.7'/>\n   <circle cx='327.4' cy='189.74' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='43' title='kelompok=5&amp;lt;br&amp;gt;Positive.affect=0.7'/>\n   <circle cx='314.76' cy='250.55' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='44' title='kelompok=5&amp;lt;br&amp;gt;Negative.affect=0.7'/>\n   <circle cx='266.74' cy='299.57' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='45' title='kelompok=5&amp;lt;br&amp;gt;Social.support=0.8'/>\n   <circle cx='200.48' cy='283.84' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='46' title='kelompok=5&amp;lt;br&amp;gt;Freedom=0.7'/>\n   <circle cx='178.24' cy='228.11' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='47' title='kelompok=5&amp;lt;br&amp;gt;Corruption=0.5'/>\n   <circle cx='131.78' cy='189.74' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='48' title='kelompok=5&amp;lt;br&amp;gt;Generosity=0.7'/>\n   <circle cx='141.06' cy='124.36' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='49' title='kelompok=5&amp;lt;br&amp;gt;Log.GDP=0.8'/>\n   <circle cx='197.11' cy='85.28' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='50' title='kelompok=5&amp;lt;br&amp;gt;Healty.expectancy=0.8'/>\n   <text x='257.69' y='68.72' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Ladder<\/text>\n   <text x='310.74' y='116.15' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>SD.of.Ladder<\/text>\n   <text x='334.29' y='192.89' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Positive.affect<\/text>\n   <text x='307.4' y='269.63' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Negative.affect<\/text>\n   <text x='243.51' y='317.06' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Social.support<\/text>\n   <text x='173.1' y='317.06' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Freedom<\/text>\n   <text x='104.89' y='269.63' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Corruption<\/text>\n   <text x='79.22' y='192.89' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Generosity<\/text>\n   <text x='107.33' y='116.15' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Log.GDP<\/text>\n   <text x='155.08' y='68.72' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>Healty.expectancy<\/text>\n  <\/g>\n  <g clip-path='url(#svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd_c1)'>\n   <text x='68.82' y='175.91' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>0.2<\/text>\n   <text x='68.82' y='142.63' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>0.4<\/text>\n   <text x='68.82' y='109.35' font-size='6.6pt' font-family='Arial' fill='#4D4D4D'>0.6<\/text>\n   <polyline points='83.25,172.76 85.99,172.76' fill='none' stroke='#333333' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='83.25,139.48 85.99,139.48' fill='none' stroke='#333333' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='83.25,106.20 85.99,106.20' fill='none' stroke='#333333' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <rect x='119.19' y='5.48' width='223.72' height='28.24' fill='#FFFFFF' stroke='none'/>\n   <text x='124.67' y='23.54' font-size='8.25pt' font-family='Arial'>kelompok<\/text>\n   <rect x='177.24' y='10.96' width='17.28' height='17.28' fill='#F2F2F2' stroke='none'/>\n   <rect x='177.95' y='11.67' width='15.86' height='15.86' fill='#F8766D' fill-opacity='0.3' stroke='#F8766D' stroke-width='1.07' stroke-linejoin='miter' stroke-linecap='square'/>\n   <circle cx='185.88' cy='19.6' r='2.67pt' fill='#F8766D' stroke='#F8766D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='210.37' y='10.96' width='17.28' height='17.28' fill='#F2F2F2' stroke='none'/>\n   <rect x='211.08' y='11.67' width='15.86' height='15.86' fill='#A3A500' fill-opacity='0.3' stroke='#A3A500' stroke-width='1.07' stroke-linejoin='miter' stroke-linecap='square'/>\n   <circle cx='219.01' cy='19.6' r='2.67pt' fill='#A3A500' stroke='#A3A500' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='243.51' y='10.96' width='17.28' height='17.28' fill='#F2F2F2' stroke='none'/>\n   <rect x='244.22' y='11.67' width='15.86' height='15.86' fill='#00BF7D' fill-opacity='0.3' stroke='#00BF7D' stroke-width='1.07' stroke-linejoin='miter' stroke-linecap='square'/>\n   <circle cx='252.15' cy='19.6' r='2.67pt' fill='#00BF7D' stroke='#00BF7D' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='276.64' y='10.96' width='17.28' height='17.28' fill='#F2F2F2' stroke='none'/>\n   <rect x='277.35' y='11.67' width='15.86' height='15.86' fill='#00B0F6' fill-opacity='0.3' stroke='#00B0F6' stroke-width='1.07' stroke-linejoin='miter' stroke-linecap='square'/>\n   <circle cx='285.28' cy='19.6' r='2.67pt' fill='#00B0F6' stroke='#00B0F6' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='309.78' y='10.96' width='17.28' height='17.28' fill='#F2F2F2' stroke='none'/>\n   <rect x='310.49' y='11.67' width='15.86' height='15.86' fill='#E76BF3' fill-opacity='0.3' stroke='#E76BF3' stroke-width='1.07' stroke-linejoin='miter' stroke-linecap='square'/>\n   <circle cx='318.42' cy='19.6' r='2.67pt' fill='#E76BF3' stroke='#E76BF3' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <text x='200' y='22.75' font-size='6.6pt' font-family='Arial'>1<\/text>\n   <text x='233.13' y='22.75' font-size='6.6pt' font-family='Arial'>2<\/text>\n   <text x='266.27' y='22.75' font-size='6.6pt' font-family='Arial'>3<\/text>\n   <text x='299.4' y='22.75' font-size='6.6pt' font-family='Arial'>4<\/text>\n   <text x='332.54' y='22.75' font-size='6.6pt' font-family='Arial'>5<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_d429329b-faa7-4b84-9af3-e5a6e3d57ffd","ratio":1.2,"settings":{"tooltip":{"css":".tooltip_SVGID_ { background-color:white;font-style:italic;padding:10px;border-radius:10px 20px 10px 20px; ; position:absolute;pointer-events:none;z-index:999;}","placement":"doc","offx":10,"offy":0,"use_cursor_pos":true,"opacity":0.75,"usefill":false,"usestroke":false,"delay":{"over":200,"out":500}},"hover":{"css":".hover_SVGID_ { r:4px;cursor:pointer;stroke-width:6px; }","reactive":false},"hoverkey":{"css":".hover_key_SVGID_ { stroke:red; }","reactive":false},"hovertheme":{"css":".hover_theme_SVGID_ { fill:green; }","reactive":false},"hoverinv":{"css":""},"zoom":{"min":1,"max":10},"capture":{"css":".selected_SVGID_ { fill:#FF3333;stroke:black; }","type":"multiple","only_shiny":true,"selected":[]},"capturekey":{"css":".selected_key_SVGID_ { stroke:gray; }","type":"single","only_shiny":true,"selected":[]},"capturetheme":{"css":".selected_theme_SVGID_ { stroke:gray; }","type":"single","only_shiny":true,"selected":[]},"toolbar":{"position":"topright","saveaspng":true,"pngname":"diagram"},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+<p>Cek negara mana yang masuk ke kelompok 2.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>happiness_clean <span class="sc">%&gt;%</span> <span class="fu">filter</span>(kelompok <span class="sc">==</span> <span class="dv">2</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Ladder"],"name":[1],"type":["int"],"align":["right"]},{"label":["SD.of.Ladder"],"name":[2],"type":["int"],"align":["right"]},{"label":["Positive.affect"],"name":[3],"type":["int"],"align":["right"]},{"label":["Negative.affect"],"name":[4],"type":["int"],"align":["right"]},{"label":["Social.support"],"name":[5],"type":["int"],"align":["right"]},{"label":["Freedom"],"name":[6],"type":["int"],"align":["right"]},{"label":["Corruption"],"name":[7],"type":["int"],"align":["right"]},{"label":["Generosity"],"name":[8],"type":["int"],"align":["right"]},{"label":["Log.GDP"],"name":[9],"type":["int"],"align":["right"]},{"label":["Healty.expectancy"],"name":[10],"type":["int"],"align":["right"]},{"label":["kelompok"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"13","2":"14","3":"104","4":"69","5":"38","6":"93","7":"74","8":"24","9":"31","10":"11","11":"2","_rn_":"Israel"},{"1":"20","2":"20","3":"74","4":"22","5":"24","6":"58","7":"121","8":"117","9":"32","10":"31","11":"2","_rn_":"Czech Republic"},{"1":"30","2":"21","3":"107","4":"107","5":"26","6":"95","7":"78","8":"50","9":"30","10":"3","11":"2","_rn_":"Spain"},{"1":"36","2":"31","3":"99","4":"123","5":"23","6":"132","7":"128","8":"48","9":"29","10":"7","11":"2","_rn_":"Italy"},{"1":"38","2":"39","3":"53","4":"47","5":"21","6":"108","7":"142","8":"70","9":"35","10":"38","11":"2","_rn_":"Slovakia"},{"1":"40","2":"28","3":"76","4":"33","5":"44","6":"52","7":"108","8":"77","9":"41","10":"36","11":"2","_rn_":"Poland"},{"1":"42","2":"55","3":"138","4":"41","5":"17","6":"122","7":"113","8":"124","9":"36","10":"62","11":"2","_rn_":"Lithuania"},{"1":"44","2":"54","3":"114","4":"71","5":"14","6":"13","7":"97","8":"54","9":"34","10":"29","11":"2","_rn_":"Slovenia"},{"1":"53","2":"30","3":"119","4":"38","5":"34","6":"126","7":"92","8":"105","9":"43","10":"68","11":"2","_rn_":"Latvia"},{"1":"54","2":"57","3":"101","4":"45","5":"91","6":"144","7":"100","8":"40","9":"27","10":"9","11":"2","_rn_":"South Korea"},{"1":"60","2":"40","3":"81","4":"5","5":"19","6":"80","7":"57","8":"57","9":"47","10":"88","11":"2","_rn_":"Kazakhstan"},{"1":"62","2":"36","3":"86","4":"31","5":"51","6":"138","7":"140","8":"100","9":"42","10":"56","11":"2","_rn_":"Hungary"},{"1":"64","2":"35","3":"144","4":"90","5":"81","6":"77","7":"29","8":"43","9":"76","10":"76","11":"2","_rn_":"Northern Cyprus"},{"1":"68","2":"64","3":"96","4":"9","5":"40","6":"107","7":"127","8":"101","9":"45","10":"89","11":"2","_rn_":"Russia"},{"1":"70","2":"100","3":"148","4":"92","5":"57","6":"124","7":"118","8":"84","9":"71","10":"48","11":"2","_rn_":"Serbia"},{"1":"71","2":"45","3":"133","4":"67","5":"65","6":"128","7":"148","8":"86","9":"109","10":"86","11":"2","_rn_":"Moldova"},{"1":"73","2":"84","3":"143","4":"118","5":"60","6":"139","7":"77","8":"76","9":"61","10":"44","11":"2","_rn_":"Montenegro"},{"1":"75","2":"29","3":"122","4":"101","5":"79","6":"118","7":"139","8":"81","9":"50","10":"32","11":"2","_rn_":"Croatia"},{"1":"78","2":"80","3":"116","4":"79","5":"92","6":"137","7":"145","8":"32","9":"82","10":"50","11":"2","_rn_":"Bosnia and Herzegovina"},{"1":"79","2":"58","3":"154","4":"121","5":"61","6":"140","7":"50","8":"98","9":"44","10":"69","11":"2","_rn_":"Turkey"},{"1":"81","2":"22","3":"149","4":"36","5":"33","6":"131","7":"37","8":"103","9":"58","10":"76","11":"2","_rn_":"Belarus"},{"1":"82","2":"87","3":"102","4":"94","5":"102","6":"150","7":"123","8":"152","9":"46","10":"21","11":"2","_rn_":"Greece"},{"1":"83","2":"48","3":"95","4":"17","5":"10","6":"112","7":"119","8":"38","9":"80","10":"97","11":"2","_rn_":"Mongolia"},{"1":"84","2":"67","3":"140","4":"89","5":"74","6":"105","7":"125","8":"55","9":"75","10":"52","11":"2","_rn_":"Macedonia"},{"1":"87","2":"2","3":"135","4":"63","5":"8","6":"83","7":"74","8":"33","9":"60","10":"100","11":"2","_rn_":"Turkmenistan"},{"1":"90","2":"24","3":"134","4":"20","5":"104","6":"101","7":"22","8":"146","9":"65","10":"82","11":"2","_rn_":"Azerbaijan"},{"1":"91","2":"60","3":"150","4":"61","5":"89","6":"136","7":"133","8":"63","9":"73","10":"66","11":"2","_rn_":"Lebanon"},{"1":"94","2":"27","3":"121","4":"27","5":"64","6":"23","7":"86","8":"97","9":"105","10":"49","11":"2","_rn_":"Vietnam"},{"1":"97","2":"47","3":"117","4":"13","5":"18","6":"115","7":"147","8":"112","9":"56","10":"65","11":"2","_rn_":"Bulgaria"},{"1":"133","2":"69","3":"131","4":"44","5":"56","6":"141","7":"143","8":"66","9":"94","10":"87","11":"2","_rn_":"Ukraine"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>happiness_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>kelompok) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">cluster_min_val =</span> <span class="fu">which.min</span>(value),</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">cluster_max_val =</span> <span class="fu">which.max</span>(value))</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["cluster_min_val"],"name":[2],"type":["int"],"align":["right"]},{"label":["cluster_max_val"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Corruption","2":"34","3":"71"},{"1":"Freedom","2":"41","3":"154"},{"1":"Generosity","2":"131","3":"151"},{"1":"Healty.expectancy","2":"34","3":"155"},{"1":"Ladder","2":"1","3":"156"},{"1":"Log.GDP","2":"29","3":"155"},{"1":"Negative.affect","2":"25","3":"149"},{"1":"Positive.affect","2":"63","3":"149"},{"1":"SD.of.Ladder","2":"5","3":"141"},{"1":"Social.support","2":"4","3":"155"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
